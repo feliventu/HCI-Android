@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="home">Home</string>
-    <string name="devices">Devices</string>
-    <string name="routines">Routines</string>
+    <string name="home">Hogar</string>
+    <string name="devices">Dispositivos</string>
+    <string name="routines">Rutinas</string>
 </resources>
