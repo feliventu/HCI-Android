@@ -25,6 +25,7 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType.Companion.NavigationDrawer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -174,9 +175,12 @@ fun MainScaffold() {
 
 
     Scaffold(
-        bottomBar = { NavigationBar(
+        bottomBar = {
+
+            NavigationBar(
             contentColor = Color.Transparent,
             containerColor = MaterialTheme.colorScheme.primaryContainer,
+            modifier = Modifier.shadow(elevation = 15.dp),
         ) {
             MyAppDestinations.entries.forEach {
                 NavigationBarItem(
@@ -204,7 +208,9 @@ fun MainScaffold() {
                 )
             }
 
-        } },
+        }
+
+                    },
 
         topBar = {
             TopAppBar(
@@ -263,28 +269,6 @@ fun MainScaffold() {
 }
 
 
-
-@Composable
-fun MyHomeDestination() {
-
-        Text(text = "Home")
-
-}
-
-@Composable
-fun MyDeviceDestination() {
-
-        Text(text = "Devices")
-
-
-}
-
-@Composable
-fun MyRoutineDestination() {
-
-        Text(text = "Routines")
-
-}
 
 @Preview(showBackground = true)
 @Composable
