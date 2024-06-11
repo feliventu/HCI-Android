@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBarDefaults.containerColor
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +38,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaul
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -49,6 +51,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
@@ -59,14 +63,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
+            MyApplicationTheme ( dynamicColor = false) {
+                MyNavigationScaffold()
 
-                }
             }
         }
     }
-
-
+}
 
 
 enum class MyAppDestinations(
@@ -74,29 +77,32 @@ enum class MyAppDestinations(
     @DrawableRes val icon: Int,
     @DrawableRes val filledIcon: Int,
     @StringRes val contentDescription: Int
-){
+) {
     HOME(R.string.home, R.drawable.ic_home, R.drawable.ic_home_fill, R.string.home),
     DEVICES(R.string.devices, R.drawable.ic_devices, R.drawable.ic_devices_fill, R.string.devices),
-    RUTINAS(R.string.routines, R.drawable.ic_routines, R.drawable.ic_routines_fill, R.string.routines),
+    RUTINAS(
+        R.string.routines,
+        R.drawable.ic_routines,
+        R.drawable.ic_routines_fill,
+        R.string.routines
+    ),
 }
 
 
-
-
 @Composable
-fun MyNavigationScaffold(){
+fun MyNavigationScaffold() {
 
-        val adaptiveInfo = currentWindowAdaptiveInfo();
-        val customNavSuiteType = with(adaptiveInfo) {
-            if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
-                NavigationSuiteType.NavigationBar;
-            } else {
-                //NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
-                NavigationSuiteType.NavigationDrawer
-            }
+    val adaptiveInfo = currentWindowAdaptiveInfo();
+    val customNavSuiteType = with(adaptiveInfo) {
+        if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+            NavigationSuiteType.NavigationBar;
+        } else {
+            //NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
+            NavigationSuiteType.NavigationDrawer
         }
+    }
 
-        var currentDestination by rememberSaveable { mutableStateOf(MyAppDestinations.HOME) }
+    var currentDestination by rememberSaveable { mutableStateOf(MyAppDestinations.HOME) }
 
     val itemColors = NavigationSuiteItemColors(
         navigationBarItemColors = NavigationBarItemColors(
@@ -111,61 +117,58 @@ fun MyNavigationScaffold(){
         navigationRailItemColors = NavigationRailItemDefaults.colors(),
         navigationDrawerItemColors = NavigationDrawerItemDefaults.colors()
     )
-        NavigationSuiteScaffold(
+    NavigationSuiteScaffold(
 
-            navigationSuiteItems =
-            {
+        navigationSuiteItems =
+        {
 
-                MyAppDestinations.entries.forEach {
-                    item(
+            MyAppDestinations.entries.forEach {
+                item(
 
-                        colors = itemColors,
+                    colors = itemColors,
 
 
-                        icon = {
-                            val icon = if (it == currentDestination) {
-                                ImageVector.vectorResource(id = it.filledIcon)
-                            } else {
-                                ImageVector.vectorResource(id = it.icon)
-                            }
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = stringResource(it.contentDescription),
-                                modifier = Modifier.size(32.dp)
-                            )
-                        },
+                    icon = {
+                        val icon = if (it == currentDestination) {
+                            ImageVector.vectorResource(id = it.filledIcon)
+                        } else {
+                            ImageVector.vectorResource(id = it.icon)
+                        }
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = stringResource(it.contentDescription),
+                            modifier = Modifier.size(32.dp)
+                        )
+                    },
 
-                        label = { Text(stringResource(it.label)) },
-                        selected = it == currentDestination,
-                        onClick = { currentDestination = it }
+                    label = { Text(stringResource(it.label)) },
+                    selected = it == currentDestination,
+                    onClick = { currentDestination = it }
 
-                    )
-                }
-            },
-            layoutType = customNavSuiteType,
-            navigationSuiteColors = NavigationSuiteDefaults.colors(
-               navigationBarContentColor = Color.Transparent,
-               navigationBarContainerColor = Color.White,
+                )
+            }
+        },
+        layoutType = customNavSuiteType,
+        navigationSuiteColors = NavigationSuiteDefaults.colors(
+            navigationBarContentColor = Color.Transparent,
+            navigationBarContainerColor = Color.White,
 
 
             ),
 
 
+        content = {
+            TopBarFloatingButtonScaffold()
+            when (currentDestination) {
+                MyAppDestinations.HOME -> MyHomeDestination();
+                MyAppDestinations.DEVICES -> MyDeviceDestination();
+                MyAppDestinations.RUTINAS -> MyRoutineDestination();
+            }
+        },
 
+        )
 
-            
-            content = {
-                TopBarFloatingButtonScaffold()
-                when (currentDestination) {
-                    MyAppDestinations.HOME -> MyHomeDestination();
-                    MyAppDestinations.DEVICES -> MyDeviceDestination();
-                    MyAppDestinations.RUTINAS -> MyRoutineDestination();
-                }
-            },
-
-            )
-
-        }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -176,16 +179,19 @@ fun TopBarFloatingButtonScaffold() {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.Black,
+
                 ),
                 title = {
-                    Text("Home-Chan")
+                    Text("Home Chan", fontWeight = FontWeight.Bold)
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {  }) {
                         Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Favorite"
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_more),
+                            contentDescription = "Mas",
+                            tint = Color.Black,
+                            modifier = Modifier.size(28.dp)
                         )
                     }
 
@@ -195,15 +201,18 @@ fun TopBarFloatingButtonScaffold() {
         },
         floatingActionButton = {
             SmallFloatingActionButton(
-                onClick = { /*asd*/ },
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.secondary,
+                onClick = {  },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = Color.Black,
                 shape = CircleShape,
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier.size(50.dp).shadow(elevation = 3.dp, shape = CircleShape),
+
             ) {
                 Icon(Icons.Filled.Add, "Small floating action button.")
             }
         },
+
+        containerColor = MaterialTheme.colorScheme.background,
 
         ) { innerPadding ->
         Text(
@@ -215,25 +224,35 @@ fun TopBarFloatingButtonScaffold() {
 
 
 @Composable
-fun MyHomeDestination(){
-    Box(modifier = Modifier.padding(vertical = 70.dp)){
+fun MyHomeDestination() {
+    Box(modifier = Modifier.padding(vertical = 100.dp)) {
         Text(text = "Home")
     }
 
 }
 
 @Composable
-fun MyDeviceDestination(){
-    Text(text = "Devices")
+fun MyDeviceDestination() {
+    Box(modifier = Modifier.padding(vertical = 70.dp)) {
+        Text(text = "Devices")
+    }
+
 }
 
 @Composable
-fun MyRoutineDestination(){
-    Text(text = "Routines")
+fun MyRoutineDestination() {
+    Box(modifier = Modifier.padding(vertical = 70.dp)) {
+        Text(text = "Routines")
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MyNavigationScaffoldPreview(){
-    MyNavigationScaffold();
+fun MyNavigationScaffoldPreview() {
+    MyApplicationTheme(dynamicColor = false) {
+        MyNavigationScaffold();
+    }
+
 }
+
+
