@@ -103,7 +103,7 @@ fun MyNavigationScaffold(){
             selectedIconColor = Color.Black,
             unselectedIconColor = Color.Gray,
             selectedIndicatorColor = Color.Transparent,
-            unselectedTextColor = Color.Black,
+            unselectedTextColor = Color.Gray,
             selectedTextColor = Color.Black,
             disabledIconColor = Color.Transparent,
             disabledTextColor = Color.Transparent,
