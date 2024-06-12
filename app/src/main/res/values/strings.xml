@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="home">Hogar</string>
-    <string name="devices">Dispositivos</string>
-    <string name="routines">Rutinas</string>
+    <string name="welcome">Let\'s start with your new intelligent home!</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_devices">Devices</string>
+    <string name="nav_routines">Routines</string>
+    <string name="recent_devices">Recent Devices</string>
+    <string name="recent_routines">Recent Routines</string>
+    <string name="alarms">Alarms</string>
+    <string name="new_device">+ New Device</string>
+    <string name="new_routine">+ New Routine</string>
+    <string name="new_home">+ New Home</string>
 </resources>

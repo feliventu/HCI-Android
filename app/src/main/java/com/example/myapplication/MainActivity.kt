@@ -82,13 +82,18 @@ enum class MyAppDestinations(
     @DrawableRes val filledIcon: Int,
     @StringRes val contentDescription: Int
 ) {
-    HOME(R.string.home, R.drawable.ic_home, R.drawable.ic_home_fill, R.string.home),
-    DEVICES(R.string.devices, R.drawable.ic_devices, R.drawable.ic_devices_fill, R.string.devices),
+    HOME(R.string.nav_home, R.drawable.ic_home, R.drawable.ic_home_fill, R.string.nav_home),
+    DEVICES(
+        R.string.nav_devices,
+        R.drawable.ic_devices,
+        R.drawable.ic_devices_fill,
+        R.string.nav_devices
+    ),
     RUTINAS(
-        R.string.routines,
+        R.string.nav_routines,
         R.drawable.ic_routines,
         R.drawable.ic_routines_fill,
-        R.string.routines
+        R.string.nav_routines
     ),
 }
 
@@ -217,15 +222,27 @@ fun MyNavigationScaffold() {
                         containerColor = Color.White,
                         offset = DpOffset(0.dp, 55.dp),
                     ) {
-                        DropdownMenuItem(onClick = { /* Handle new device! */ menuExpanded = false },
-                            text = { Text("+ Nuevo dispositivo") })
-                        DropdownMenuItem(onClick = { /* Handle new routine! */ menuExpanded = false },
-                            text = { Text("+ Nueva rutina") })
-                        HorizontalDivider(thickness = 2.dp, color = Color.Gray, modifier = Modifier.padding(horizontal = 16.dp))
+                        DropdownMenuItem(onClick = { /* Handle new device! */ menuExpanded = false
+                        },
+                            text = { Text(stringResource(id = R.string.new_device)) })
+                        DropdownMenuItem(onClick = { /* Handle new routine! */ menuExpanded =
+                            false
+                        },
+                            text = { Text(stringResource(id = R.string.new_routine)) })
+                        HorizontalDivider(
+                            thickness = 2.dp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
                         DropdownMenuItem(onClick = { /* Handle new home! */ menuExpanded = false },
-                            text = { Text("+ Nuevo Hogar") })
-                        Icon(Icons.Filled.Add, tint = Color.Black, modifier = Modifier.align(
-                            Alignment.End).padding(end = 13.dp, bottom = 10.dp), contentDescription = "")
+                            text = { Text(stringResource(id = R.string.new_home)) })
+                        Icon(
+                            Icons.Filled.Add, tint = Color.Black, modifier = Modifier
+                                .align(
+                                    Alignment.End
+                                )
+                                .padding(end = 13.dp, bottom = 10.dp), contentDescription = ""
+                        )
                     }
                 }
             },

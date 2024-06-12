@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,14 +23,14 @@ import com.example.myapplication.ui.theme.YellowR
 fun MyHomeDestination() {
     Column(
         modifier = Modifier
-            .padding(start = 18.dp, end = 18.dp,)
+            .padding(start = 18.dp, end = 18.dp)
             .verticalScroll(rememberScrollState())
             .fillMaxHeight(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
 
-    ) {
+        ) {
         Text(
-            text = "Alarmas",
+            text = stringResource(id = R.string.alarms),
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             modifier = Modifier.padding(top = 18.dp)
@@ -37,15 +38,14 @@ fun MyHomeDestination() {
         AlarmCard()
 
         Text(
-            text = "Rutinas recientes",
+            text = stringResource(id = R.string.recent_routines),
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
 
-        )
-        LazyRow (horizontalArrangement = Arrangement.spacedBy(15.dp)){
+            )
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
             items(5) {
                 RoutineCard(false, "Rutina 1234", "Descripción de la rutina 1", color = YellowR)
-
 
 
             }
@@ -54,7 +54,7 @@ fun MyHomeDestination() {
 
 
         Text(
-            text = "Dispositivos recientes",
+            text = stringResource(id = R.string.recent_devices),
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp
         )

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="welcome">Comencemos con tu nuevo hogar inteligente!</string>
+    <string name="nav_home">Hogar</string>
+    <string name="nav_devices">Dispositivos</string>
+    <string name="nav_routines">Rutinas</string>
+    <string name="recent_devices">Dispositivos recientes</string>
+    <string name="recent_routines">Rutinas recientes</string>
+    <string name="alarms">Alarmas</string>
+    <string name="new_device">+ Nuevo dispositivo</string>
+    <string name="new_routine">+ Nueva rutina</string>
+    <string name="new_home">+ Nuevo hogar</string>
+</resources>
