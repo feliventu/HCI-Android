@@ -95,6 +95,8 @@ enum class MyAppDestinations(
         R.drawable.ic_routines_fill,
         R.string.nav_routines
     ),
+    NEW_HOME(R.string.new_home, R.drawable.ic_home, R.drawable.ic_home_fill, R.string.new_home)
+
 }
 
 
@@ -134,6 +136,11 @@ fun MyNavigationScaffold() {
         {
 
             MyAppDestinations.entries.forEach {
+                if(it != MyAppDestinations.HOME &&
+                    it != MyAppDestinations.DEVICES &&
+                    it != MyAppDestinations.RUTINAS ){
+                    return@forEach
+                }
                 item(
 
                     colors = itemColors,
@@ -202,6 +209,7 @@ fun MyNavigationScaffold() {
                         enter = fadeIn(),
                         exit = fadeOut()
                     ) {
+                        if( currentDestination != MyAppDestinations.NEW_HOME){
                         SmallFloatingActionButton(
                             onClick = { menuExpanded = !menuExpanded },
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -212,7 +220,7 @@ fun MyNavigationScaffold() {
                                 .shadow(elevation = 2.dp, shape = CircleShape)
                         ) {
                             Icon(Icons.Filled.Add, "Small floating action button.")
-                        }
+                        }}
                     }
 
                     DropdownMenu(
@@ -234,7 +242,8 @@ fun MyNavigationScaffold() {
                             color = Color.Gray,
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
-                        DropdownMenuItem(onClick = { /* Handle new home! */ menuExpanded = false },
+                        DropdownMenuItem(onClick = { currentDestination = MyAppDestinations.NEW_HOME
+                            menuExpanded = false },
                             text = { Text(stringResource(id = R.string.new_home)) })
                         Icon(
                             Icons.Filled.Add, tint = Color.Black, modifier = Modifier
@@ -256,6 +265,7 @@ fun MyNavigationScaffold() {
                     MyAppDestinations.HOME -> MyHomeDestination();
                     MyAppDestinations.DEVICES -> MyDeviceDestination();
                     MyAppDestinations.RUTINAS -> MyRoutineDestination();
+                    MyAppDestinations.NEW_HOME -> NewHomeDestination();
                 }
 
             }
