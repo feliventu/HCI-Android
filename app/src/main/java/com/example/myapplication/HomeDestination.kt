@@ -31,7 +31,7 @@ fun MyHomeDestination() {
         verticalArrangement = Arrangement.spacedBy(12.dp),
 
         ) {
-        DropdownMenuBox(arrayOf("Casa 1", "Casa 2", "Casa 3"))
+        DropdownMenuBox( arrayOf("Casa 1", "Casa 2", "Casa 3"))
 
         Text(
             text = stringResource(id = R.string.alarms),

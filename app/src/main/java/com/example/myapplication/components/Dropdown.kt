@@ -27,15 +27,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.R
 import com.example.myapplication.ui.theme.LightGray01
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownMenuBox(options: Array<String> = arrayOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")) {
+fun DropdownMenuBox(options: Array<String> = arrayOf(stringResource(id = R.string.no_data))) {
     val context = LocalContext.current
 
     var expanded by remember { mutableStateOf(false) }

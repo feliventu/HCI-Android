@@ -7,7 +7,18 @@
     <string name="recent_devices">Recent Devices</string>
     <string name="recent_routines">Recent Routines</string>
     <string name="alarms">Alarms</string>
-    <string name="new_device">+ New Device</string>
-    <string name="new_routine">+ New Routine</string>
-    <string name="new_home">+ New Home</string>
+    <string name="plus_new_device">+ New Device</string>
+    <string name="plus_new_routine">+ New Routine</string>
+    <string name="plus_new_home">+ New Home</string>
+
+    <string name="name">Name</string>
+    <string name="create">CREATE</string>
+    <string name="no_data">EMPTY</string>
+
+    <string name="new_home">New Home</string>
+    <string name="new_routine">New Routine</string>
+    <string name="new_device">New Device</string>
+
+
+
 </resources>

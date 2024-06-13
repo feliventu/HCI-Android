@@ -8,7 +8,15 @@
     <string name="recent_devices">Dispositivos recientes</string>
     <string name="recent_routines">Rutinas recientes</string>
     <string name="alarms">Alarmas</string>
-    <string name="new_device">+ Nuevo dispositivo</string>
-    <string name="new_routine">+ Nueva rutina</string>
-    <string name="new_home">+ Nuevo hogar</string>
+    <string name="plus_new_device">+ Nuevo dispositivo</string>
+    <string name="plus_new_routine">+ Nueva rutina</string>
+    <string name="plus_new_home">+ Nuevo hogar</string>
+
+    <string name="name">Nombre</string>
+    <string name="create">CREAR</string>
+    <string name="no_data">VACIO</string>
+
+    <string name="new_home">Nuevo hogar</string>
+    <string name="new_routine">Nueva rutina</string>
+    <string name="new_device">Nuevo dispositivo</string>
 </resources>

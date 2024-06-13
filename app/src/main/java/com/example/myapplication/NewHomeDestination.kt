@@ -27,6 +27,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.components.CustomOutlinedButton
+import com.example.myapplication.components.CustomTextField
 import com.example.myapplication.ui.theme.LightGray01
 
 @Composable
@@ -39,14 +41,14 @@ fun NewHomeDestination() {
         verticalArrangement = Arrangement.spacedBy(12.dp),
 
         ) {
-        Text(text = "New Home", fontWeight = FontWeight.SemiBold,
+        Text(text = stringResource(id = R.string.new_home), fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             modifier = Modifier
                 .padding(top = 0.dp)
                 .padding(top = 15.dp))
 
-        SimpleOutlinedTextFieldSample()
-        OutlinedButtonExample(onClick = { /*TODO*/})
+        CustomTextField(stringResource(id = R.string.name))
+        CustomOutlinedButton(onClick = { /*TODO*/}, stringResource(id = R.string.create))
     }
 
 
@@ -56,25 +58,5 @@ fun NewHomeDestination() {
 }
 
 
-@Composable
-fun SimpleOutlinedTextFieldSample() {
-    var text by remember { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
-        label = { Text("Name") },
-        shape = RoundedCornerShape(10.dp),
-    )
-}
 
 
-@Composable
-fun OutlinedButtonExample(onClick: () -> Unit) {
-    OutlinedButton(onClick = { onClick() },
-        shape = RoundedCornerShape(10.dp),
-        border = BorderStroke(3.dp, LightGray01)) {
-        Text("CREATE", color = Color.Black, style = TextStyle(fontWeight = FontWeight.Bold))
-
-    }
-}
