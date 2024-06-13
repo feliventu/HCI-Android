@@ -2,11 +2,14 @@ package com.example.myapplication.components
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -38,6 +41,7 @@ fun DropdownMenuBox(options: Array<String> = arrayOf("Americano", "Cappuccino", 
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(options[0]) }
 
+    val interactionSource = remember { MutableInteractionSource() }
 
 
     Box(
@@ -91,7 +95,8 @@ fun DropdownMenuBox(options: Array<String> = arrayOf("Americano", "Cappuccino", 
                             disabledTextColor = Color.Black,
                             disabledLeadingIconColor = Color.Black,
                             disabledTrailingIconColor = Color.Black,
-                        )
+                        ),
+
                     )
                 }}
             }
