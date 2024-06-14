@@ -4,10 +4,13 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -26,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -93,6 +97,16 @@ fun CustomOutlinedButton(onClick: () -> Unit , label: String = "Button") {
 
     ) {
         Text(label, color = Color.Black, style = TextStyle(fontWeight = FontWeight.Bold))
+    }
+}
+@Composable
+fun CustomOutlinedButtonIcon(onClick: () -> Unit, icon: ImageVector) {
 
+    OutlinedButton(onClick = { onClick() },
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(3.dp, LightGray01),
+        modifier = Modifier.width(50.dp).height(50.dp)
+        ) {
+        Icon(imageVector = icon, contentDescription ="")
     }
 }

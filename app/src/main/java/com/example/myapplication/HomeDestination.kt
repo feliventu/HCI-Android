@@ -20,6 +20,7 @@ import com.example.myapplication.components.CustomTextField
 import com.example.myapplication.components.DeviceCard
 import com.example.myapplication.components.DropdownMenuBox
 import com.example.myapplication.components.RoutineCard
+import com.example.myapplication.components.SpeakerDialog
 import com.example.myapplication.ui.theme.YellowR
 
 @Composable
@@ -64,12 +65,10 @@ fun MyHomeDestination() {
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp
         )
-
+    
+        SpeakerDialog(onDismissRequest = { })
         DeviceCard()
         DeviceCard()
-        DeviceCard()
-        DeviceCard()
-        DeviceCard()
-        DeviceCard()
+        
     }
 }
