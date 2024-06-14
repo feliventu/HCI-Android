@@ -52,12 +52,12 @@ fun DeviceCard(
             ),
             modifier = if(isCompact){
                 Modifier
-                    .width(200.dp) // Fill the maximum width available
+                    .fillMaxWidth() // Fill the maximum width available
                     .height(100.dp)
             }// Keep the height as 100.dp
             else {
                 Modifier
-                    .width(300.dp) // Fill the maximum width available
+                    .width(400.dp) // Fill the maximum width available
                     .height(100.dp)
             }
         ) {
