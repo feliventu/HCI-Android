@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -12,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.myapplication.R
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
@@ -36,16 +39,26 @@ fun AlarmCard(
     name: String = "Alarma",
     icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices)
 ) {
+
+    val adaptiveInfo = currentWindowAdaptiveInfo()
+    val isCompact = adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+
     MyApplicationTheme(dynamicColor = false) {
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = Color.Black
             ),
-            modifier = Modifier
-                .fillMaxWidth() // Fill the maximum width available
-                .height(55.dp)// Keep the height as 100.dp
-
+            modifier = if(isCompact){
+                Modifier
+                    .fillMaxWidth() // Fill the maximum width available
+                    .height(55.dp)
+            }// Keep the height as 100.dp
+            else {
+                Modifier
+                    .width(400.dp) // Fill the maximum width available
+                    .height(55.dp)
+            }
         ) {
             Row {
                 Column {

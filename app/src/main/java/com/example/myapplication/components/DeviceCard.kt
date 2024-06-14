@@ -46,7 +46,6 @@ fun DeviceCard(
 
     MyApplicationTheme(dynamicColor = false) {
         Card(
-            onClick = { },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = Color.Black
@@ -58,7 +57,7 @@ fun DeviceCard(
             }// Keep the height as 100.dp
             else {
                 Modifier
-                    .width(500.dp) // Fill the maximum width available
+                    .width(400.dp) // Fill the maximum width available
                     .height(100.dp)
             }
         ) {
