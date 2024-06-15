@@ -47,8 +47,8 @@ fun DeviceCard(
     MyApplicationTheme(dynamicColor = false) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary
             ),
             modifier = if(isCompact){
                 Modifier
@@ -81,7 +81,7 @@ fun DeviceCard(
 
                 Text(
                     text = status, fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp),
-                    color = Color.Black, fontWeight = FontWeight.Light
+                    color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
                 )
             }
 

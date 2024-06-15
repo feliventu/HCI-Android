@@ -46,8 +46,8 @@ fun AlarmCard(
     MyApplicationTheme(dynamicColor = false) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary
             ),
             modifier = if(isCompact){
                 Modifier

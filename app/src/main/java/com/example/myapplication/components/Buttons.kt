@@ -1,5 +1,6 @@
 package com.example.myapplication.components
 
+import android.content.res.Resources.Theme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -57,7 +58,7 @@ fun CustomTextField(label: String = "Name") {
         value = searchText,
         singleLine = true,
         interactionSource = interactionSource,
-        cursorBrush = SolidColor(Color.White),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.inversePrimary),
         onValueChange = { newText -> searchText = newText },
         modifier = Modifier.width(250.dp)
 
@@ -81,8 +82,8 @@ fun CustomTextField(label: String = "Name") {
                     isError = false,
                     interactionSource = interactionSource,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.LightGray,
-                        unfocusedBorderColor = LightGray01,
+                        focusedBorderColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.surface,
 
                         ),
                     shape = RoundedCornerShape(13.dp),
@@ -100,10 +101,10 @@ fun CustomOutlinedButton(onClick: () -> Unit, label: String = "Button") {
     OutlinedButton(
         onClick = { onClick() },
         shape = RoundedCornerShape(10.dp),
-        border = BorderStroke(3.dp, LightGray01),
+        border = BorderStroke(3.dp, MaterialTheme.colorScheme.surface),
 
         ) {
-        Text(label, color = Color.Black, style = TextStyle(fontWeight = FontWeight.Bold))
+        Text(label, color = MaterialTheme.colorScheme.primary, style = TextStyle(fontWeight = FontWeight.Bold))
     }
 }
 
@@ -113,7 +114,7 @@ fun CustomOutlinedButtonIcon(onClick: () -> Unit = {}, icon: ImageVector = Icons
 
     IconButton(
         onClick = { onClick() },
-        modifier = Modifier.border(4.dp, LightGray01, RoundedCornerShape(25)) // Add this line
+        modifier = Modifier.border(4.dp, MaterialTheme.colorScheme.surface, RoundedCornerShape(25)) // Add this line
 
     ) {
         Icon(imageVector = icon, contentDescription = "", modifier = Modifier.size(28.dp))
@@ -132,7 +133,7 @@ fun CustomButtonIconMini(onClick: () -> Unit = {}) {
     ) {
         Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow,),
             contentDescription = "", modifier = Modifier.size(28.dp),
-            tint = Color.Gray)
+            tint = MaterialTheme.colorScheme.tertiary)
     }
 }
 
@@ -145,6 +146,6 @@ fun CustomButtonIconMedium(onClick: () -> Unit = {}) {
     ) {
         Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow2,),
             contentDescription = "", modifier = Modifier.size(38.dp),
-            tint = Color.Gray)
+            tint = MaterialTheme.colorScheme.tertiary)
     }
 }

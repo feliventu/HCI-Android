@@ -12,6 +12,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -58,8 +59,8 @@ fun CustomDropdown(options: Array<String> = arrayOf(stringResource(id = R.string
         ) {
             Surface(
                 shape = RoundedCornerShape(13.dp),
-                border = BorderStroke(3.dp, LightGray01),
-                color = Color.White,
+                border = BorderStroke(3.dp, MaterialTheme.colorScheme.surface),
+                color = MaterialTheme.colorScheme.inversePrimary,
 
                 ) {
                 OutlinedTextField(
@@ -67,14 +68,17 @@ fun CustomDropdown(options: Array<String> = arrayOf(stringResource(id = R.string
                     onValueChange = {},
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    colors =  OutlinedTextFieldDefaults.colors(),
+                    colors =  OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.primary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.primary
+                    ),
                     modifier = Modifier.menuAnchor(),
                     textStyle = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                 )
             }
 
             ExposedDropdownMenu(
-                containerColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.inversePrimary,
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
 
@@ -89,12 +93,12 @@ fun CustomDropdown(options: Array<String> = arrayOf(stringResource(id = R.string
                             Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                         },
                         colors = MenuItemColors(
-                            textColor = Color.Black,
-                            leadingIconColor = Color.Black,
-                            trailingIconColor = Color.Black,
-                            disabledTextColor = Color.Black,
-                            disabledLeadingIconColor = Color.Black,
-                            disabledTrailingIconColor = Color.Black,
+                            textColor = MaterialTheme.colorScheme.primary,
+                            leadingIconColor = MaterialTheme.colorScheme.primary,
+                            trailingIconColor = MaterialTheme.colorScheme.primary,
+                            disabledTextColor = MaterialTheme.colorScheme.primary,
+                            disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
+                            disabledTrailingIconColor = MaterialTheme.colorScheme.primary,
                         ),
 
                     )

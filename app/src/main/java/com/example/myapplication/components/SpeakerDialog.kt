@@ -69,7 +69,7 @@ fun SpeakerDialog(
     onDismissRequest: () -> Unit,
     id: String = null.toString(),
 ) {
-    val dialogState = remember { mutableStateOf(DialogState.MAIN_DIALOG) }
+    val dialogState = rememberSaveable { mutableStateOf(DialogState.MAIN_DIALOG) }
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -77,8 +77,8 @@ fun SpeakerDialog(
                 .wrapContentSize(),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.inversePrimary,
+                contentColor = MaterialTheme.colorScheme.primary
             ),
         ) {
             when (dialogState.value) {
@@ -109,7 +109,7 @@ fun GenreDialog(dialogState: MutableState<DialogState>) {
                 textAlign = TextAlign.Left,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 8.dp),
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.tertiary
             )
 
 
@@ -134,7 +134,7 @@ fun GenreDialog(dialogState: MutableState<DialogState>) {
             ) {
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = Color.Gray)
+            Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
 
 
         }
@@ -159,7 +159,7 @@ fun VolumeDialog(dialogState: MutableState<DialogState>) {
                 textAlign = TextAlign.Left,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 8.dp),
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.tertiary
             )
 
 
@@ -194,7 +194,7 @@ fun VolumeDialog(dialogState: MutableState<DialogState>) {
             ) {
             Text(text = stringResource(id = R.string.volume))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = Color.Gray)
+            Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
 
         }
     }
@@ -274,7 +274,7 @@ fun MainDialog(dialogState: MutableState<DialogState>) {
             Text(
                 text = "Taylor swift",
                 modifier = Modifier.padding(end = 10.dp),
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.tertiary
             )
         }
         Row(
@@ -284,7 +284,7 @@ fun MainDialog(dialogState: MutableState<DialogState>) {
             ) {
             Text(text = stringResource(id = R.string.volume))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = Color.Gray)
+            Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
             CustomButtonIconMini { dialogState.value = DialogState.VOLUME_DIALOG }
         }
         Row(
@@ -293,7 +293,7 @@ fun MainDialog(dialogState: MutableState<DialogState>) {
         ) {
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = Color.Gray)
+            Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
             CustomButtonIconMini { dialogState.value = DialogState.GENRE_DIALOG }
         }
     }

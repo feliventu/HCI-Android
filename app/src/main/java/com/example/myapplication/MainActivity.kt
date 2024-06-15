@@ -123,11 +123,11 @@ fun MyNavigationScaffold() {
 
     val itemColors = NavigationSuiteItemColors(
         navigationBarItemColors = NavigationBarItemColors(
-            selectedIconColor = Color.Black,
-            unselectedIconColor = Color.Gray,
+            selectedIconColor = MaterialTheme.colorScheme.primary,
+            unselectedIconColor = MaterialTheme.colorScheme.tertiary,
             selectedIndicatorColor = Color.Transparent,
-            unselectedTextColor = Color.Gray,
-            selectedTextColor = Color.Black,
+            unselectedTextColor = MaterialTheme.colorScheme.tertiary,
+            selectedTextColor = MaterialTheme.colorScheme.primary,
             disabledIconColor = Color.Transparent,
             disabledTextColor = Color.Transparent,
         ),
@@ -173,7 +173,7 @@ fun MyNavigationScaffold() {
         layoutType = customNavSuiteType,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             navigationBarContentColor = Color.Transparent,
-            navigationBarContainerColor = Color.White,
+            navigationBarContainerColor = MaterialTheme.colorScheme.inversePrimary,
 
 
             ),
@@ -185,8 +185,8 @@ fun MyNavigationScaffold() {
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = Color.Black,
+                        containerColor = MaterialTheme.colorScheme.inversePrimary,
+                        titleContentColor = MaterialTheme.colorScheme.primary,
 
                         ),
                     title = {
@@ -197,7 +197,7 @@ fun MyNavigationScaffold() {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_more),
                                 contentDescription = "Mas",
-                                tint = Color.Black,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(28.dp)
                             )
                         }
@@ -216,8 +216,8 @@ fun MyNavigationScaffold() {
                         if( currentDestination != MyAppDestinations.NEW_HOME){
                         SmallFloatingActionButton(
                             onClick = { menuExpanded = !menuExpanded },
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = Color.Black,
+                            containerColor = MaterialTheme.colorScheme.inversePrimary,
+                            contentColor = MaterialTheme.colorScheme.primary,
                             shape = CircleShape,
                             modifier = Modifier
                                 .size(50.dp)
@@ -231,26 +231,29 @@ fun MyNavigationScaffold() {
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false },
                         shape = RoundedCornerShape(16.dp),
-                        containerColor = Color.White,
+                        containerColor = MaterialTheme.colorScheme.inversePrimary,
                         offset = DpOffset(0.dp, 55.dp),
                     ) {
                         DropdownMenuItem(onClick = { /* Handle new device! */ menuExpanded = false
                         },
-                            text = { Text(stringResource(id = R.string.plus_new_device)) })
+                            text = { Text(stringResource(id = R.string.plus_new_device),
+                                color = MaterialTheme.colorScheme.primary) })
                         DropdownMenuItem(onClick = { /* Handle new routine! */ menuExpanded =
                             false
                         },
-                            text = { Text(stringResource(id = R.string.plus_new_routine)) })
+                            text = { Text(stringResource(id = R.string.plus_new_routine),
+                                color = MaterialTheme.colorScheme.primary) })
                         HorizontalDivider(
                             thickness = 2.dp,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onTertiary,
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                         DropdownMenuItem(onClick = { currentDestination = MyAppDestinations.NEW_HOME
                             menuExpanded = false },
-                            text = { Text(stringResource(id = R.string.plus_new_home)) })
+                            text = { Text(stringResource(id = R.string.plus_new_home),
+                                color = MaterialTheme.colorScheme.primary)})
                         Icon(
-                            Icons.Filled.Add, tint = Color.Black, modifier = Modifier
+                            Icons.Filled.Add, tint = MaterialTheme.colorScheme.primary, modifier = Modifier
                                 .align(
                                     Alignment.End
                                 )
