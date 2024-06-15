@@ -2,14 +2,12 @@ package com.example.myapplication.components
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -37,7 +35,7 @@ import com.example.myapplication.ui.theme.LightGray01
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownMenuBox(options: Array<String> = arrayOf(stringResource(id = R.string.no_data))) {
+fun CustomDropdown(options: Array<String> = arrayOf(stringResource(id = R.string.no_data))) {
     val context = LocalContext.current
 
     var expanded by remember { mutableStateOf(false) }

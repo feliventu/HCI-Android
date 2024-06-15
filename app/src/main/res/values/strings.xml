@@ -19,6 +19,10 @@
     <string name="new_routine">New Routine</string>
     <string name="new_device">New Device</string>
 
+    <string name="song">Song</string>
+    <string name="volume">Volume</string>
+    <string name="genre">Genre</string>
+
 
 
 </resources>

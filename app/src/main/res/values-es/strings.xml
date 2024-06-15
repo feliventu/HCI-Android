@@ -19,4 +19,8 @@
     <string name="new_home">Nuevo hogar</string>
     <string name="new_routine">Nueva rutina</string>
     <string name="new_device">Nuevo dispositivo</string>
+
+    <string name="song">Canción</string>
+    <string name="volume">Volumen</string>
+    <string name="genre">Género</string>
 </resources>

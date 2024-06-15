@@ -83,21 +83,8 @@ fun AlarmCard(
 
                 Column( modifier = Modifier
                     .fillMaxWidth()) {
-                    var checked by rememberSaveable { mutableStateOf(true) }
-                    Switch(
-                        checked = checked,
-                        onCheckedChange = {
-                            checked = it
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = Color.White,
-                            checkedTrackColor = MaterialTheme.colorScheme.secondary,
-                            uncheckedThumbColor = Color.White,
-                            uncheckedTrackColor = Color.LightGray,
-                            uncheckedBorderColor = Color.LightGray
-                        ),
-                        modifier = Modifier.align(Alignment.End).padding(end = 21.dp, top = 5.dp)
-                    )
+
+
                 }
 
 

@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -31,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
@@ -38,10 +42,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.ui.theme.LightGray01
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun CustomTextField( label: String = "Name") {
+fun CustomTextField(label: String = "Name") {
     var text by remember { mutableStateOf("") }
 
 
@@ -66,23 +71,24 @@ fun CustomTextField( label: String = "Name") {
             visualTransformation = VisualTransformation.None,
             placeholder = {
                 Text(
-                    text = stringResource(R.string.name),)
+                    text = stringResource(R.string.name),
+                )
 
             },
             container = {
                 Container(
-        enabled = true,
-        isError = false,
-        interactionSource = interactionSource,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Color.LightGray,
-            unfocusedBorderColor = LightGray01,
+                    enabled = true,
+                    isError = false,
+                    interactionSource = interactionSource,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.LightGray,
+                        unfocusedBorderColor = LightGray01,
 
-        ),
-        shape = RoundedCornerShape(13.dp),
-        focusedBorderThickness = 4.dp,
-        unfocusedBorderThickness = 3.dp,
-    )
+                        ),
+                    shape = RoundedCornerShape(13.dp),
+                    focusedBorderThickness = 4.dp,
+                    unfocusedBorderThickness = 3.dp,
+                )
             }
         )
     }
@@ -90,23 +96,55 @@ fun CustomTextField( label: String = "Name") {
 
 
 @Composable
-fun CustomOutlinedButton(onClick: () -> Unit , label: String = "Button") {
-    OutlinedButton(onClick = { onClick() },
+fun CustomOutlinedButton(onClick: () -> Unit, label: String = "Button") {
+    OutlinedButton(
+        onClick = { onClick() },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(3.dp, LightGray01),
 
-    ) {
+        ) {
         Text(label, color = Color.Black, style = TextStyle(fontWeight = FontWeight.Bold))
     }
 }
-@Composable
-fun CustomOutlinedButtonIcon(onClick: () -> Unit, icon: ImageVector) {
 
-    OutlinedButton(onClick = { onClick() },
-        shape = RoundedCornerShape(10.dp),
-        border = BorderStroke(3.dp, LightGray01),
-        modifier = Modifier.width(50.dp).height(50.dp)
-        ) {
-        Icon(imageVector = icon, contentDescription ="")
+@Composable
+fun CustomOutlinedButtonIcon(onClick: () -> Unit = {}, icon: ImageVector = Icons.Default.Done) {
+
+
+    IconButton(
+        onClick = { onClick() },
+        modifier = Modifier.border(4.dp, LightGray01, RoundedCornerShape(25)) // Add this line
+
+    ) {
+        Icon(imageVector = icon, contentDescription = "", modifier = Modifier.size(28.dp))
+    }
+
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CustomButtonIconMini(onClick: () -> Unit = {}) {
+    IconButton(
+        onClick = { onClick() },
+        modifier = Modifier.size(25.dp) // Add this line
+
+    ) {
+        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow,),
+            contentDescription = "", modifier = Modifier.size(28.dp),
+            tint = Color.Gray)
+    }
+}
+
+@Composable
+fun CustomButtonIconMedium(onClick: () -> Unit = {}) {
+    IconButton(
+        onClick = { onClick() },
+        modifier = Modifier.size(25.dp) // Add this line
+
+    ) {
+        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow2,),
+            contentDescription = "", modifier = Modifier.size(38.dp),
+            tint = Color.Gray)
     }
 }
