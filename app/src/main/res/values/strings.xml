@@ -14,6 +14,7 @@
     <string name="name">Name</string>
     <string name="create">CREATE</string>
     <string name="no_data">EMPTY</string>
+    <string name="back">Back</string>
 
     <string name="new_home">New Home</string>
     <string name="new_routine">New Routine</string>

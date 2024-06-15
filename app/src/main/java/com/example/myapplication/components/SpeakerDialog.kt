@@ -105,7 +105,7 @@ fun GenreDialog(dialogState: MutableState<DialogState>) {
         ) {
             CustomButtonIconMedium { dialogState.value = DialogState.MAIN_DIALOG }
             Text(
-                text = "Back",
+                text = stringResource(id =R.string.back),
                 textAlign = TextAlign.Left,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 8.dp),
@@ -155,7 +155,7 @@ fun VolumeDialog(dialogState: MutableState<DialogState>) {
         ) {
             CustomButtonIconMedium { dialogState.value = DialogState.MAIN_DIALOG }
             Text(
-                text = "Back",
+                text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 8.dp),
@@ -215,7 +215,7 @@ fun MainDialog(dialogState: MutableState<DialogState>) {
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_devices),
-                contentDescription = "xd",
+                contentDescription = "",
                 modifier = Modifier.size(30.dp)
             );
             Text(

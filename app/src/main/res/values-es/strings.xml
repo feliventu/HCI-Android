@@ -15,6 +15,7 @@
     <string name="name">Nombre</string>
     <string name="create">CREAR</string>
     <string name="no_data">VACIO</string>
+    <string name="back">Atrás</string>
 
     <string name="new_home">Nuevo hogar</string>
     <string name="new_routine">Nueva rutina</string>
