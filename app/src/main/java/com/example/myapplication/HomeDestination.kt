@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.components.AlarmCard
+import com.example.myapplication.components.AlarmDialog
 import com.example.myapplication.components.DeviceCard
 import com.example.myapplication.components.CustomDropdown
 import com.example.myapplication.components.RoutineCard
@@ -36,13 +37,13 @@ fun MyHomeDestination() {
         verticalArrangement = Arrangement.spacedBy(12.dp),
 
         ) {
-        CustomDropdown( arrayOf("Casa 1", "Casa 2", "Casa 3"))
+
 
         Text(
             text = stringResource(id = R.string.alarms),
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            modifier = Modifier.padding(top = 0.dp)
+            modifier = Modifier.padding(top = 15.dp)
         )
         AlarmCard()
 
@@ -57,7 +58,7 @@ fun MyHomeDestination() {
             )
         LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
             items(5) {
-                RoutineCard(false, "Rutina 1334", "Descripción de la rutina 1", color = YellowR)
+                RoutineCard(false, "Routine ", "Descripción de la rutina 1", color = YellowR)
             }
         }
 
@@ -68,6 +69,10 @@ fun MyHomeDestination() {
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp
         )
+
+        DeviceCard()
+        DeviceCard()
+
         var showDialog by remember { mutableStateOf(false) }
         Button(onClick = { showDialog = true }) {
             Text("Show Dialog")
@@ -76,8 +81,14 @@ fun MyHomeDestination() {
         if (showDialog) {
             SpeakerDialog(onDismissRequest = { showDialog = false })
         }
-        DeviceCard()
-        DeviceCard()
-        
+
+        var showDialog2 by remember { mutableStateOf(false) }
+        Button(onClick = { showDialog2 = true }) {
+            Text("Show Dialog alarm")
+        }
+
+        if (showDialog2) {
+            AlarmDialog(onDismissRequest = { showDialog2 = false })
+        }
     }
 }

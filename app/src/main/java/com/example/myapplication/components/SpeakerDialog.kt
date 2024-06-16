@@ -1,6 +1,5 @@
 package com.example.myapplication.components
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 
@@ -9,56 +8,42 @@ import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 
 
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.myapplication.R
-import com.example.myapplication.ui.theme.MyApplicationTheme
 
-enum class DialogState {
+enum class SpeakerDialogState {
     MAIN_DIALOG,
     VOLUME_DIALOG,
     GENRE_DIALOG // Add more dialog states as needed
@@ -68,8 +53,9 @@ enum class DialogState {
 fun SpeakerDialog(
     onDismissRequest: () -> Unit,
     id: String = null.toString(),
+
 ) {
-    val dialogState = rememberSaveable { mutableStateOf(DialogState.MAIN_DIALOG) }
+    val dialogState = rememberSaveable { mutableStateOf(SpeakerDialogState.MAIN_DIALOG) }
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -82,9 +68,9 @@ fun SpeakerDialog(
             ),
         ) {
             when (dialogState.value) {
-                DialogState.MAIN_DIALOG -> MainDialog(dialogState)
-                DialogState.VOLUME_DIALOG -> VolumeDialog(dialogState)
-                DialogState.GENRE_DIALOG -> GenreDialog(dialogState)
+                SpeakerDialogState.MAIN_DIALOG -> MainDialog(dialogState)
+                SpeakerDialogState.VOLUME_DIALOG -> VolumeDialog(dialogState)
+                SpeakerDialogState.GENRE_DIALOG -> GenreDialog(dialogState)
             }
             Spacer(modifier = Modifier.height(18.dp))
         }
@@ -92,7 +78,7 @@ fun SpeakerDialog(
 }
 
 @Composable
-fun GenreDialog(dialogState: MutableState<DialogState>) {
+internal fun GenreDialog(dialogState: MutableState<SpeakerDialogState>) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -103,7 +89,7 @@ fun GenreDialog(dialogState: MutableState<DialogState>) {
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = DialogState.MAIN_DIALOG }
+            CustomButtonIconMedium { dialogState.value = SpeakerDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id =R.string.back),
                 textAlign = TextAlign.Left,
@@ -142,7 +128,7 @@ fun GenreDialog(dialogState: MutableState<DialogState>) {
 }
 
 @Composable
-fun VolumeDialog(dialogState: MutableState<DialogState>) {
+internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState>) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -153,7 +139,7 @@ fun VolumeDialog(dialogState: MutableState<DialogState>) {
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = DialogState.MAIN_DIALOG }
+            CustomButtonIconMedium { dialogState.value = SpeakerDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,
@@ -202,7 +188,7 @@ fun VolumeDialog(dialogState: MutableState<DialogState>) {
 }
 
 @Composable
-fun MainDialog(dialogState: MutableState<DialogState>) {
+internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -214,7 +200,7 @@ fun MainDialog(dialogState: MutableState<DialogState>) {
 
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_devices),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_speaker),
                 contentDescription = "",
                 modifier = Modifier.size(30.dp)
             );
@@ -285,7 +271,7 @@ fun MainDialog(dialogState: MutableState<DialogState>) {
             Text(text = stringResource(id = R.string.volume))
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = DialogState.VOLUME_DIALOG }
+            CustomButtonIconMini { dialogState.value = SpeakerDialogState.VOLUME_DIALOG }
         }
         Row(
             modifier = Modifier
@@ -294,7 +280,7 @@ fun MainDialog(dialogState: MutableState<DialogState>) {
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = DialogState.GENRE_DIALOG }
+            CustomButtonIconMini { dialogState.value = SpeakerDialogState.GENRE_DIALOG }
         }
     }
 }

@@ -37,7 +37,7 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 @Composable
 fun DeviceCard(
     id: String = null.toString(),
-    name: String = "Dispositivo", status: String = "Estado",
+    name: String = "Device", status: String = "Status",
     icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices),
 ) {
 

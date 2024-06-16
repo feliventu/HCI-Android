@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +21,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults.Container
+import androidx.compose.material3.OutlinedTextFieldDefaults.colors
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
@@ -47,7 +49,9 @@ import com.example.myapplication.ui.theme.LightGray01
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun CustomTextField(label: String = "Name") {
+fun CustomTextField(label: String = "Name",
+                    visualTransformation: VisualTransformation = VisualTransformation.None,
+                    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,) {
     var text by remember { mutableStateOf("") }
 
 
@@ -58,9 +62,13 @@ fun CustomTextField(label: String = "Name") {
         value = searchText,
         singleLine = true,
         interactionSource = interactionSource,
-        cursorBrush = SolidColor(MaterialTheme.colorScheme.inversePrimary),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         onValueChange = { newText -> searchText = newText },
-        modifier = Modifier.width(250.dp)
+        modifier = Modifier.width(250.dp),
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        textStyle = TextStyle(color = MaterialTheme.colorScheme.primary), // Change the color here
+
 
     ) { innerTextField ->
         OutlinedTextFieldDefaults.DecorationBox(
@@ -72,10 +80,12 @@ fun CustomTextField(label: String = "Name") {
             visualTransformation = VisualTransformation.None,
             placeholder = {
                 Text(
-                    text = stringResource(R.string.name),
+                    text = label,
                 )
 
             },
+
+
             container = {
                 Container(
                     enabled = true,
@@ -106,6 +116,7 @@ fun CustomOutlinedButton(onClick: () -> Unit, label: String = "Button") {
         ) {
         Text(label, color = MaterialTheme.colorScheme.primary, style = TextStyle(fontWeight = FontWeight.Bold))
     }
+
 }
 
 @Composable

@@ -23,7 +23,11 @@
     <string name="song">Song</string>
     <string name="volume">Volume</string>
     <string name="genre">Genre</string>
-
+    <string name="enter">Enter</string>
+    <string name="armaway">Arm away</string>
+    <string name="armstay">Arm stay</string>
+    <string name="status">Status</string>
+    <string name="disarm">Disarm</string>
 
 
 </resources>
