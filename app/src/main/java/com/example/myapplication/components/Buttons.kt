@@ -49,9 +49,11 @@ import com.example.myapplication.ui.theme.LightGray01
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun CustomTextField(label: String = "Name",
-                    visualTransformation: VisualTransformation = VisualTransformation.None,
-                    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,) {
+fun CustomTextField(
+    label: String = "Name",
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
     var text by remember { mutableStateOf("") }
 
 
@@ -114,7 +116,11 @@ fun CustomOutlinedButton(onClick: () -> Unit, label: String = "Button") {
         border = BorderStroke(3.dp, MaterialTheme.colorScheme.surface),
 
         ) {
-        Text(label, color = MaterialTheme.colorScheme.primary, style = TextStyle(fontWeight = FontWeight.Bold))
+        Text(
+            label,
+            color = MaterialTheme.colorScheme.primary,
+            style = TextStyle(fontWeight = FontWeight.Bold)
+        )
     }
 
 }
@@ -125,7 +131,11 @@ fun CustomOutlinedButtonIcon(onClick: () -> Unit = {}, icon: ImageVector = Icons
 
     IconButton(
         onClick = { onClick() },
-        modifier = Modifier.border(4.dp, MaterialTheme.colorScheme.surface, RoundedCornerShape(25)) // Add this line
+        modifier = Modifier.border(
+            4.dp,
+            MaterialTheme.colorScheme.surface,
+            RoundedCornerShape(25)
+        ) // Add this line
 
     ) {
         Icon(imageVector = icon, contentDescription = "", modifier = Modifier.size(28.dp))
@@ -142,9 +152,11 @@ fun CustomButtonIconMini(onClick: () -> Unit = {}) {
         modifier = Modifier.size(25.dp) // Add this line
 
     ) {
-        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow,),
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow),
             contentDescription = "", modifier = Modifier.size(28.dp),
-            tint = MaterialTheme.colorScheme.tertiary)
+            tint = MaterialTheme.colorScheme.tertiary
+        )
     }
 }
 
@@ -155,8 +167,10 @@ fun CustomButtonIconMedium(onClick: () -> Unit = {}) {
         modifier = Modifier.size(25.dp) // Add this line
 
     ) {
-        Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow2,),
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_arrow2),
             contentDescription = "", modifier = Modifier.size(38.dp),
-            tint = MaterialTheme.colorScheme.tertiary)
+            tint = MaterialTheme.colorScheme.tertiary
+        )
     }
 }

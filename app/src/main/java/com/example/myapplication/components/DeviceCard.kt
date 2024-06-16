@@ -10,6 +10,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.myapplication.R
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -39,13 +42,17 @@ fun DeviceCard(
     id: String = null.toString(),
     name: String = "Device", status: String = "Status",
     icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices),
+    snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
-
+    val scope = rememberCoroutineScope()
     val adaptiveInfo = currentWindowAdaptiveInfo()
     val isCompact = adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
 
     MyApplicationTheme(dynamicColor = false) {
         Card(
+            onClick = {
+
+            },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary
@@ -91,6 +98,10 @@ fun DeviceCard(
                 checked = checked,
                 onCheckedChange = {
                     checked = it
+                    if (checked) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Device activated", withDismissAction = true)
+                    }}
                 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,

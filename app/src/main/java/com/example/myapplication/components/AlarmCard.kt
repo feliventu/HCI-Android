@@ -2,6 +2,7 @@ package com.example.myapplication.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,12 +38,20 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 @Preview
 @Composable
 fun AlarmCard(
-    name: String = "Alarma",
-    icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices)
+    name: String = "Alarm",
+
 ) {
 
+
+
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    val isCompact = adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+    val isCompact =
+        adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        AlarmDialog(onDismissRequest = { showDialog = false })
+    }
 
     MyApplicationTheme(dynamicColor = false) {
         Card(
@@ -49,45 +59,41 @@ fun AlarmCard(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary
             ),
-            modifier = if(isCompact){
+            onClick = { showDialog = true },
+            modifier = if (isCompact) {
                 Modifier
                     .fillMaxWidth() // Fill the maximum width available
-                    .height(55.dp)
+                    .height(80.dp)
             }// Keep the height as 100.dp
             else {
                 Modifier
                     .width(400.dp) // Fill the maximum width available
-                    .height(55.dp)
+                    .height(80.dp)
             }
         ) {
-            Row {
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .padding(start = 16.dp, top = 16.dp)
-                    ) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = "",
+            Column {
+                Row(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_alarm),
+                        contentDescription = "",
+                        modifier = Modifier.padding(top = 2.dp),
 
-                            )
-                        Text(
-                            text = name,
-                            modifier = Modifier.padding(start = 16.dp),
-                            textAlign = TextAlign.Center,
-                            fontSize = 18.sp,
                         )
-                    }
-
+                    Text(
+                        text = name,
+                        modifier = Modifier.padding(start = 16.dp),
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                    )
                 }
 
-                Column( modifier = Modifier
-                    .fillMaxWidth()) {
-
-
-                }
-
-
+                Text(
+                    text = "Status", fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp),
+                    color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
+                )
             }
 
 

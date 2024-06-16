@@ -44,6 +44,7 @@ fun RoutineCard(
 
         if (!expanded) {
             Card(
+                onClick = {},
                 colors = CardDefaults.cardColors(
                     containerColor = color,
                     contentColor = Color.Black

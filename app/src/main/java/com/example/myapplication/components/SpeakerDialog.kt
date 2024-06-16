@@ -265,7 +265,7 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>) {
         }
         Row(
             modifier = Modifier
-                .padding(top = 10.dp),
+                .padding(top = 15.dp),
 
             ) {
             Text(text = stringResource(id = R.string.volume))
@@ -275,7 +275,7 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>) {
         }
         Row(
             modifier = Modifier
-                .padding(top = 10.dp),
+                .padding(top = 15.dp),
         ) {
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))

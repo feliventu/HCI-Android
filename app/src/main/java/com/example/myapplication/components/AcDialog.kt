@@ -122,7 +122,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             )
         }
         Row(
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 16.dp),
         ){
             Text(text = stringResource(id = R.string.temperature))
             Spacer(modifier = Modifier.weight(1f))
@@ -132,7 +132,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             CustomButtonIconMini { dialogState.value = AcDialogState.TEMPERATURE_DIALOG}
         }
         Row(
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 15.dp),
         ){
             Text(text = stringResource(id = R.string.mode))
             Spacer(modifier = Modifier.weight(1f))
@@ -142,7 +142,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             CustomButtonIconMini { dialogState.value = AcDialogState.MODE_DIALOG}
         }
         Row(
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 15.dp),
         ){
             Text(text = stringResource(id = R.string.verticalswing))
             Spacer(modifier = Modifier.weight(1f))
@@ -152,7 +152,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             CustomButtonIconMini { dialogState.value = AcDialogState.VERTICAL_SWING_DIALOG}
         }
         Row(
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 15.dp),
         ){
             Text(text = stringResource(id = R.string.horizontalswing))
             Spacer(modifier = Modifier.weight(1f))
@@ -162,7 +162,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             CustomButtonIconMini { dialogState.value = AcDialogState.HORIZONTAL_SWING_DIALOG}
         }
         Row(
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 15.dp),
         ){
             Text(text = stringResource(id = R.string.fanspeed))
             Spacer(modifier = Modifier.weight(1f))
