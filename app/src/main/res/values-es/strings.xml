@@ -24,4 +24,15 @@
     <string name="song">Canción</string>
     <string name="volume">Volumen</string>
     <string name="genre">Género</string>
+
+    <string name="armaway">Armar away</string>
+    <string name="armstay">Armar stay</string>
+    <string name="status">Estado</string>
+    <string name="disarm">Desarmar</string>
+
+    <string name="temperature">Temperatura</string>
+    <string name="mode">Modo</string>
+    <string name="verticalswing">Swing Vertical</string>
+    <string name="horizontalswing">Swing Horizontal</string>
+    <string name="fanspeed">Velocidad del ventilador</string>
 </resources>

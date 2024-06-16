@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.components.AcDialog
 import com.example.myapplication.components.AlarmCard
 import com.example.myapplication.components.AlarmDialog
 import com.example.myapplication.components.DeviceCard
@@ -70,8 +71,14 @@ fun MyHomeDestination() {
             fontSize = 18.sp
         )
 
-        DeviceCard()
-        DeviceCard()
+        var showDialog2 by remember { mutableStateOf(false) }
+        Button(onClick = { showDialog2 = true }) {
+            Text("Show Dialog alarm")
+        }
+
+        if (showDialog2) {
+            AlarmDialog(onDismissRequest = { showDialog2 = false })
+        }
 
         var showDialog by remember { mutableStateOf(false) }
         Button(onClick = { showDialog = true }) {
@@ -82,13 +89,18 @@ fun MyHomeDestination() {
             SpeakerDialog(onDismissRequest = { showDialog = false })
         }
 
-        var showDialog2 by remember { mutableStateOf(false) }
-        Button(onClick = { showDialog2 = true }) {
-            Text("Show Dialog alarm")
+        var showDialog1 by remember { mutableStateOf(false) }
+        Button(onClick = { showDialog1 = true }) {
+            Text("Show Dialog1")
         }
 
-        if (showDialog2) {
-            AlarmDialog(onDismissRequest = { showDialog2 = false })
+        if (showDialog1) {
+            AcDialog(onDismissRequest = { showDialog1 = false })
         }
+
+
+        DeviceCard()
+        DeviceCard()
+        
     }
 }

@@ -28,6 +28,10 @@
     <string name="armstay">Arm stay</string>
     <string name="status">Status</string>
     <string name="disarm">Disarm</string>
-
+    <string name="temperature">Temperature</string>
+    <string name="mode">Mode</string>
+    <string name="verticalswing">Vertical Swing</string>
+    <string name="horizontalswing">Horizontal Swing</string>
+    <string name="fanspeed">Fan speed</string>
 
 </resources>
