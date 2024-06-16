@@ -31,5 +31,7 @@
     <string name="verticalswing">Vertical Swing</string>
     <string name="horizontalswing">Horizontal Swing</string>
     <string name="fanspeed">Fan speed</string>
+    <string name="actualstatus">Actual status</string>
+    <string name="maxAperture">Max aperture</string>
 
 </resources>

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.components.AcDialog
 import com.example.myapplication.components.AlarmCard
 import com.example.myapplication.components.AlarmDialog
+import com.example.myapplication.components.BlindsDialog
 import com.example.myapplication.components.DeviceCard
 import com.example.myapplication.components.CustomDropdown
 import com.example.myapplication.components.RoutineCard
@@ -94,6 +95,18 @@ fun MyHomeDestination(snackbarHostState: SnackbarHostState) {
         if (showDialog1) {
             AcDialog(onDismissRequest = { showDialog1 = false })
         }
+
+        var showDialog2 by remember { mutableStateOf(false) }
+        Button(onClick = { showDialog2 = true
+        }) {
+            Text("Blinds dialog")
+        }
+
+        if (showDialog2) {
+            BlindsDialog(onDismissRequest = { showDialog2 = false })
+        }
+
+
 
         DeviceCard( snackbarHostState = snackbarHostState)
         DeviceCard( snackbarHostState = snackbarHostState)

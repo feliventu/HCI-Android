@@ -35,4 +35,8 @@
     <string name="verticalswing">Swing Vertical</string>
     <string name="horizontalswing">Swing Horizontal</string>
     <string name="fanspeed">Velocidad del ventilador</string>
+
+    <string name="actualstatus">Estado actual</string>
+    <string name="maxAperture">Máxima apertura</string>
+
 </resources>
