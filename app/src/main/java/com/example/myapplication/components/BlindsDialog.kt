@@ -111,7 +111,7 @@ fun BlindsDialog(
                 Row(
                     modifier = Modifier.padding(top = 16.dp),
                 ){
-                    Text(text = stringResource(id = R.string.maxAperture))
+                    Text(text = stringResource(id = R.string.maxaperture))
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = "50",
                         modifier = Modifier.padding(end = 10.dp),

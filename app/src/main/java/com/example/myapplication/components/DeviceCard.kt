@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -92,7 +93,7 @@ fun DeviceCard(
                 )
             }
 
-
+            val snackbarLabel= stringResource(R.string.device_on)
             var checked by rememberSaveable { mutableStateOf(true) }
             Switch(
                 checked = checked,
@@ -100,7 +101,7 @@ fun DeviceCard(
                     checked = it
                     if (checked) {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Device activated", withDismissAction = true)
+                        snackbarHostState.showSnackbar( snackbarLabel, withDismissAction = true)
                     }}
                 },
                 colors = SwitchDefaults.colors(

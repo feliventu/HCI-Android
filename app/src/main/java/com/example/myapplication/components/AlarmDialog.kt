@@ -36,7 +36,7 @@ import com.example.myapplication.R
 
 
 enum class AlarmDialogState {
-                            PASS_DIALOG,
+    PASS_DIALOG,
     MAIN_DIALOG,
 
 }
@@ -78,6 +78,7 @@ internal fun PassDialog(dialogState: MutableState<AlarmDialogState>) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+
             modifier = Modifier
                 .padding(top = 15.dp)
                 .fillMaxWidth()
@@ -97,14 +98,21 @@ internal fun PassDialog(dialogState: MutableState<AlarmDialogState>) {
 
             Spacer(modifier = Modifier.weight(1f))
         }
-    Row(modifier = Modifier
-        .padding(top = 15.dp),){
-        CustomTextField(label = "Password",PasswordVisualTransformation(),
-            KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
-        )
-    }
-        Row(modifier = Modifier
-            .padding(top = 10.dp),){
+        Row(
+            modifier = Modifier
+                .padding(top = 15.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            CustomTextField(
+                label = "Password", PasswordVisualTransformation(),
+                KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
+            )
+        }
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
             CustomOutlinedButton(
                 label = stringResource(id = R.string.enter),
                 onClick = { dialogState.value = AlarmDialogState.MAIN_DIALOG },
@@ -115,7 +123,7 @@ internal fun PassDialog(dialogState: MutableState<AlarmDialogState>) {
 }
 
 @Composable
-internal fun MainDialog(dialogState: MutableState<AlarmDialogState>){
+internal fun MainDialog(dialogState: MutableState<AlarmDialogState>) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -151,23 +159,25 @@ internal fun MainDialog(dialogState: MutableState<AlarmDialogState>){
         ) {
             CustomOutlinedButton(
                 label = stringResource(id = R.string.armaway),
-                onClick = {  },
+                onClick = { },
             )
             CustomOutlinedButton(
                 label = stringResource(id = R.string.armstay),
-                onClick = {  },
+                onClick = { },
             )
 
 
         }
-        Row(modifier = Modifier
-            .padding( bottom = 5.dp)
-            .fillMaxWidth(), // Fill the entire width
+        Row(
+            modifier = Modifier
+                .padding(bottom = 5.dp)
+                .fillMaxWidth(), // Fill the entire width
             horizontalArrangement = Arrangement.SpaceEvenly, // Space items evenly
-            verticalAlignment = Alignment.CenterVertically) {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             CustomOutlinedButton(
                 label = stringResource(id = R.string.disarm),
-                onClick = {  },
+                onClick = { },
             )
         }
 

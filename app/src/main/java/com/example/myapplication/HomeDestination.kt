@@ -84,7 +84,7 @@ fun MyHomeDestination(snackbarHostState: SnackbarHostState) {
         }
 
         if (showDialog) {
-            SpeakerDialog(onDismissRequest = { showDialog = false })
+            SpeakerDialog(onDismissRequest = { showDialog = false }, snackbarHostState = snackbarHostState)
         }
 
         var showDialog1 by remember { mutableStateOf(false) }

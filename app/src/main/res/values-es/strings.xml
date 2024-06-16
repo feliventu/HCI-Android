@@ -37,6 +37,9 @@
     <string name="fanspeed">Velocidad del ventilador</string>
 
     <string name="actualstatus">Estado actual</string>
-    <string name="maxAperture">Máxima apertura</string>
+    <string name="maxaperture">Máxima apertura</string>
+
+    <string name="device_on">Dispositivo activado</string>
+    <string name="volume_updated">Volumen actualizado</string>
 
 </resources>

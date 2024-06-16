@@ -73,6 +73,8 @@ fun AlarmCard(
         ) {
             Column {
                 Row(
+
+
                     modifier = Modifier
                         .padding(start = 16.dp, top = 16.dp)
                 ) {
