@@ -16,6 +16,7 @@
     <string name="create">CREAR</string>
     <string name="no_data">VACIO</string>
     <string name="back">Atrás</string>
+    <string name="enter">Entrar</string>
 
     <string name="new_home">Nuevo hogar</string>
     <string name="new_routine">Nueva rutina</string>
@@ -24,6 +25,7 @@
     <string name="song">Canción</string>
     <string name="volume">Volumen</string>
     <string name="genre">Género</string>
+
 
     <string name="armaway">Armar away</string>
     <string name="armstay">Armar stay</string>
