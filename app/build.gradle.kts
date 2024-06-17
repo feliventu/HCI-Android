@@ -24,6 +24,18 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // No usar localhost o la IP 127.0.0.1 porque es la interfaz de loopback
+            // del emulador. La forma de salir del emulador para acceder al localhost
+            // de host del mismo es usando la IP 10.0.2.2.
+            buildConfigField("String", "API_BASE_URL",
+                "\"http://10.0.2.2:8080/api/\"")
+        }
+        debug {
+            // No usar localhost o la IP 127.0.0.1 porque es la interfaz de loopback
+            // del emulador. La forma de salir del emulador para acceder al localhost
+            // de host del mismo es usando la IP 10.0.2.2.
+            buildConfigField("String", "API_BASE_URL",
+                "\"http://10.0.2.2:8080/api/\"")
         }
     }
     compileOptions {
@@ -35,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -65,6 +78,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
 }

@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.ui
 
 
 import androidx.compose.foundation.layout.Arrangement
@@ -22,16 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.components.AcDialog
-import com.example.myapplication.components.AlarmCard
-import com.example.myapplication.components.AlarmDialog
-import com.example.myapplication.components.BlindsDialog
-import com.example.myapplication.components.DeviceCard
-import com.example.myapplication.components.CustomDropdown
-import com.example.myapplication.components.RoutineCard
-import com.example.myapplication.components.SpeakerDialog
+import com.example.myapplication.R
+import com.example.myapplication.ui.components.AcDialog
+import com.example.myapplication.ui.components.AlarmCard
+import com.example.myapplication.ui.components.BlindsDialog
+import com.example.myapplication.ui.components.DeviceCard
+import com.example.myapplication.ui.components.RoutineCard
+import com.example.myapplication.ui.components.SpeakerDialog
 import com.example.myapplication.ui.theme.YellowR
-import kotlinx.coroutines.launch
 
 @Composable
 fun MyHomeDestination(snackbarHostState: SnackbarHostState) {
