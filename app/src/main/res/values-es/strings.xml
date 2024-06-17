@@ -41,5 +41,6 @@
 
     <string name="device_on">Dispositivo activado</string>
     <string name="volume_updated">Volumen actualizado</string>
+    <string name="open">Abrir</string>
 
 </resources>

@@ -1,6 +1,5 @@
 package com.example.myapplication.components
 
-import android.health.connect.datatypes.units.Temperature
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -129,7 +126,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             Text(text = "24",
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = AcDialogState.TEMPERATURE_DIALOG}
+            CustomButtonArrowMini { dialogState.value = AcDialogState.TEMPERATURE_DIALOG}
         }
         Row(
             modifier = Modifier.padding(top = 15.dp),
@@ -139,7 +136,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             Text(text = "cool",
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = AcDialogState.MODE_DIALOG}
+            CustomButtonArrowMini { dialogState.value = AcDialogState.MODE_DIALOG}
         }
         Row(
             modifier = Modifier.padding(top = 15.dp),
@@ -149,7 +146,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             Text(text = "auto",
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = AcDialogState.VERTICAL_SWING_DIALOG}
+            CustomButtonArrowMini { dialogState.value = AcDialogState.VERTICAL_SWING_DIALOG}
         }
         Row(
             modifier = Modifier.padding(top = 15.dp),
@@ -159,7 +156,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             Text(text = "auto",
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = AcDialogState.HORIZONTAL_SWING_DIALOG}
+            CustomButtonArrowMini { dialogState.value = AcDialogState.HORIZONTAL_SWING_DIALOG}
         }
         Row(
             modifier = Modifier.padding(top = 15.dp),
@@ -169,7 +166,7 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             Text(text = "auto",
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = AcDialogState.FAN_SPEED_DIALOG}
+            CustomButtonArrowMini { dialogState.value = AcDialogState.FAN_SPEED_DIALOG}
         }
 
     }
@@ -187,7 +184,7 @@ fun TemepratureDialog(dialogState:  MutableState<AcDialogState>){
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
+            CustomButtonArrowMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,
@@ -241,7 +238,7 @@ fun ModeDialog(dialogState:  MutableState<AcDialogState>) {
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
+            CustomButtonArrowMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,
@@ -304,7 +301,7 @@ fun VerticalSwingDialog(dialogState:  MutableState<AcDialogState>){
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
+            CustomButtonArrowMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,
@@ -329,7 +326,7 @@ fun HorizontalSwingDialog(dialogState:  MutableState<AcDialogState>){
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
+            CustomButtonArrowMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,
@@ -354,7 +351,7 @@ fun FanSpeedDialog(dialogState:  MutableState<AcDialogState>){
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
+            CustomButtonArrowMedium { dialogState.value = AcDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,

@@ -94,7 +94,7 @@ internal fun GenreDialog(dialogState: MutableState<SpeakerDialogState>, snackbar
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = SpeakerDialogState.MAIN_DIALOG }
+            CustomButtonArrowMedium { dialogState.value = SpeakerDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id =R.string.back),
                 textAlign = TextAlign.Left,
@@ -145,7 +145,7 @@ internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState> , snackb
                 .fillMaxWidth()
 
         ) {
-            CustomButtonIconMedium { dialogState.value = SpeakerDialogState.MAIN_DIALOG }
+            CustomButtonArrowMedium { dialogState.value = SpeakerDialogState.MAIN_DIALOG }
             Text(
                 text = stringResource(id = R.string.back),
                 textAlign = TextAlign.Left,
@@ -201,6 +201,7 @@ internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState> , snackb
 @Composable
 internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarHostState: SnackbarHostState = SnackbarHostState()) {
     val scope = rememberCoroutineScope()
+    var checked by rememberSaveable { mutableStateOf(true) }
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -225,7 +226,7 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
 
             Spacer(modifier = Modifier.weight(1f))
             val snackbarLabel= stringResource(R.string.device_on)
-            var checked by rememberSaveable { mutableStateOf(true) }
+
             Switch(
                 checked = checked,
                 onCheckedChange = {
@@ -255,18 +256,22 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
             CustomOutlinedButtonIcon(
                 onClick = { /*TODO*/ },
                 icon = ImageVector.vectorResource(R.drawable.ic_skip),
+                enabled = checked
             )
             CustomOutlinedButtonIcon(
                 onClick = { /*TODO*/ },
                 icon = ImageVector.vectorResource(R.drawable.ic_play),
+                enabled = checked
             )
             CustomOutlinedButtonIcon(
                 onClick = { /*TODO*/ },
                 icon = ImageVector.vectorResource(R.drawable.ic_pause),
+                enabled = checked
             )
             CustomOutlinedButtonIcon(
                 onClick = { /*TODO*/ },
                 icon = ImageVector.vectorResource(R.drawable.ic_skip2),
+                enabled = checked
             )
         }
         Row(
@@ -289,7 +294,7 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
             Text(text = stringResource(id = R.string.volume))
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = SpeakerDialogState.VOLUME_DIALOG }
+            CustomButtonArrowMini { dialogState.value = SpeakerDialogState.VOLUME_DIALOG }
         }
         Row(
             modifier = Modifier
@@ -298,7 +303,7 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
-            CustomButtonIconMini { dialogState.value = SpeakerDialogState.GENRE_DIALOG }
+            CustomButtonArrowMini { dialogState.value = SpeakerDialogState.GENRE_DIALOG }
         }
     }
 }

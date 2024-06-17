@@ -72,7 +72,7 @@ fun BlindsDialog(
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     CustomOutlinedButton(onClick = { /*TODO*/ },
-                    label = "Open",
+                    label = stringResource(id = R.string.open),
                     )
                 }
 
