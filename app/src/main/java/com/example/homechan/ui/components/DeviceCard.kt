@@ -61,10 +61,9 @@ fun DeviceCard(
 
 
     val lamp = device as Lamp
-
-
     uiLampState.currentDevice = lamp
     val status = uiLampState.currentDevice?.status.toString()
+
     MyApplicationTheme(dynamicColor = false) {
         Card(
             onClick = {
@@ -110,13 +109,12 @@ fun DeviceCard(
             }
 
             val snackbarLabel= stringResource(R.string.device_on)
-            var checked by rememberSaveable { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
-
+            val checked = uiLampState.currentDevice?.status != Status.OFF
             Switch(
                 checked = checked,
                 onCheckedChange = {
                     uiLampState.currentDevice = lamp
-                    checked = it
+                    //checked = it
                     if (checked) {
                     scope.launch {
                         snackbarHostState.showSnackbar( snackbarLabel, withDismissAction = true)
