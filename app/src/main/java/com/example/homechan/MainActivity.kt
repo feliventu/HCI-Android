@@ -332,7 +332,7 @@ fun MyNavigationScaffold() {
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 when (currentDestination) {
-                    MyAppDestinations.HOME -> MyHomeDestination(snackbarHostState)
+                    MyAppDestinations.HOME -> MyHomeDestination(snackbarHostState = snackbarHostState)
                     MyAppDestinations.DEVICES -> MyDeviceDestination();
                     MyAppDestinations.RUTINAS -> MyRoutineDestination();
                     MyAppDestinations.NEW_HOME -> NewHomeDestination();
