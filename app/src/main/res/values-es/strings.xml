@@ -42,5 +42,10 @@
     <string name="device_on">Dispositivo activado</string>
     <string name="volume_updated">Volumen actualizado</string>
     <string name="open">Abrir</string>
+    <string name="about">Acerca de</string>
+    <string name="team_name">Grupo 12</string>
+    <string name="date">Fecha</string>
+    <string name="developed">Desarrollado por</string>
+    <string name="materia">Materia</string>
 
 </resources>

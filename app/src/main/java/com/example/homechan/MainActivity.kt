@@ -53,23 +53,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.homechan.ui.destinations.AboutDestination
 import com.example.homechan.ui.destinations.MyDeviceDestination
 import com.example.homechan.ui.destinations.MyHomeDestination
 import com.example.homechan.ui.destinations.MyRoutineDestination
 import com.example.homechan.ui.destinations.NewHomeDestination
 import com.example.homechan.ui.theme.Green01
 import com.example.homechan.ui.theme.MyApplicationTheme
+import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +110,8 @@ enum class MyAppDestinations(
         R.drawable.ic_routines_fill,
         R.string.nav_routines
     ),
-    NEW_HOME(R.string.new_home, R.drawable.ic_home, R.drawable.ic_home_fill, R.string.new_home)
+    NEW_HOME(R.string.new_home, R.drawable.ic_home, R.drawable.ic_home_fill, R.string.new_home),
+    ABOUT(R.string.about, R.drawable.ic_more, R.drawable.ic_more, R.string.about)
 
 }
 
@@ -127,6 +134,7 @@ fun MyNavigationScaffold() {
 
     var currentDestination by rememberSaveable { mutableStateOf(MyAppDestinations.HOME) }
     var menuExpanded by rememberSaveable { mutableStateOf(false) }
+    var menuExpandedTop by rememberSaveable { mutableStateOf(false) }
 
     val rotation by animateFloatAsState(
         targetValue = if (menuExpanded) 360f else 0f, label = ""
@@ -223,6 +231,9 @@ fun MyNavigationScaffold() {
             },
             topBar = {
                 if (isCompact) {
+                    var iconButtonPosition by remember { mutableStateOf(Offset.Zero) }
+                    var xOffset by remember { mutableStateOf(0f) }
+                    var yOffset by remember { mutableStateOf(0f) }
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = MaterialTheme.colorScheme.inversePrimary,
@@ -233,7 +244,15 @@ fun MyNavigationScaffold() {
                             Text("Home Chan", fontWeight = FontWeight.Bold)
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = {  menuExpandedTop = !menuExpandedTop }
+                            , modifier = Modifier.onGloballyPositioned { coordinates ->
+                                    val position = coordinates.positionInRoot()
+                                    iconButtonPosition = Offset(position.x.roundToInt().toFloat(),
+                                        position.y.roundToInt().toFloat()
+                                    )
+                                    xOffset = position.x
+                                    yOffset = position.y
+                                }) {
                                 Icon(
                                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_more),
                                     contentDescription = "Mas",
@@ -244,9 +263,28 @@ fun MyNavigationScaffold() {
 
                         }
                     )
+
+                    DropdownMenu(
+                        modifier = Modifier.padding(start = 10.dp),
+                        expanded = menuExpandedTop,
+                        onDismissRequest = { menuExpandedTop = false },
+                        shape = RoundedCornerShape(16.dp),
+                        containerColor = MaterialTheme.colorScheme.inversePrimary,
+                        offset = DpOffset(xOffset.dp - 20.dp, yOffset.dp),
+                        ) {
+                        DropdownMenuItem(onClick = {
+                            currentDestination = MyAppDestinations.ABOUT
+                            menuExpandedTop = false
+                        },
+                            text = {
+                                Text(
+                                    stringResource(id = R.string.about),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            })
                 }
 
-            },
+            }},
             floatingActionButton = {
                 Box {
                     AnimatedVisibility(
@@ -336,6 +374,7 @@ fun MyNavigationScaffold() {
                     MyAppDestinations.DEVICES -> MyDeviceDestination();
                     MyAppDestinations.RUTINAS -> MyRoutineDestination();
                     MyAppDestinations.NEW_HOME -> NewHomeDestination();
+                    MyAppDestinations.ABOUT -> AboutDestination();
                 }
 
             }
