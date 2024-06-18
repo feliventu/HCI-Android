@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Home Chan</string>
     <string name="welcome">Let\'s start with your new intelligent home!</string>
     <string name="nav_home">Home</string>
     <string name="nav_devices">Devices</string>
