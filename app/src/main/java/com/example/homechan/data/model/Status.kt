@@ -4,13 +4,16 @@ import com.example.homechan.data.remote.model.RemoteStatus
 
 
 enum class Status {
-    ON, OFF;
+    ON, OFF, PLAYING, STOPPED, UNKNOWN;
 
     companion object {
         fun asRemoteModel(value: Status): String {
             return when (value) {
                 ON -> RemoteStatus.ON
-                else -> RemoteStatus.OFF
+                OFF -> RemoteStatus.OFF
+                PLAYING -> RemoteStatus.PLAYING
+                STOPPED -> RemoteStatus.STOPPED
+                else -> RemoteStatus.UNKNOWN
             }
         }
     }

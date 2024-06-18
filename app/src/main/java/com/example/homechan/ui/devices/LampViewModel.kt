@@ -1,10 +1,12 @@
 package com.example.homechan.ui.devices
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homechan.data.DataSourceException
 import com.example.homechan.data.model.Lamp
 import com.example.homechan.data.repository.DeviceRepository
 import com.example.homechan.data.model.Error
+import com.example.homechan.data.model.Speaker
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +27,14 @@ class LampViewModel(
     init {
         collectOnViewModelScope(
             repository.currentDevice
-        ) { state, response -> state.copy(currentDevice = response as Lamp?) }
+        ) { state, response ->
+            if (response is Lamp) {
+                state.copy(currentDevice = response)
+            } else {
+                // Handle the case where response is not a Speaker
+                state
+            }
+        }
     }
 
     fun turnOn() = runOnViewModelScope(

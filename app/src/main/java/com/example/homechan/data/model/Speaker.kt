@@ -25,5 +25,10 @@ class Speaker(
         return model
     }
 
+    companion object {
+        const val PLAY_ACTION = "play"
+        const val STOP_ACTION = "stop"
+    }
+
 
 }

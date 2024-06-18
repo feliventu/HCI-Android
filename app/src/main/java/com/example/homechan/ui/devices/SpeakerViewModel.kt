@@ -14,16 +14,32 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.example.homechan.data.model.Error
 
-class SpeakerViewModel(private val repository: DeviceRepository)
-    : ViewModel(){
+class SpeakerViewModel(private val repository: DeviceRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(SpeakerUIState())
     val uiState = _uiState.asStateFlow()
 
     init {
         collectOnViewModelScope(
             repository.currentDevice
-        ) { state, response -> state.copy(currentDevice = response as Speaker?) }
+        ) { state, response ->
+            if (response is Speaker) {
+                state.copy(currentDevice = response)
+            } else {
+                // Handle the case where response is not a Speaker
+                state
+            }
+        }
     }
+
+    fun turnOn() = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PLAY_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun turnOff() = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.STOP_ACTION) },
+        { state, _ -> state }
+    )
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,

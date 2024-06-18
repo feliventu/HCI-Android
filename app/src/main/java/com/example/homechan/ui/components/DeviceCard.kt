@@ -38,9 +38,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.homechan.R
 import com.example.homechan.data.model.Device
+import com.example.homechan.data.model.DeviceType
 import com.example.homechan.data.model.Lamp
+import com.example.homechan.data.model.Speaker
 import com.example.homechan.data.model.Status
 import com.example.homechan.ui.devices.LampViewModel
+import com.example.homechan.ui.devices.SpeakerViewModel
 import com.example.homechan.ui.getViewModelFactory
 import com.example.homechan.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
@@ -48,23 +51,45 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DeviceCard(
-    device : Device,
+    device: Device,
     name: String = "Device",
     icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices),
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
-) {
+
+
+    ) {
+    val lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
+    val speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory())
+
     val scope = rememberCoroutineScope()
     val adaptiveInfo = currentWindowAdaptiveInfo()
-    val isCompact = adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+    val isCompact =
+        adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
     val uiLampState by lampViewModel.uiState.collectAsState()
+    val uiSpeakerState by speakerViewModel.uiState.collectAsState()
 
 
-    val lamp = device as Lamp
+    var status: String = ""
+
+    var deviceAux: Device
+
+    if (device.type == DeviceType.LAMP) {
+
+        deviceAux = device as Lamp
+        uiLampState.currentDevice = deviceAux
+        status = uiLampState.currentDevice?.status.toString()
+    }
+
+    if (device.type == DeviceType.SPEAKER) {
+
+        deviceAux = device as Speaker
+        uiSpeakerState.currentDevice = deviceAux
+        status = uiSpeakerState.currentDevice?.status.toString()
+    }
 
 
-    uiLampState.currentDevice = lamp
-    val status = uiLampState.currentDevice?.status.toString()
+
+
     MyApplicationTheme(dynamicColor = false) {
         Card(
             onClick = {
@@ -74,7 +99,7 @@ fun DeviceCard(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary
             ),
-            modifier = if(isCompact){
+            modifier = if (isCompact) {
                 Modifier
                     .fillMaxWidth() // Fill the maximum width available
                     .height(100.dp)
@@ -109,23 +134,42 @@ fun DeviceCard(
                 )
             }
 
-            val snackbarLabel= stringResource(R.string.device_on)
+            val snackbarLabel = stringResource(R.string.device_on)
             var checked by rememberSaveable { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
 
             Switch(
                 checked = checked,
                 onCheckedChange = {
-                    uiLampState.currentDevice = lamp
-                    checked = it
-                    if (checked) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar( snackbarLabel, withDismissAction = true)
-                    }}
-                    if (checked) {
-                        lampViewModel.turnOn()
-                    } else {
-                        lampViewModel.turnOff()
+                    if (device.type == DeviceType.LAMP) {
+
+                        uiLampState.currentDevice = device as Lamp
+                        checked = it
+                        if (it) {
+                            lampViewModel.turnOn()
+                        } else {
+                            lampViewModel.turnOff()
+                        }
                     }
+                    if (device.type == DeviceType.SPEAKER) {
+                        uiSpeakerState.currentDevice = device as Speaker
+                        checked = it
+
+                        if (it) {
+                            speakerViewModel.turnOn()
+                        } else {
+                            speakerViewModel.turnOff()
+                        }
+                    }
+                    if (checked) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }
+                    }
+
+
                 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
@@ -138,7 +182,6 @@ fun DeviceCard(
                     .align(Alignment.End)
                     .padding(bottom = 30.dp, end = 20.dp)
             )
-
 
 
         }
