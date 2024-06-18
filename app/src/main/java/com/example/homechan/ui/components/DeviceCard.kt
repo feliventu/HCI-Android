@@ -16,8 +16,10 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -32,23 +34,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.homechan.R
+import com.example.homechan.data.model.Device
+import com.example.homechan.data.model.Lamp
+import com.example.homechan.data.model.Status
+import com.example.homechan.ui.devices.LampViewModel
+import com.example.homechan.ui.getViewModelFactory
 import com.example.homechan.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
-@Preview
+
 @Composable
 fun DeviceCard(
-    id: String = null.toString(),
-    name: String = "Device", status: String = "Status",
+    device : Device,
+    name: String = "Device",
     icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices),
-    snackbarHostState: SnackbarHostState = SnackbarHostState()
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
 ) {
     val scope = rememberCoroutineScope()
     val adaptiveInfo = currentWindowAdaptiveInfo()
     val isCompact = adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+    val uiLampState by lampViewModel.uiState.collectAsState()
 
+
+    val lamp = device as Lamp
+
+
+    uiLampState.currentDevice = lamp
+    val status = uiLampState.currentDevice?.status.toString()
     MyApplicationTheme(dynamicColor = false) {
         Card(
             onClick = {
@@ -94,15 +110,22 @@ fun DeviceCard(
             }
 
             val snackbarLabel= stringResource(R.string.device_on)
-            var checked by rememberSaveable { mutableStateOf(true) }
+            var checked by rememberSaveable { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
+
             Switch(
                 checked = checked,
                 onCheckedChange = {
+                    uiLampState.currentDevice = lamp
                     checked = it
                     if (checked) {
                     scope.launch {
                         snackbarHostState.showSnackbar( snackbarLabel, withDismissAction = true)
                     }}
+                    if (checked) {
+                        lampViewModel.turnOn()
+                    } else {
+                        lampViewModel.turnOff()
+                    }
                 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
@@ -115,6 +138,7 @@ fun DeviceCard(
                     .align(Alignment.End)
                     .padding(bottom = 30.dp, end = 20.dp)
             )
+
 
 
         }

@@ -40,9 +40,9 @@ import com.example.homechan.ui.theme.YellowR
 
 @Composable
 fun MyHomeDestination(snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },  viewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
-                      lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())) {
+                      ) {
     val uiState by viewModel.uiState.collectAsState()
-    val uiLampState by lampViewModel.uiState.collectAsState()
+
 
     val scope = rememberCoroutineScope()
     Column(
@@ -63,9 +63,6 @@ fun MyHomeDestination(snackbarHostState: SnackbarHostState = remember { Snackbar
         )
         AlarmCard()
 
-
-
-
         Text(
             text = stringResource(id = R.string.recent_routines),
             fontWeight = FontWeight.SemiBold,
@@ -84,16 +81,11 @@ fun MyHomeDestination(snackbarHostState: SnackbarHostState = remember { Snackbar
             fontSize = 18.sp
         )
 
-
-
         for (device in uiState.devices) {
-            DeviceCard(name = device.name, snackbarHostState = snackbarHostState)
+            DeviceCard( device = device, name = device.name, snackbarHostState = snackbarHostState)
         }
 
-
-
-
-        DeviceCard( snackbarHostState = snackbarHostState)
+//        DeviceCard( snackbarHostState = snackbarHostState)
 
         
     }
