@@ -186,7 +186,7 @@ fun DeviceCard(
             }// Keep the height as 100.dp
             else {
                 Modifier
-                    .width(400.dp) // Fill the maximum width available
+                    .fillMaxWidth() // Fill the maximum width available
                     .height(100.dp)
             }
         ) {
