@@ -31,11 +31,12 @@
     <string name="verticalswing">Vertical Swing</string>
     <string name="horizontalswing">Horizontal Swing</string>
     <string name="fanspeed">Fan speed</string>
-    <string name="actualstatus">Actual status</string>
+    <string name="actualstatus">Actual aperture</string>
     <string name="maxaperture">Max aperture</string>
     <string name="device_on">Activating device</string>
     <string name="volume_updated">Updating volume</string>
     <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="about">About</string>
     <string name="team_name">Team 12</string>
     <string name="date">Date</string>
@@ -48,5 +49,7 @@
     <string name="dance">Dance</string>
     <string name="latina">Latina</string>
     <string name="genre_updated">Updating genre</string>
+    <string name="closing">Closing</string>
+    <string name="opening">Opening</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.example.homechan.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,13 +29,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.homechan.R
+import com.example.homechan.data.model.Blinds
+import com.example.homechan.data.model.Device
+import com.example.homechan.ui.devices.BlindsViewModel
+import com.example.homechan.ui.getViewModelFactory
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun BlindsDialog(
     onDismissRequest: () -> Unit,
-    id: String = null.toString(),
+    device: Device,
     ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
@@ -48,6 +57,26 @@ fun BlindsDialog(
             Column(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
+                val blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory())
+                val uiBlindsState by blindsViewModel.uiState.collectAsState()
+                val blinds = device as Blinds
+                uiBlindsState.currentDevice = blinds
+                var label = ""
+                var disableButton = false
+                if(uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                    label = stringResource(id = R.string.open)
+                else if(uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                    label = stringResource(id = R.string.close)
+                else {
+                    if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
+                        label = stringResource(id = R.string.opening)
+                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
+                        label = stringResource(id = R.string.closing)
+
+                        disableButton = true
+                }
+
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -61,14 +90,20 @@ fun BlindsDialog(
                         modifier = Modifier.size(30.dp)
                     );
                     Text(
-                        text = "Blind",
+                        text = uiBlindsState.currentDevice!!.name,
                         textAlign = TextAlign.Left,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(start = 8.dp)
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    CustomOutlinedButton(onClick = { /*TODO*/ },
-                    label = stringResource(id = R.string.open),
+                    CustomOutlinedButton(onClick = {
+                        if(uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                            blindsViewModel.close()
+                        else if(uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                            blindsViewModel.open()
+                    },
+                    label = label,
+                    enabled = label == stringResource(id = R.string.open) || label == stringResource(id = R.string.close)
                     )
                 }
 
@@ -81,15 +116,16 @@ fun BlindsDialog(
                 ) {
                     Box(modifier = Modifier.padding(start = 50.dp)) {
                         CustomOutlinedButtonIcon(
-                            onClick = { /*TODO*/ },
+                            onClick = { blindsViewModel.setLevel( uiBlindsState.currentDevice!!.level + 10) },
                             icon = ImageVector.vectorResource(R.drawable.ic_up_arrow),
-
+                            enabled = uiBlindsState.currentDevice!!.level < 100 && !disableButton
                             )
                     }
                     Box(modifier = Modifier.padding(end = 50.dp)) {
                         CustomOutlinedButtonIcon(
-                            onClick = { /*TODO*/ },
+                            onClick = { blindsViewModel.setLevel(uiBlindsState.currentDevice!!.level - 10) },
                             icon = ImageVector.vectorResource(R.drawable.ic_down_arrow),
+                            enabled = uiBlindsState.currentDevice!!.level > 0 && !disableButton
                         )
                     }
                 }
@@ -100,7 +136,7 @@ fun BlindsDialog(
                 ){
                 Text(text = stringResource(id = R.string.actualstatus))
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = "50",
+                Text(text = uiBlindsState.currentDevice!!.currentLevel.toString(),
                     modifier = Modifier.padding(end = 10.dp),
                     color = MaterialTheme.colorScheme.tertiary)
             }
@@ -109,7 +145,7 @@ fun BlindsDialog(
                 ){
                     Text(text = stringResource(id = R.string.maxaperture))
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = "50",
+                    Text(text = uiBlindsState.currentDevice!!.level.toString(),
                         modifier = Modifier.padding(end = 10.dp),
                         color = MaterialTheme.colorScheme.tertiary)
                 }

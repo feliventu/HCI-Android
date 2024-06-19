@@ -9,6 +9,10 @@ object RemoteStatus {
     const val STOPPED = "stopped"
     const val PLAYING = "playing"
     const val PAUSED = "paused"
+    const val OPENING = "opening"
+    const val CLOSING = "closing"
+    const val CLOSED = "closed"
+    const val OPENED = "opened"
     const val UNKNOWN = "unknown"
 
 
@@ -19,6 +23,10 @@ object RemoteStatus {
             STOPPED -> Status.STOPPED
             PLAYING -> Status.PLAYING
             PAUSED -> Status.PAUSED
+            OPENING -> Status.OPENING
+            CLOSING -> Status.CLOSING
+            CLOSED -> Status.CLOSED
+            OPENED -> Status.OPENED
             else -> Status.UNKNOWN
         }
     }

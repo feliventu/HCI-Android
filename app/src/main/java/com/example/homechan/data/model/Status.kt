@@ -14,6 +14,10 @@ enum class Status {
                 PLAYING -> RemoteStatus.PLAYING
                 STOPPED -> RemoteStatus.STOPPED
                 PAUSED -> RemoteStatus.PAUSED
+                OPENING -> RemoteStatus.OPENING
+                CLOSING -> RemoteStatus.CLOSING
+                CLOSED -> RemoteStatus.CLOSED
+                OPENED -> RemoteStatus.OPENED
                 else -> RemoteStatus.UNKNOWN
             }
         }

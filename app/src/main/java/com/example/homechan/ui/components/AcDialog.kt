@@ -155,7 +155,7 @@ internal fun MainDialog(
         ){
             Text(text = stringResource(id = R.string.temperature))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = ac.temperature.toString(),
+            Text(text =  uiAcState.currentDevice!!.temperature.toString(),
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
             CustomButtonArrowMini { dialogState.value = AcDialogState.TEMPERATURE_DIALOG}
@@ -165,7 +165,7 @@ internal fun MainDialog(
         ){
             Text(text = stringResource(id = R.string.mode))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = ac.mode,
+            Text(text = uiAcState.currentDevice!!.mode,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
             CustomButtonArrowMini { dialogState.value = AcDialogState.MODE_DIALOG}
@@ -175,7 +175,7 @@ internal fun MainDialog(
         ){
             Text(text = stringResource(id = R.string.verticalswing))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = ac.verticalSwing,
+            Text(text = uiAcState.currentDevice!!.verticalSwing,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
             CustomButtonArrowMini { dialogState.value = AcDialogState.VERTICAL_SWING_DIALOG}
@@ -185,7 +185,7 @@ internal fun MainDialog(
         ){
             Text(text = stringResource(id = R.string.horizontalswing))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = ac.horizontalSwing,
+            Text(text = uiAcState.currentDevice!!.horizontalSwing,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
             CustomButtonArrowMini { dialogState.value = AcDialogState.HORIZONTAL_SWING_DIALOG}
@@ -195,7 +195,7 @@ internal fun MainDialog(
         ){
             Text(text = stringResource(id = R.string.fanspeed))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = ac.fanSpeed,
+            Text(text = uiAcState.currentDevice!!.fanSpeed,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary)
             CustomButtonArrowMini { dialogState.value = AcDialogState.FAN_SPEED_DIALOG}
@@ -242,16 +242,16 @@ fun TemepratureDialog(
         ) {
             Box(modifier = Modifier.padding(start = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { acViewModel.setTemperature(ac.temperature + 1 ) },
+                    onClick = { acViewModel.setTemperature(uiAcState.currentDevice!!.temperature+ 1 ) },
                     icon = ImageVector.vectorResource(R.drawable.ic_up_arrow),
-                    enabled = ac.temperature < 34
+                    enabled = uiAcState.currentDevice!!.temperature < 34
                     )
             }
             Box(modifier = Modifier.padding(end = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { acViewModel.setTemperature(ac.temperature - 1) },
+                    onClick = { acViewModel.setTemperature(uiAcState.currentDevice!!.temperature - 1) },
                     icon = ImageVector.vectorResource(R.drawable.ic_down_arrow),
-                    enabled = ac.temperature >= 17
+                    enabled = uiAcState.currentDevice!!.temperature >= 17
                 )
             }
         }
@@ -262,7 +262,7 @@ fun TemepratureDialog(
             ) {
             Text(text = stringResource(id = R.string.temperature))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = ac.temperature.toString(), modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
+            Text(text = uiAcState.currentDevice!!.temperature.toString(), modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
         }
     }
 }
@@ -310,21 +310,21 @@ fun ModeDialog(
                     onClick = { acViewModel.setMode("cool")
                     },
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_cool),
-                    enabled = ac.mode != "cool"
+                    enabled = uiAcState.currentDevice!!.mode != "cool"
                     )
             }
             Box() {
                 CustomOutlinedButtonIcon(
                     onClick = { acViewModel.setMode("heat") },
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_heat),
-                    enabled = ac.mode != "heat"
+                    enabled = uiAcState.currentDevice!!.mode != "heat"
                 )
             }
             Box(modifier = Modifier.padding(end = 25.dp)) {
                 CustomOutlinedButtonIcon(
                     onClick = { acViewModel.setMode("fan") },
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_fan),
-                    enabled = ac.mode != "fan"
+                    enabled = uiAcState.currentDevice!!.mode != "fan"
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.example.homechan.ui.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,12 +42,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.homechan.R
 import com.example.homechan.data.model.Ac
+import com.example.homechan.data.model.Blinds
 import com.example.homechan.data.model.Device
 import com.example.homechan.data.model.DeviceType
 import com.example.homechan.data.model.Lamp
 import com.example.homechan.data.model.Speaker
 import com.example.homechan.data.model.Status
 import com.example.homechan.ui.devices.AcViewModel
+import com.example.homechan.ui.devices.BlindsViewModel
 import com.example.homechan.ui.devices.LampViewModel
 import com.example.homechan.ui.devices.SpeakerViewModel
 import com.example.homechan.ui.getViewModelFactory
@@ -65,6 +68,7 @@ fun DeviceCard(
     val lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
     val speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory())
     val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+    val blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory())
 
 
     val scope = rememberCoroutineScope()
@@ -76,6 +80,7 @@ fun DeviceCard(
     val uiLampState by lampViewModel.uiState.collectAsState()
     val uiSpeakerState by speakerViewModel.uiState.collectAsState()
     val uiAcState by acViewModel.uiState.collectAsState()
+    val uiBlindsState by blindsViewModel.uiState.collectAsState()
 
     var showDialog = rememberSaveable {
         mutableStateOf(false)
@@ -103,6 +108,21 @@ fun DeviceCard(
                 onDismissRequest = { showDialog.value = false },
                 device = deviceAux,
             )
+        }
+    }
+
+    if(device.type == DeviceType.BLINDS){
+        icon = ImageVector.vectorResource(id = R.drawable.ic_lamp)
+        deviceAux = device as Blinds
+        uiBlindsState.currentDevice = deviceAux
+        status = uiBlindsState.currentDevice?.status.toString()
+
+        if(showDialog.value){
+            BlindsDialog(
+                onDismissRequest = { showDialog.value = false },
+                device = deviceAux,
+            )
+
         }
     }
 
@@ -218,69 +238,100 @@ fun DeviceCard(
                 }
             }
 
+            if(device.type != DeviceType.BLINDS) {
+                Switch(
+                    checked = switchState.value,
+                    onCheckedChange = { isChecked ->
+                        switchState.value = isChecked
+                        if (isChecked) {
+                            if (device.type == DeviceType.SPEAKER) {
+                                uiSpeakerState.currentDevice = device as Speaker
+                                speakerViewModel.play()
+                            }
 
-            Switch(
-                checked = switchState.value,
-                onCheckedChange = { isChecked ->
-                    switchState.value = isChecked
-                    if (isChecked) {
-                        if (device.type == DeviceType.SPEAKER) {
-                            uiSpeakerState.currentDevice = device as Speaker
-                            speakerViewModel.play()
+                            if (device.type == DeviceType.LAMP) {
+                                uiLampState.currentDevice = device as Lamp
+                                lampViewModel.turnOn()
+                            }
+
+                            if (device.type == DeviceType.AC) {
+                                uiAcState.currentDevice = device as Ac
+                                acViewModel.turnOn()
+                            }
+
+                        } else {
+
+                            if (device.type == DeviceType.SPEAKER) {
+                                uiSpeakerState.currentDevice = device as Speaker
+                                speakerViewModel.stop()
+                            }
+
+                            if (device.type == DeviceType.LAMP) {
+                                uiLampState.currentDevice = device as Lamp
+                                lampViewModel.turnOff()
+                            }
+
+                            if (device.type == DeviceType.AC) {
+                                uiAcState.currentDevice = device as Ac
+                                acViewModel.turnOff()
+                            }
+
                         }
 
-                        if (device.type == DeviceType.LAMP) {
-                            uiLampState.currentDevice = device as Lamp
-                            lampViewModel.turnOn()
+                        if (switchState.value) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    snackbarLabel,
+                                    withDismissAction = true
+                                )
+                            }
                         }
 
-                        if(device.type == DeviceType.AC){
-                            uiAcState.currentDevice = device as Ac
-                            acViewModel.turnOn()
-                        }
 
-                    } else {
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedThumbColor = Color.White,
+                        uncheckedTrackColor = Color.LightGray,
+                        uncheckedBorderColor = Color.LightGray
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(bottom = 30.dp, end = 20.dp)
+                )
+            }
+            else {
+                deviceAux = device as Blinds
+                uiBlindsState.currentDevice = deviceAux as Blinds
+                status = uiAcState.currentDevice?.status.toString()
 
-                        if (device.type == DeviceType.SPEAKER) {
-                            uiSpeakerState.currentDevice = device as Speaker
-                            speakerViewModel.stop()
-                        }
+                var label = ""
+                var disableButton = false
+                if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                    label = stringResource(id = R.string.open)
+                else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                    label = stringResource(id = R.string.close)
+                else {
+                    if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
+                        label = stringResource(id = R.string.opening)
+                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
+                        label = stringResource(id = R.string.closing)
 
-                        if (device.type == DeviceType.LAMP) {
-                            uiLampState.currentDevice = device as Lamp
-                            lampViewModel.turnOff()
-                        }
+                    disableButton = true
+                }
 
-                        if(device.type == DeviceType.AC){
-                            uiAcState.currentDevice = device as Ac
-                            acViewModel.turnOff()
-                        }
-
-                    }
-
-                    if (switchState.value) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                snackbarLabel,
-                                withDismissAction = true
-                            )
-                        }
-                    }
-
-
-                },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
-                    checkedTrackColor = MaterialTheme.colorScheme.secondary,
-                    uncheckedThumbColor = Color.White,
-                    uncheckedTrackColor = Color.LightGray,
-                    uncheckedBorderColor = Color.LightGray
-                ),
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(bottom = 30.dp, end = 20.dp)
-            )
-
+                Box(
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    CustomOutlinedButton(label = label, enabled = !disableButton, onClick = {
+                        if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                            blindsViewModel.close()
+                        else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                            blindsViewModel.open()
+                    })
+                }
+            }
 
         }
 

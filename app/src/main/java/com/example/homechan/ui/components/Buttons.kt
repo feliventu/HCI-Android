@@ -99,12 +99,12 @@ fun CustomTextField(
 
 
 @Composable
-fun CustomOutlinedButton(onClick: () -> Unit, label: String = "Button") {
+fun CustomOutlinedButton(onClick: () -> Unit, label: String = "Button", enabled: Boolean = true) {
     OutlinedButton(
         onClick = { onClick() },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(3.dp, MaterialTheme.colorScheme.surface),
-
+        enabled = enabled
         ) {
         Text(
             label.uppercase(Locale.getDefault()),
