@@ -61,6 +61,11 @@ class SpeakerViewModel(private val repository: DeviceRepository) : ViewModel() {
         { state, _ -> state }
     )
 
+    fun setGenre(genre: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.SET_GENRE_ACTION, arrayOf(genre)) },
+        { state, _ -> state }
+    )
+
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
         updateState: (SpeakerUiState, T) -> SpeakerUiState

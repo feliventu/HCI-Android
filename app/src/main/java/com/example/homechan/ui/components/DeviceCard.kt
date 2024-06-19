@@ -93,7 +93,7 @@ fun DeviceCard(
     }
 
     if(device.type == DeviceType.AC){
-        icon = ImageVector.vectorResource(R.drawable.ic_speaker)
+        icon = ImageVector.vectorResource(R.drawable.ic_ac)
         deviceAux = device as Ac
         uiAcState.currentDevice = deviceAux
         status = uiAcState.currentDevice?.status.toString()

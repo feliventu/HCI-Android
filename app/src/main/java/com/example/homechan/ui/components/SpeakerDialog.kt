@@ -144,24 +144,44 @@ internal fun GenreDialog(
         ) {
 
             var supportedGenres = arrayOf(
-                R.string.pop,
-                R.string.rock,
-                R.string.classical,
-                R.string.country,
-                R.string.dance,
-                R.string.latina
+                stringResource(id = R.string.pop),
+                stringResource(id = R.string.rock),
+               stringResource(id = R.string.classical) ,
+                stringResource(id = R.string.country),
+                stringResource(id = R.string.dance) ,
+                stringResource(id = R.string.latina),
             )
 
-            var supportedGenresAux = arrayOf(
-                "pop",
-                "rock",
-                "classical",
-                "country",
-                "dance",
-                "latina"
-            )
 
-            CustomDropdown(supportedGenresAux)
+            val snackbarLabel = stringResource(R.string.genre_updated)
+            var selectedGender = when (uiSpeakerState.currentDevice!!.genre.toString()) {
+                "pop" -> stringResource(id = R.string.pop)
+                "rock" -> stringResource(id = R.string.rock)
+                "classical" -> stringResource(id = R.string.classical)
+                "country" -> stringResource(id = R.string.country)
+                "dance" -> stringResource(id = R.string.dance)
+                "latina" -> stringResource(id = R.string.latina)
+                else -> stringResource(id = R.string.no_data)
+
+            }
+
+            CustomDropdown(options = supportedGenres,
+                selectedOption = selectedGender) { selectedOption ->
+                var result = ""
+                when (selectedOption) {
+                    supportedGenres[0] -> result = "pop"
+                    supportedGenres[1] -> result = "rock"
+                    supportedGenres[2] -> result = "classical"
+                    supportedGenres[3] -> result = "country"
+                    supportedGenres[4] -> result = "dance"
+                    supportedGenres[5] -> result = "latina"
+                }
+                speakerViewModel.setGenre(result)
+
+                scope.launch {
+                    snackbarHostState.showSnackbar(snackbarLabel, withDismissAction = true)
+                }
+            }
 
 
         }

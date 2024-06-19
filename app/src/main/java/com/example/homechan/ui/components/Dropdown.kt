@@ -34,11 +34,14 @@ import com.example.homechan.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomDropdown(options: Array<String> = arrayOf(stringResource(id = R.string.no_data))) {
+fun CustomDropdown(options: Array<String> = arrayOf(stringResource(id = R.string.no_data)),
+                   selectedOption: String = options[0],
+                   onSelectionChange: (String) -> Unit,
+                   ) {
     val context = LocalContext.current
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(options[0]) }
+    var selectedText by remember { mutableStateOf(selectedOption) }
 
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -86,8 +89,10 @@ fun CustomDropdown(options: Array<String> = arrayOf(stringResource(id = R.string
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
+
                             selectedText = item
                             expanded = false
+                            onSelectionChange(item)
                             Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                         },
                         colors = MenuItemColors(

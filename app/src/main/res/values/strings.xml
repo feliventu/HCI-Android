@@ -33,8 +33,8 @@
     <string name="fanspeed">Fan speed</string>
     <string name="actualstatus">Actual status</string>
     <string name="maxaperture">Max aperture</string>
-    <string name="device_on">Device activated</string>
-    <string name="volume_updated">Volume updated</string>
+    <string name="device_on">Activating device</string>
+    <string name="volume_updated">Updating volume</string>
     <string name="open">Open</string>
     <string name="about">About</string>
     <string name="team_name">Team 12</string>
@@ -47,5 +47,6 @@
     <string name="country">Country</string>
     <string name="dance">Dance</string>
     <string name="latina">Latina</string>
+    <string name="genre_updated">Updating genre</string>
 
 </resources>
