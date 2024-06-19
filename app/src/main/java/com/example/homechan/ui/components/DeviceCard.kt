@@ -125,6 +125,7 @@ fun DeviceCard(
     }
 
 
+
     MyApplicationTheme(dynamicColor = false) {
         Card(
             onClick = {
