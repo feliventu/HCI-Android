@@ -112,7 +112,18 @@ fun DeviceCard(
         icon = ImageVector.vectorResource(R.drawable.ic_speaker)
         deviceAux = device as Speaker
         uiSpeakerState.currentDevice = deviceAux
-        status = uiSpeakerState.currentDevice?.status.toString()
+        var genre = when(uiSpeakerState.currentDevice!!.genre) {
+            "rock" -> stringResource(id = R.string.rock)
+            "pop" -> stringResource(id = R.string.pop)
+            "country" -> stringResource(id = R.string.country)
+            "classical" -> stringResource(id = R.string.classical)
+            "dance" -> stringResource(id = R.string.dance)
+            "latina" -> stringResource(id = R.string.latina)
+            else -> stringResource(id = R.string.no_data)
+
+        }
+
+        status =  stringResource(id = R.string.genre) + ": " + genre
 
         if (showDialog.value) {
             SpeakerDialog(

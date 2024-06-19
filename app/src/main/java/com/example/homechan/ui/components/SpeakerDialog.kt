@@ -146,9 +146,9 @@ internal fun GenreDialog(
             var supportedGenres = arrayOf(
                 stringResource(id = R.string.pop),
                 stringResource(id = R.string.rock),
-               stringResource(id = R.string.classical) ,
+                stringResource(id = R.string.classical),
                 stringResource(id = R.string.country),
-                stringResource(id = R.string.dance) ,
+                stringResource(id = R.string.dance),
                 stringResource(id = R.string.latina),
             )
 
@@ -165,8 +165,10 @@ internal fun GenreDialog(
 
             }
 
-            CustomDropdown(options = supportedGenres,
-                selectedOption = selectedGender) { selectedOption ->
+            CustomDropdown(
+                options = supportedGenres,
+                selectedOption = selectedGender
+            ) { selectedOption ->
                 var result = ""
                 when (selectedOption) {
                     supportedGenres[0] -> result = "pop"
@@ -193,7 +195,7 @@ internal fun GenreDialog(
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = speaker.genre,
+                text = uiSpeakerState.currentDevice!!.genre,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -337,12 +339,12 @@ internal fun MainDialog(
                 onCheckedChange = { isChecked ->
                     switchState = isChecked
                     if (isChecked) {
-                            uiSpeakerState.currentDevice = device as Speaker
-                            speakerViewModel.play()
+                        uiSpeakerState.currentDevice = device as Speaker
+                        speakerViewModel.play()
 
                     } else {
-                            uiSpeakerState.currentDevice = device as Speaker
-                            speakerViewModel.stop()
+                        uiSpeakerState.currentDevice = device as Speaker
+                        speakerViewModel.stop()
 
                     }
 
@@ -363,7 +365,8 @@ internal fun MainDialog(
                     uncheckedThumbColor = Color.White,
                     uncheckedTrackColor = Color.LightGray,
                     uncheckedBorderColor = Color.LightGray
-                ),)
+                ),
+            )
         }
         Row(
             modifier = Modifier
@@ -372,39 +375,29 @@ internal fun MainDialog(
             horizontalArrangement = Arrangement.SpaceEvenly, // Space items evenly
             verticalAlignment = Alignment.CenterVertically
         ) {
+            uiSpeakerState.currentDevice = speaker
             CustomOutlinedButtonIcon(
                 onClick = { speakerViewModel.previousSong() },
                 icon = ImageVector.vectorResource(R.drawable.ic_skip),
-                enabled = speaker.status != Status.STOPPED
+                enabled = uiSpeakerState.currentDevice?.status != Status.STOPPED
             )
             CustomOutlinedButtonIcon(
                 onClick = { speakerViewModel.play() },
                 icon = ImageVector.vectorResource(R.drawable.ic_play),
-                enabled = speaker.status != Status.STOPPED && speaker.status != Status.PLAYING
+                enabled = uiSpeakerState.currentDevice?.status != Status.STOPPED && speaker.status != Status.PLAYING
             )
             CustomOutlinedButtonIcon(
                 onClick = { speakerViewModel.pause() },
                 icon = ImageVector.vectorResource(R.drawable.ic_pause),
-                enabled = speaker.status != Status.STOPPED && speaker.status != Status.PAUSED
+                enabled = uiSpeakerState.currentDevice?.status != Status.STOPPED && speaker.status != Status.PAUSED
             )
             CustomOutlinedButtonIcon(
                 onClick = { speakerViewModel.nextSong() },
                 icon = ImageVector.vectorResource(R.drawable.ic_skip2),
-                enabled = speaker.status != Status.STOPPED
+                enabled = uiSpeakerState.currentDevice?.status != Status.STOPPED
             )
         }
-        Row(
-            modifier = Modifier
-                .padding(top = 10.dp),
-        ) {
-            Text(text = stringResource(id = R.string.song))
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "Taylor swift",
-                modifier = Modifier.padding(end = 10.dp),
-                color = MaterialTheme.colorScheme.tertiary
-            )
-        }
+
         Row(
             modifier = Modifier
                 .padding(top = 15.dp),
@@ -426,7 +419,7 @@ internal fun MainDialog(
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = speaker.genre,
+                text = uiSpeakerState.currentDevice!!.genre,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
