@@ -312,45 +312,45 @@ internal fun MainDialog(
                 switchState = uiSpeakerState.currentDevice?.status != Status.STOPPED
             }
 
-//            Switch(
-//                checked = switchState,
-//                onCheckedChange = { isChecked ->
-//                    switchState = isChecked
-//                    if (isChecked) {
-//                        if (device.type == DeviceType.SPEAKER) {
-//                            uiSpeakerState.currentDevice = device as Speaker
-//                            speakerViewModel.play()
-//                        }
-//
-//
-//                    } else {
-//
-//                        if (device.type == DeviceType.SPEAKER) {
-//                            uiSpeakerState.currentDevice = device as Speaker
-//                            speakerViewModel.stop()
-//                        }
-//
-//
-//                    }
-//
-//                    if (switchState) {
-//                        scope.launch {
-//                            snackbarHostState.showSnackbar(
-//                                snackbarLabel,
-//                                withDismissAction = true
-//                            )
-//                        }
-//                    }
-//
-//
-//                },
-//                colors = SwitchDefaults.colors(
-//                    checkedThumbColor = Color.White,
-//                    checkedTrackColor = MaterialTheme.colorScheme.secondary,
-//                    uncheckedThumbColor = Color.White,
-//                    uncheckedTrackColor = Color.LightGray,
-//                    uncheckedBorderColor = Color.LightGray
-//                ),)
+            Switch(
+                checked = switchState,
+                onCheckedChange = { isChecked ->
+                    switchState = isChecked
+                    if (isChecked) {
+                        if (device.type == DeviceType.SPEAKER) {
+                            uiSpeakerState.currentDevice = device as Speaker
+                            speakerViewModel.play()
+                        }
+
+
+                    } else {
+
+                        if (device.type == DeviceType.SPEAKER) {
+                            uiSpeakerState.currentDevice = device as Speaker
+                            speakerViewModel.stop()
+                        }
+
+
+                    }
+
+                    if (switchState) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }
+                    }
+
+
+                },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = MaterialTheme.colorScheme.secondary,
+                    uncheckedThumbColor = Color.White,
+                    uncheckedTrackColor = Color.LightGray,
+                    uncheckedBorderColor = Color.LightGray
+                ),)
         }
         Row(
             modifier = Modifier

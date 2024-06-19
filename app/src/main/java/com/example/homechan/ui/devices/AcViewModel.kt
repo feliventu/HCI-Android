@@ -3,7 +3,8 @@ package com.example.homechan.ui.devices
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homechan.data.DataSourceException
-import com.example.homechan.data.model.Speaker
+import com.example.homechan.data.model.Ac
+import com.example.homechan.data.model.Error
 import com.example.homechan.data.repository.DeviceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,17 +13,16 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.example.homechan.data.model.Error
 
-class SpeakerViewModel(private val repository: DeviceRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow(SpeakerUiState())
+class AcViewModel(private val repository: DeviceRepository) : ViewModel() {
+    private val _uiState = MutableStateFlow(AcUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
         collectOnViewModelScope(
             repository.currentDevice
         ) { state, response ->
-            if (response is Speaker) {
+            if (response is Ac) {
                 state.copy(currentDevice = response)
             } else {
                 // Handle the case where response is not a Speaker
@@ -31,39 +31,21 @@ class SpeakerViewModel(private val repository: DeviceRepository) : ViewModel() {
         }
     }
 
-    fun play() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PLAY_ACTION) },
+    fun turnOn() = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.TURN_ON_ACTION) },
         { state, _ -> state }
     )
 
-    fun stop() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.STOP_ACTION) },
+    fun turnOff() = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.TURN_OFF_ACTION) },
         { state, _ -> state }
     )
 
-    fun pause() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PAUSE_ACTION) },
-        { state, _ -> state }
-    )
 
-    fun setVolume(volume: Int) = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.SET_VOLUME_ACTION, arrayOf(volume)) },
-        { state, _ -> state }
-    )
-
-    fun nextSong() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.NEXT_SONG_ACTION) },
-        { state, _ -> state }
-    )
-
-    fun previousSong() = runOnViewModelScope(
-        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PREVIOUS_SONG_ACTION) },
-        { state, _ -> state }
-    )
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
-        updateState: (SpeakerUiState, T) -> SpeakerUiState
+        updateState: (AcUiState, T) -> AcUiState
     ) = viewModelScope.launch {
         flow
             .distinctUntilChanged()
@@ -81,7 +63,7 @@ class SpeakerViewModel(private val repository: DeviceRepository) : ViewModel() {
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (SpeakerUiState, R) -> SpeakerUiState
+        updateState: (AcUiState, R) -> AcUiState
     ) = viewModelScope.launch {
         _uiState.update { it.copy(loading = true, error = null) }
         runCatching {
@@ -92,5 +74,6 @@ class SpeakerViewModel(private val repository: DeviceRepository) : ViewModel() {
             _uiState.update { it.copy(loading = false, error = handleError(e)) }
         }
     }
+
 
 }

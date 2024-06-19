@@ -6,8 +6,6 @@ import com.example.homechan.data.DataSourceException
 import com.example.homechan.data.model.Lamp
 import com.example.homechan.data.repository.DeviceRepository
 import com.example.homechan.data.model.Error
-import com.example.homechan.data.model.Speaker
-
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

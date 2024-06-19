@@ -40,11 +40,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.homechan.R
+import com.example.homechan.data.model.Ac
 import com.example.homechan.data.model.Device
 import com.example.homechan.data.model.DeviceType
 import com.example.homechan.data.model.Lamp
 import com.example.homechan.data.model.Speaker
 import com.example.homechan.data.model.Status
+import com.example.homechan.ui.devices.AcViewModel
 import com.example.homechan.ui.devices.LampViewModel
 import com.example.homechan.ui.devices.SpeakerViewModel
 import com.example.homechan.ui.getViewModelFactory
@@ -62,13 +64,18 @@ fun DeviceCard(
     ) {
     val lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
     val speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory())
+    val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+
 
     val scope = rememberCoroutineScope()
     val adaptiveInfo = currentWindowAdaptiveInfo()
     val isCompact =
         adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
+
+
     val uiLampState by lampViewModel.uiState.collectAsState()
     val uiSpeakerState by speakerViewModel.uiState.collectAsState()
+    val uiAcState by acViewModel.uiState.collectAsState()
 
     var showDialog = rememberSaveable {
         mutableStateOf(false)
@@ -84,6 +91,21 @@ fun DeviceCard(
         uiLampState.currentDevice = deviceAux
         status = uiLampState.currentDevice?.status.toString()
     }
+
+    if(device.type == DeviceType.AC){
+        icon = ImageVector.vectorResource(R.drawable.ic_speaker)
+        deviceAux = device as Ac
+        uiAcState.currentDevice = deviceAux
+        status = uiAcState.currentDevice?.status.toString()
+
+        if(showDialog.value){
+            AcDialog(
+                onDismissRequest = { showDialog.value = false },
+                device = deviceAux,
+            )
+        }
+    }
+
 
     if (device.type == DeviceType.SPEAKER) {
 
@@ -162,6 +184,17 @@ fun DeviceCard(
                 }
             }
 
+            if (device.type == DeviceType.AC) {
+                uiAcState.currentDevice = device as Ac
+                switchState =
+                    remember { mutableStateOf(uiAcState.currentDevice?.status != Status.OFF) }
+
+                LaunchedEffect(uiAcState.currentDevice?.status) {
+                    uiAcState.currentDevice = device as Ac
+                    switchState.value = uiAcState.currentDevice?.status != Status.OFF
+                }
+            }
+
             if (device.type == DeviceType.LAMP) {
                 uiLampState.currentDevice = device as Lamp
                 switchState =
@@ -189,6 +222,11 @@ fun DeviceCard(
                             lampViewModel.turnOn()
                         }
 
+                        if(device.type == DeviceType.AC){
+                            uiAcState.currentDevice = device as Ac
+                            acViewModel.turnOn()
+                        }
+
                     } else {
 
                         if (device.type == DeviceType.SPEAKER) {
@@ -199,6 +237,11 @@ fun DeviceCard(
                         if (device.type == DeviceType.LAMP) {
                             uiLampState.currentDevice = device as Lamp
                             lampViewModel.turnOff()
+                        }
+
+                        if(device.type == DeviceType.AC){
+                            uiAcState.currentDevice = device as Ac
+                            acViewModel.turnOff()
                         }
 
                     }

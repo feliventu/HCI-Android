@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.homechan.R
+import com.example.homechan.data.model.Device
 
 enum class AcDialogState {
     MAIN_DIALOG,
@@ -51,7 +52,7 @@ enum class AcDialogState {
 @Composable
 fun AcDialog(
     onDismissRequest: () -> Unit,
-    id: String = null.toString(),
+    device: Device,
 ){
     val dialogState = rememberSaveable { mutableStateOf(AcDialogState.MAIN_DIALOG) }
     Dialog(onDismissRequest = { onDismissRequest() }) {

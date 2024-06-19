@@ -9,6 +9,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.homechan.data.repository.DeviceRepository
+import com.example.homechan.ui.devices.AcViewModel
 import com.example.homechan.ui.devices.DevicesViewModel
 import com.example.homechan.ui.devices.LampViewModel
 import com.example.homechan.ui.devices.SpeakerViewModel
@@ -50,6 +51,9 @@ class ViewModelFactory (
 
             isAssignableFrom(SpeakerViewModel::class.java) ->
                 SpeakerViewModel(deviceRepository)
+
+            isAssignableFrom(AcViewModel::class.java) ->
+                AcViewModel(deviceRepository)
 
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

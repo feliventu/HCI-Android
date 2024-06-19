@@ -15,5 +15,6 @@ class RemoteDeviceType {
     companion object {
         const val LAMP_DEVICE_TYPE_ID = "go46xmbqeomjrsjr"
         const val SPEAKER_DEVICE_TYPE_ID = "c89b94e8581855bc"
+        const val AC_DEVICE_TYPE_ID = "li6cbv5sdlatti0j"
     }
 }

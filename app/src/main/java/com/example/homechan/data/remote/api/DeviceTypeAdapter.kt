@@ -1,5 +1,6 @@
 package com.example.homechan.data.remote.api
 
+import com.example.homechan.data.remote.model.RemoteAc
 import com.example.homechan.data.remote.model.RemoteDevice
 import com.example.homechan.data.remote.model.RemoteDeviceType
 import com.example.homechan.data.remote.model.RemoteLamp
@@ -28,6 +29,8 @@ class DeviceTypeAdapter : JsonDeserializer<RemoteDevice<*>?> {
             gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteLamp?>() {}.type)
         } else if( deviceTypeId == RemoteDeviceType.SPEAKER_DEVICE_TYPE_ID) {
             gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteSpeaker?>() {}.type)
+        } else if(deviceTypeId == RemoteDeviceType.AC_DEVICE_TYPE_ID){
+            gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAc?>() {}.type)
         } else {
             null
         }
