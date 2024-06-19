@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -16,7 +17,9 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,9 +56,8 @@ import kotlinx.coroutines.launch
 fun DeviceCard(
     device: Device,
     name: String = "Device",
-    icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices),
-    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 
     ) {
     val lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
@@ -68,15 +70,16 @@ fun DeviceCard(
     val uiLampState by lampViewModel.uiState.collectAsState()
     val uiSpeakerState by speakerViewModel.uiState.collectAsState()
 
-    var showDialog = rememberSaveable{ mutableStateOf(false)
+    var showDialog = rememberSaveable {
+        mutableStateOf(false)
     }
 
     var status: String = ""
-
+    var icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices)
     var deviceAux: Device
 
     if (device.type == DeviceType.LAMP) {
-
+        icon = ImageVector.vectorResource(R.drawable.ic_lamp)
         deviceAux = device as Lamp
         uiLampState.currentDevice = deviceAux
         status = uiLampState.currentDevice?.status.toString()
@@ -84,12 +87,17 @@ fun DeviceCard(
 
     if (device.type == DeviceType.SPEAKER) {
 
+        icon = ImageVector.vectorResource(R.drawable.ic_speaker)
         deviceAux = device as Speaker
         uiSpeakerState.currentDevice = deviceAux
         status = uiSpeakerState.currentDevice?.status.toString()
 
         if (showDialog.value) {
-            SpeakerDialog(onDismissRequest = { showDialog.value = false}, device = deviceAux )
+            SpeakerDialog(
+                onDismissRequest = { showDialog.value = false },
+                device = deviceAux,
+                snackbarHostState
+            )
         }
 
     }
@@ -123,49 +131,63 @@ fun DeviceCard(
                     Icon(
                         imageVector = icon,
                         contentDescription = "",
-
+                        modifier = Modifier.size(28.dp),
                         )
                     Text(
                         text = name,
-                        modifier = Modifier.padding(start = 16.dp),
+                        modifier = Modifier.padding(start = 12.dp),
                         textAlign = TextAlign.Center,
                         fontSize = 18.sp,
                     )
                 }
 
                 Text(
-                    text = status, fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp),
+                    text = status, fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp,
+                        top=2.dp),
                     color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
                 )
             }
 
             val snackbarLabel = stringResource(R.string.device_on)
-           // var checked by rememberSaveable { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF ) }
-            var checked by rememberSaveable { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
+
+            uiSpeakerState.currentDevice = device as Speaker
+            var switchState by remember { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
+
+            LaunchedEffect(uiSpeakerState.currentDevice?.status) {
+                uiSpeakerState.currentDevice = device as Speaker
+                switchState = uiSpeakerState.currentDevice?.status != Status.STOPPED
+            }
+
             Switch(
-                checked = checked,
-                onCheckedChange = {
-                    if (device.type == DeviceType.LAMP) {
-
-                        uiLampState.currentDevice = device as Lamp
-                        checked = it
-                        if (it) {
-                            lampViewModel.turnOn()
-                        } else {
-                            lampViewModel.turnOff()
-                        }
-                    }
-                    if (device.type == DeviceType.SPEAKER) {
-                        uiSpeakerState.currentDevice = device as Speaker
-                        checked = it
-
-                        if (it) {
+                checked = switchState,
+                onCheckedChange = { isChecked ->
+                    switchState = isChecked
+                    if (isChecked) {
+                        if (device.type == DeviceType.SPEAKER) {
+                            uiSpeakerState.currentDevice = device as Speaker
                             speakerViewModel.play()
-                        } else {
+                        }
+
+                        if (device.type == DeviceType.LAMP) {
+                            uiLampState.currentDevice = device as Lamp
+                            lampViewModel.turnOn()
+                        }
+
+                    } else {
+
+                        if (device.type == DeviceType.SPEAKER) {
+                            uiSpeakerState.currentDevice = device as Speaker
                             speakerViewModel.stop()
                         }
+
+                        if (device.type == DeviceType.LAMP) {
+                            uiLampState.currentDevice = device as Lamp
+                            lampViewModel.turnOff()
+                        }
+
                     }
-                    if (checked) {
+
+                    if (switchState) {
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 snackbarLabel,

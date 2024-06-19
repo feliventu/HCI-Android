@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -57,12 +58,12 @@ fun AlarmCard(
             modifier = if (isCompact) {
                 Modifier
                     .fillMaxWidth() // Fill the maximum width available
-                    .height(80.dp)
+                    .height(85.dp)
             }// Keep the height as 100.dp
             else {
                 Modifier
                     .width(400.dp) // Fill the maximum width available
-                    .height(80.dp)
+                    .height(85.dp)
             }
         ) {
             Column {
@@ -75,19 +76,19 @@ fun AlarmCard(
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_alarm),
                         contentDescription = "",
-                        modifier = Modifier.padding(top = 2.dp),
+                        modifier = Modifier.padding(top = 2.dp).size(28.dp),
 
                         )
                     Text(
                         text = name,
-                        modifier = Modifier.padding(start = 16.dp),
+                        modifier = Modifier.padding(start = 13.dp),
                         textAlign = TextAlign.Center,
                         fontSize = 18.sp,
                     )
                 }
 
                 Text(
-                    text = "Status", fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp),
+                    text = "STATUS", fontSize = 14.sp, modifier = Modifier.padding(start = 58.dp),
                     color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
                 )
             }
