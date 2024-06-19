@@ -19,9 +19,12 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,8 +37,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.homechan.R
+import com.example.homechan.data.model.Ac
 import com.example.homechan.data.model.Device
+import com.example.homechan.data.model.DeviceType
+import com.example.homechan.data.model.Speaker
+import com.example.homechan.data.model.Status
+import com.example.homechan.ui.devices.AcViewModel
+import com.example.homechan.ui.getViewModelFactory
 
 enum class AcDialogState {
     MAIN_DIALOG,
@@ -67,12 +77,12 @@ fun AcDialog(
             ),
         ) {
             when (dialogState.value) {
-                    AcDialogState.MAIN_DIALOG -> MainDialog(dialogState)
-                    AcDialogState.TEMPERATURE_DIALOG -> TemepratureDialog(dialogState)
-                    AcDialogState.MODE_DIALOG -> ModeDialog(dialogState)
-                    AcDialogState.VERTICAL_SWING_DIALOG -> VerticalSwingDialog(dialogState)
-                    AcDialogState.HORIZONTAL_SWING_DIALOG -> HorizontalSwingDialog(dialogState)
-                    AcDialogState.FAN_SPEED_DIALOG -> FanSpeedDialog(dialogState)
+                    AcDialogState.MAIN_DIALOG -> MainDialog(dialogState, device)
+                    AcDialogState.TEMPERATURE_DIALOG -> TemepratureDialog(dialogState, device)
+                    AcDialogState.MODE_DIALOG -> ModeDialog(dialogState, device)
+                    AcDialogState.VERTICAL_SWING_DIALOG -> VerticalSwingDialog(dialogState, device)
+                    AcDialogState.HORIZONTAL_SWING_DIALOG -> HorizontalSwingDialog(dialogState, device)
+                    AcDialogState.FAN_SPEED_DIALOG -> FanSpeedDialog(dialogState, device)
             }
             Spacer(modifier = Modifier.height(18.dp))
         }
@@ -80,10 +90,18 @@ fun AcDialog(
 }
 
 @Composable
-internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
+internal fun MainDialog(
+    dialogState: MutableState<AcDialogState>,
+    device: Device
+) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+        val uiAcState by acViewModel.uiState.collectAsState()
+        val ac = device as Ac
+        uiAcState.currentDevice = ac
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -104,11 +122,24 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
             )
 
             Spacer(modifier = Modifier.weight(1f))
-            var checked by rememberSaveable { mutableStateOf(true) }
+
+
+            var switchState by remember { mutableStateOf(uiAcState.currentDevice?.status != Status.OFF) }
+            LaunchedEffect(uiAcState.currentDevice?.status) {
+                switchState = uiAcState.currentDevice?.status != Status.OFF
+            }
             Switch(
-                checked = checked,
-                onCheckedChange = {
-                    checked = it
+                checked = switchState,
+                onCheckedChange = { isChecked ->
+                    switchState = isChecked
+                    if (isChecked) {
+                            uiAcState.currentDevice = device as Ac
+                            acViewModel.turnOn()
+                    } else {
+                            uiAcState.currentDevice = device as Ac
+                            acViewModel.turnOff()
+
+                    }
                 },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
@@ -174,10 +205,18 @@ internal fun MainDialog(dialogState: MutableState<AcDialogState>) {
 }
 
 @Composable
-fun TemepratureDialog(dialogState:  MutableState<AcDialogState>){
+fun TemepratureDialog(
+    dialogState:  MutableState<AcDialogState>,
+    device: Device
+){
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+        val uiAcState by acViewModel.uiState.collectAsState()
+        val ac = device as Ac
+        uiAcState.currentDevice = ac
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -203,14 +242,13 @@ fun TemepratureDialog(dialogState:  MutableState<AcDialogState>){
         ) {
             Box(modifier = Modifier.padding(start = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { /*TODO*/ },
+                    onClick = { acViewModel.setTemperature(ac.temperature + 1 ) },
                     icon = ImageVector.vectorResource(R.drawable.ic_up_arrow),
-
                     )
             }
             Box(modifier = Modifier.padding(end = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { /*TODO*/ },
+                    onClick = { acViewModel.setTemperature(ac.temperature - 1) },
                     icon = ImageVector.vectorResource(R.drawable.ic_down_arrow),
 
                 )
@@ -229,10 +267,18 @@ fun TemepratureDialog(dialogState:  MutableState<AcDialogState>){
 }
 
 @Composable
-fun ModeDialog(dialogState:  MutableState<AcDialogState>) {
+fun ModeDialog(
+    dialogState:  MutableState<AcDialogState>,
+    device: Device
+) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+        val uiAcState by acViewModel.uiState.collectAsState()
+        val ac = device as Ac
+        uiAcState.currentDevice = ac
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -260,20 +306,21 @@ fun ModeDialog(dialogState:  MutableState<AcDialogState>) {
                 modifier = Modifier.padding(start = 25.dp)
             ) {
                 CustomOutlinedButtonIcon(
-                    onClick = { /*TODO*/ },
+                    onClick = { acViewModel.setMode("cool")
+                    },
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_cool),
                     )
             }
             Box() {
                 CustomOutlinedButtonIcon(
-                    onClick = { /*TODO*/ },
+                    onClick = { acViewModel.setMode("heat") },
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_heat),
 
                 )
             }
             Box(modifier = Modifier.padding(end = 25.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { /*TODO*/ },
+                    onClick = { acViewModel.setMode("fan") },
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_fan),
                 )
             }
@@ -292,7 +339,10 @@ fun ModeDialog(dialogState:  MutableState<AcDialogState>) {
 
 
 @Composable
-fun VerticalSwingDialog(dialogState:  MutableState<AcDialogState>){
+fun VerticalSwingDialog(
+    dialogState:  MutableState<AcDialogState>,
+    device: Device
+){
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -317,7 +367,10 @@ fun VerticalSwingDialog(dialogState:  MutableState<AcDialogState>){
 
 
 @Composable
-fun HorizontalSwingDialog(dialogState:  MutableState<AcDialogState>){
+fun HorizontalSwingDialog(
+    dialogState:  MutableState<AcDialogState>,
+    device: Device
+){
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -342,7 +395,9 @@ fun HorizontalSwingDialog(dialogState:  MutableState<AcDialogState>){
 
 
 @Composable
-fun FanSpeedDialog(dialogState:  MutableState<AcDialogState>){
+fun FanSpeedDialog(
+    dialogState:  MutableState<AcDialogState>,
+    device: Device){
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {

@@ -41,7 +41,15 @@ class AcViewModel(private val repository: DeviceRepository) : ViewModel() {
         { state, _ -> state }
     )
 
+    fun setTemperature(temperature: Int) = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_TEMPERATURE_ACTION, arrayOf(temperature)) },
+        { state, _ -> state }
+    )
 
+    fun setMode(mode: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_MODE_ACTION, arrayOf(mode)) },
+        { state, _ -> state }
+    )
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,

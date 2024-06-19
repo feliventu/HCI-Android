@@ -317,19 +317,12 @@ internal fun MainDialog(
                 onCheckedChange = { isChecked ->
                     switchState = isChecked
                     if (isChecked) {
-                        if (device.type == DeviceType.SPEAKER) {
                             uiSpeakerState.currentDevice = device as Speaker
                             speakerViewModel.play()
-                        }
-
 
                     } else {
-
-                        if (device.type == DeviceType.SPEAKER) {
                             uiSpeakerState.currentDevice = device as Speaker
                             speakerViewModel.stop()
-                        }
-
 
                     }
 
