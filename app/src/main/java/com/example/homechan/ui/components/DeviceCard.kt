@@ -90,11 +90,13 @@ fun DeviceCard(
     var icon: ImageVector = ImageVector.vectorResource(R.drawable.ic_devices)
     var deviceAux: Device
 
+
     if (device.type == DeviceType.LAMP) {
         icon = ImageVector.vectorResource(R.drawable.ic_lamp)
         deviceAux = device as Lamp
         uiLampState.currentDevice = deviceAux
         status = uiLampState.currentDevice?.status.toString()
+
     }
 
     if(device.type == DeviceType.AC){
@@ -116,6 +118,17 @@ fun DeviceCard(
         deviceAux = device as Blinds
         uiBlindsState.currentDevice = deviceAux
         status = uiBlindsState.currentDevice?.status.toString()
+
+        if(uiBlindsState.currentDevice?.status.toString() == "OPENED")
+            status = stringResource(id = R.string.closed)
+        else if(uiBlindsState.currentDevice?.status.toString() == "CLOSED")
+            status = stringResource(id = R.string.opened)
+        else {
+            if (uiBlindsState.currentDevice?.status.toString() == "OPENING")
+                status = stringResource(id = R.string.opening)
+            else if (uiBlindsState.currentDevice?.status.toString() == "CLOSING")
+                status = stringResource(id = R.string.closing)
+        }
 
         if(showDialog.value){
             BlindsDialog(
@@ -196,7 +209,7 @@ fun DeviceCard(
                 }
 
                 Text(
-                    text = status, fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp,
+                    text = status ,fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp,
                         top=2.dp),
                     color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
                 )

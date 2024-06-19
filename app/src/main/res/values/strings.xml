@@ -51,5 +51,7 @@
     <string name="genre_updated">Updating genre</string>
     <string name="closing">Closing</string>
     <string name="opening">Opening</string>
+    <string name="closed">Closed</string>
+    <string name="opened">Opened</string>
 
 </resources>
