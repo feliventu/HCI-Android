@@ -149,19 +149,35 @@ fun DeviceCard(
             }
 
             val snackbarLabel = stringResource(R.string.device_on)
+            var switchState = remember { mutableStateOf(false) }
 
-            uiSpeakerState.currentDevice = device as Speaker
-            var switchState by remember { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
-
-            LaunchedEffect(uiSpeakerState.currentDevice?.status) {
+            if (device.type == DeviceType.SPEAKER) {
                 uiSpeakerState.currentDevice = device as Speaker
-                switchState = uiSpeakerState.currentDevice?.status != Status.STOPPED
+                 switchState =
+                    remember { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
+
+                LaunchedEffect(uiSpeakerState.currentDevice?.status) {
+                    uiSpeakerState.currentDevice = device as Speaker
+                    switchState.value = uiSpeakerState.currentDevice?.status != Status.STOPPED
+                }
             }
 
+            if (device.type == DeviceType.LAMP) {
+                uiLampState.currentDevice = device as Lamp
+                switchState =
+                    remember { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
+
+                LaunchedEffect(uiLampState.currentDevice?.status) {
+                    uiLampState.currentDevice = device as Lamp
+                    switchState.value = uiLampState.currentDevice?.status != Status.OFF
+                }
+            }
+
+
             Switch(
-                checked = switchState,
+                checked = switchState.value,
                 onCheckedChange = { isChecked ->
-                    switchState = isChecked
+                    switchState.value = isChecked
                     if (isChecked) {
                         if (device.type == DeviceType.SPEAKER) {
                             uiSpeakerState.currentDevice = device as Speaker
@@ -187,7 +203,7 @@ fun DeviceCard(
 
                     }
 
-                    if (switchState) {
+                    if (switchState.value) {
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 snackbarLabel,
