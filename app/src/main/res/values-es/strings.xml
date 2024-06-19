@@ -56,6 +56,12 @@
     <string name="dance">RKT</string>
     <string name="latina">Latina</string>
     <string name="genre_updated">Actualizando género</string>
+    <string name="closing">Cerrando</string>
+    <string name="opening">Abriendo</string>
+    <string name="closed">Cerrado</string>
+    <string name="opened">Abierto</string>
+    <string name="off">Apagado</string>
+    <string name="on">Prendido</string>
 
 
 </resources>

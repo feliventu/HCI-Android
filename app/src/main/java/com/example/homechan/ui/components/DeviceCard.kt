@@ -105,6 +105,12 @@ fun DeviceCard(
         uiAcState.currentDevice = deviceAux
         status = uiAcState.currentDevice?.status.toString()
 
+        if(uiAcState.currentDevice?.status.toString() == "ON")
+            status = stringResource(id = R.string.on)
+        else if(uiAcState.currentDevice?.status.toString() == "OFF")
+            status = stringResource(id = R.string.off)
+
+
         if(showDialog.value){
             AcDialog(
                 onDismissRequest = { showDialog.value = false },

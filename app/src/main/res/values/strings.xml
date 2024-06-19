@@ -53,5 +53,8 @@
     <string name="opening">Opening</string>
     <string name="closed">Closed</string>
     <string name="opened">Opened</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+
 
 </resources>
