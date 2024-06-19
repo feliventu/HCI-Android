@@ -85,7 +85,7 @@ fun BlindsDialog(
 
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_devices),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_blinds),
                         contentDescription = "",
                         modifier = Modifier.size(30.dp)
                     );

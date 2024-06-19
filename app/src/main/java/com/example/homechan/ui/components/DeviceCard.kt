@@ -114,7 +114,7 @@ fun DeviceCard(
     }
 
     if(device.type == DeviceType.BLINDS){
-        icon = ImageVector.vectorResource(id = R.drawable.ic_lamp)
+        icon = ImageVector.vectorResource(id = R.drawable.ic_blinds)
         deviceAux = device as Blinds
         uiBlindsState.currentDevice = deviceAux
         status = uiBlindsState.currentDevice?.status.toString()
