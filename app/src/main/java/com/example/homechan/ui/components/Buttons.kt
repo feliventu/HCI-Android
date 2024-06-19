@@ -116,7 +116,11 @@ fun CustomOutlinedButton(onClick: () -> Unit, label: String = "Button") {
 }
 
 @Composable
-fun CustomOutlinedButtonIcon(onClick: () -> Unit = {}, icon: ImageVector = Icons.Default.Done, enabled: Boolean = true) {
+fun CustomOutlinedButtonIcon(
+    onClick: () -> Unit = {},
+    icon: ImageVector = Icons.Default.Done,
+    enabled: Boolean = true,
+) {
 
 
     IconButton(

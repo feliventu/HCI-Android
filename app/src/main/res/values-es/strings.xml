@@ -48,4 +48,12 @@
     <string name="developed">Desarrollado por</string>
     <string name="materia">Materia</string>
 
+    <string name="pop">Pop</string>
+    <string name="rock">Rock</string>
+    <string name="classical">Clasica</string>
+    <string name="country">Country</string>
+    <string name="dance">Fiesta</string>
+    <string name="latina">Latina</string>
+
+
 </resources>

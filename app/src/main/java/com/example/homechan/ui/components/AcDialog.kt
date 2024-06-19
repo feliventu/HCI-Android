@@ -211,6 +211,7 @@ fun TemepratureDialog(dialogState:  MutableState<AcDialogState>){
                 CustomOutlinedButtonIcon(
                     onClick = { /*TODO*/ },
                     icon = ImageVector.vectorResource(R.drawable.ic_down_arrow),
+
                 )
             }
         }

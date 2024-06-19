@@ -68,6 +68,8 @@ fun DeviceCard(
     val uiLampState by lampViewModel.uiState.collectAsState()
     val uiSpeakerState by speakerViewModel.uiState.collectAsState()
 
+    var showDialog = rememberSaveable{ mutableStateOf(false)
+    }
 
     var status: String = ""
 
@@ -85,15 +87,18 @@ fun DeviceCard(
         deviceAux = device as Speaker
         uiSpeakerState.currentDevice = deviceAux
         status = uiSpeakerState.currentDevice?.status.toString()
+
+        if (showDialog.value) {
+            SpeakerDialog(onDismissRequest = { showDialog.value = false}, device = deviceAux )
+        }
+
     }
-
-
 
 
     MyApplicationTheme(dynamicColor = false) {
         Card(
             onClick = {
-
+                showDialog.value = true;
             },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -135,8 +140,8 @@ fun DeviceCard(
             }
 
             val snackbarLabel = stringResource(R.string.device_on)
-            var checked by rememberSaveable { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
-
+           // var checked by rememberSaveable { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF ) }
+            var checked by rememberSaveable { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
             Switch(
                 checked = checked,
                 onCheckedChange = {
@@ -155,9 +160,9 @@ fun DeviceCard(
                         checked = it
 
                         if (it) {
-                            speakerViewModel.turnOn()
+                            speakerViewModel.play()
                         } else {
-                            speakerViewModel.turnOff()
+                            speakerViewModel.stop()
                         }
                     }
                     if (checked) {

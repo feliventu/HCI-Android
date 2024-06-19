@@ -41,5 +41,11 @@
     <string name="date">Date</string>
     <string name="developed">Developed by</string>
     <string name="materia">Class</string>
+    <string name="pop">Pop</string>
+    <string name="rock">Rock</string>
+    <string name="classical">Classical</string>
+    <string name="country">Country</string>
+    <string name="dance">Dance</string>
+    <string name="latina">Latina</string>
 
 </resources>

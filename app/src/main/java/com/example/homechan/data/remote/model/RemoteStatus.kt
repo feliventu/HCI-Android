@@ -8,6 +8,7 @@ object RemoteStatus {
     const val OFF = "off"
     const val STOPPED = "stopped"
     const val PLAYING = "playing"
+    const val PAUSED = "paused"
     const val UNKNOWN = "unknown"
 
 
@@ -17,6 +18,7 @@ object RemoteStatus {
             OFF -> Status.OFF
             STOPPED -> Status.STOPPED
             PLAYING -> Status.PLAYING
+            PAUSED -> Status.PAUSED
             else -> Status.UNKNOWN
         }
     }

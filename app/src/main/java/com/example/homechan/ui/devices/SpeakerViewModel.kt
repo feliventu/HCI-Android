@@ -31,13 +31,33 @@ class SpeakerViewModel(private val repository: DeviceRepository) : ViewModel() {
         }
     }
 
-    fun turnOn() = runOnViewModelScope(
+    fun play() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PLAY_ACTION) },
         { state, _ -> state }
     )
 
-    fun turnOff() = runOnViewModelScope(
+    fun stop() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.STOP_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun pause() = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PAUSE_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun setVolume(volume: Int) = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.SET_VOLUME_ACTION, arrayOf(volume)) },
+        { state, _ -> state }
+    )
+
+    fun nextSong() = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.NEXT_SONG_ACTION) },
+        { state, _ -> state }
+    )
+
+    fun previousSong() = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PREVIOUS_SONG_ACTION) },
         { state, _ -> state }
     )
 

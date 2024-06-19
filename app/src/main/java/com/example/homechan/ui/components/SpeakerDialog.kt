@@ -28,11 +28,11 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +43,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.homechan.R
+import com.example.homechan.data.model.Device
+import com.example.homechan.data.model.Speaker
+import com.example.homechan.data.model.Status
+import com.example.homechan.ui.devices.SpeakerViewModel
+import com.example.homechan.ui.getViewModelFactory
 import kotlinx.coroutines.launch
 
 enum class SpeakerDialogState {
@@ -55,7 +61,7 @@ enum class SpeakerDialogState {
 @Composable
 fun SpeakerDialog(
     onDismissRequest: () -> Unit,
-    id: String = null.toString(),
+    device: Device,
     snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
 
@@ -72,9 +78,9 @@ fun SpeakerDialog(
             ),
         ) {
             when (dialogState.value) {
-                SpeakerDialogState.MAIN_DIALOG -> MainDialog(dialogState, snackbarHostState)
-                SpeakerDialogState.VOLUME_DIALOG -> VolumeDialog(dialogState, snackbarHostState)
-                SpeakerDialogState.GENRE_DIALOG -> GenreDialog(dialogState, snackbarHostState)
+                SpeakerDialogState.MAIN_DIALOG -> MainDialog(dialogState, snackbarHostState, device)
+                SpeakerDialogState.VOLUME_DIALOG -> VolumeDialog(dialogState, snackbarHostState, device)
+                SpeakerDialogState.GENRE_DIALOG -> GenreDialog(dialogState, snackbarHostState, device)
             }
             Spacer(modifier = Modifier.height(18.dp))
         }
@@ -82,11 +88,16 @@ fun SpeakerDialog(
 }
 
 @Composable
-internal fun GenreDialog(dialogState: MutableState<SpeakerDialogState>, snackbarHostState: SnackbarHostState = SnackbarHostState()) {
+internal fun GenreDialog(dialogState: MutableState<SpeakerDialogState>, snackbarHostState: SnackbarHostState = SnackbarHostState(), device: Device) {
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory())
+        val uiSpeakerState by speakerViewModel.uiState.collectAsState()
+        val speaker = device as Speaker
+        uiSpeakerState.currentDevice = speaker
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -113,7 +124,24 @@ internal fun GenreDialog(dialogState: MutableState<SpeakerDialogState>, snackbar
             horizontalArrangement = Arrangement.SpaceEvenly, // Space items evenly
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CustomDropdown( arrayOf("Genre 1", "Genre 2", "Genre 3"))
+
+            var supportedGenres = arrayOf(
+                R.string.pop,
+                R.string.rock,
+                R.string.classical,
+                R.string.country,
+                R.string.dance,
+                R.string.latina)
+
+            var supportedGenresAux = arrayOf(
+                "pop",
+                "rock",
+                "classical",
+                "country",
+                "dance",
+                "latina")
+
+            CustomDropdown( supportedGenresAux )
 
 
 
@@ -125,7 +153,7 @@ internal fun GenreDialog(dialogState: MutableState<SpeakerDialogState>, snackbar
             ) {
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
+            Text(text = speaker.genre, modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
 
 
         }
@@ -133,11 +161,16 @@ internal fun GenreDialog(dialogState: MutableState<SpeakerDialogState>, snackbar
 }
 
 @Composable
-internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState> , snackbarHostState: SnackbarHostState = SnackbarHostState()) {
+internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState> , snackbarHostState: SnackbarHostState = SnackbarHostState(), device: Device) {
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory())
+        val uiSpeakerState by speakerViewModel.uiState.collectAsState()
+        val speaker = device as Speaker
+        uiSpeakerState.currentDevice = speaker
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -167,19 +200,25 @@ internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState> , snackb
             val snackbarLabel= stringResource(R.string.volume_updated)
             Box(modifier = Modifier.padding(start = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { scope.launch {
+                    onClick = {
+                        speakerViewModel.setVolume(speaker.volume + 1)
+                        scope.launch {
                         snackbarHostState.showSnackbar( snackbarLabel, withDismissAction = true)
                     }},
                     icon = Icons.Filled.Add,
+                    enabled = speaker.volume != 10,
 
                     )
             }
             Box(modifier = Modifier.padding(end = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { scope.launch {
+                    onClick = {
+                        speakerViewModel.setVolume(speaker.volume - 1)
+                        scope.launch {
                         snackbarHostState.showSnackbar( snackbarLabel, withDismissAction = true)
                     } },
                     icon = ImageVector.vectorResource(R.drawable.ic_minus),
+                    enabled = speaker.volume != 0
                 )
             }
 
@@ -187,11 +226,10 @@ internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState> , snackb
         Row(
             modifier = Modifier
                 .padding(top = 10.dp),
-
             ) {
             Text(text = stringResource(id = R.string.volume))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
+            Text(text = speaker.volume.toString(), modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
 
         }
     }
@@ -199,12 +237,17 @@ internal fun VolumeDialog(dialogState: MutableState<SpeakerDialogState> , snackb
 }
 
 @Composable
-internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarHostState: SnackbarHostState = SnackbarHostState()) {
+internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarHostState: SnackbarHostState = SnackbarHostState(), device: Device) {
     val scope = rememberCoroutineScope()
-    var checked by rememberSaveable { mutableStateOf(true) }
+
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory())
+        val uiSpeakerState by speakerViewModel.uiState.collectAsState()
+        val speaker = device as Speaker
+        uiSpeakerState.currentDevice = speaker
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -226,13 +269,20 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
 
             Spacer(modifier = Modifier.weight(1f))
             val snackbarLabel= stringResource(R.string.device_on)
-
+            var checked = rememberSaveable { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
             Switch(
-                checked = checked,
+                checked = checked.value,
                 onCheckedChange = {
-                    checked = it
 
-                    if (checked) {
+                    checked.value = it
+                    if (it) {
+                        speakerViewModel.play()
+                    } else {
+                        speakerViewModel.stop()
+                    }
+                    checked.value = it
+
+                    if (checked.value) {
                         scope.launch {
                             snackbarHostState.showSnackbar( snackbarLabel, withDismissAction = true)
                         }}
@@ -254,24 +304,24 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
             verticalAlignment = Alignment.CenterVertically
         ) {
             CustomOutlinedButtonIcon(
-                onClick = { /*TODO*/ },
+                onClick = { speakerViewModel.previousSong() },
                 icon = ImageVector.vectorResource(R.drawable.ic_skip),
-                enabled = checked
+                enabled = speaker.status != Status.STOPPED
             )
             CustomOutlinedButtonIcon(
-                onClick = { /*TODO*/ },
+                onClick = { speakerViewModel.play()},
                 icon = ImageVector.vectorResource(R.drawable.ic_play),
-                enabled = checked
+                enabled =  speaker.status != Status.STOPPED && speaker.status != Status.PLAYING
             )
             CustomOutlinedButtonIcon(
-                onClick = { /*TODO*/ },
+                onClick = { speakerViewModel.pause() },
                 icon = ImageVector.vectorResource(R.drawable.ic_pause),
-                enabled = checked
+                enabled = speaker.status != Status.STOPPED && speaker.status != Status.PAUSED
             )
             CustomOutlinedButtonIcon(
-                onClick = { /*TODO*/ },
+                onClick = { speakerViewModel.nextSong() },
                 icon = ImageVector.vectorResource(R.drawable.ic_skip2),
-                enabled = checked
+                enabled = speaker.status != Status.STOPPED
             )
         }
         Row(
@@ -293,7 +343,7 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
             ) {
             Text(text = stringResource(id = R.string.volume))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "1", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
+            Text(text = speaker.volume.toString(), modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
             CustomButtonArrowMini { dialogState.value = SpeakerDialogState.VOLUME_DIALOG }
         }
         Row(
@@ -302,7 +352,7 @@ internal fun MainDialog(dialogState: MutableState<SpeakerDialogState>, snackbarH
         ) {
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "Pop", modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
+            Text(text = speaker.genre, modifier = Modifier.padding(end = 10.dp), color = MaterialTheme.colorScheme.tertiary)
             CustomButtonArrowMini { dialogState.value = SpeakerDialogState.GENRE_DIALOG }
         }
     }
