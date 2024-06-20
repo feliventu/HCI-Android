@@ -132,9 +132,9 @@ fun DeviceCard(
             status = stringResource(id = R.string.opened)
         else {
             if (uiBlindsState.currentDevice?.status.toString() == "OPENING")
-                status = stringResource(id = R.string.opening)
-            else if (uiBlindsState.currentDevice?.status.toString() == "CLOSING")
                 status = stringResource(id = R.string.closing)
+            else if (uiBlindsState.currentDevice?.status.toString() == "CLOSING")
+                status = stringResource(id = R.string.opening)
         }
 
         if(showDialog.value){
@@ -179,167 +179,167 @@ fun DeviceCard(
 
     MyApplicationTheme(dynamicColor = false) {
 
-Box(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
 
-    Card(
-        onClick = {
-            showDialog.value = true;
-        },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.primary
-        ),
-        modifier = if (isCompact) {
-            Modifier
-                .fillMaxWidth() // Fill the maximum width available
-                .height(100.dp)
-        }// Keep the height as 100.dp
-        else {
-            Modifier
-                .fillMaxWidth() // Fill the maximum width available
-                .height(100.dp)
-        }
-    ) {
-        Column {
-            Row(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp),
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = "",
-                    modifier = Modifier.size(28.dp),
-                )
-                Text(
-                    text = name,
-                    modifier = Modifier.padding(start = 12.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 18.sp,
-                )
-
-
-            }
-
-            Text(
-                text = status, fontSize = 14.sp, modifier = Modifier.padding(
-                    start = 56.dp,
-                    top = 2.dp
-                ),
-                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
-            )
-
-
-        }
-
-
-        val snackbarLabel = stringResource(R.string.device_on)
-        var switchState = remember { mutableStateOf(false) }
-
-        if (device.type == DeviceType.SPEAKER) {
-            uiSpeakerState.currentDevice = device as Speaker
-            switchState =
-                remember { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
-
-            LaunchedEffect(uiSpeakerState.currentDevice?.status) {
-                uiSpeakerState.currentDevice = device as Speaker
-                switchState.value = uiSpeakerState.currentDevice?.status != Status.STOPPED
-            }
-        }
-
-        if (device.type == DeviceType.AC) {
-            uiAcState.currentDevice = device as Ac
-            switchState =
-                remember { mutableStateOf(uiAcState.currentDevice?.status != Status.OFF) }
-
-            LaunchedEffect(uiAcState.currentDevice?.status) {
-                uiAcState.currentDevice = device as Ac
-                switchState.value = uiAcState.currentDevice?.status != Status.OFF
-            }
-        }
-
-        if (device.type == DeviceType.LAMP) {
-            uiLampState.currentDevice = device as Lamp
-            switchState =
-                remember { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
-
-            LaunchedEffect(uiLampState.currentDevice?.status) {
-                uiLampState.currentDevice = device as Lamp
-                switchState.value = uiLampState.currentDevice?.status != Status.OFF
-            }
-
-
-        }
-
-        if (device.type != DeviceType.BLINDS) {
-            Switch(
-                checked = switchState.value,
-                onCheckedChange = { isChecked ->
-                    switchState.value = isChecked
-                    if (isChecked) {
-                        if (device.type == DeviceType.SPEAKER) {
-                            uiSpeakerState.currentDevice = device as Speaker
-                            speakerViewModel.play()
-                        }
-
-                        if (device.type == DeviceType.LAMP) {
-                            uiLampState.currentDevice = device as Lamp
-                            lampViewModel.turnOn()
-                        }
-
-                        if (device.type == DeviceType.AC) {
-                            uiAcState.currentDevice = device as Ac
-                            acViewModel.turnOn()
-                        }
-
-                    } else {
-
-                        if (device.type == DeviceType.SPEAKER) {
-                            uiSpeakerState.currentDevice = device as Speaker
-                            speakerViewModel.stop()
-                        }
-
-                        if (device.type == DeviceType.LAMP) {
-                            uiLampState.currentDevice = device as Lamp
-                            lampViewModel.turnOff()
-                        }
-
-                        if (device.type == DeviceType.AC) {
-                            uiAcState.currentDevice = device as Ac
-                            acViewModel.turnOff()
-                        }
-
-                    }
-
-                    if (switchState.value) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                snackbarLabel,
-                                withDismissAction = true
-                            )
-                        }
-                    }
-
-
+            Card(
+                onClick = {
+                    showDialog.value = true;
                 },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
-                    checkedTrackColor = MaterialTheme.colorScheme.secondary,
-                    uncheckedThumbColor = Color.White,
-                    uncheckedTrackColor = Color.LightGray,
-                    uncheckedBorderColor = Color.LightGray
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primary
                 ),
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(bottom = 30.dp, end = 20.dp)
-            )
-        }
+                modifier = if (isCompact) {
+                    Modifier
+                        .fillMaxWidth() // Fill the maximum width available
+                        .height(100.dp)
+                }// Keep the height as 100.dp
+                else {
+                    Modifier
+                        .fillMaxWidth() // Fill the maximum width available
+                        .height(100.dp)
+                }
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 16.dp),
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "",
+                            modifier = Modifier.size(28.dp),
+                        )
+                        Text(
+                            text = name,
+                            modifier = Modifier.padding(start = 12.dp),
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp,
+                        )
 
-    }
 
-    if (device.type == DeviceType.BLINDS) {
-        deviceAux = device as Blinds
-        uiBlindsState.currentDevice = deviceAux as Blinds
-        status = uiAcState.currentDevice?.status.toString()
+                    }
+
+                    Text(
+                        text = status, fontSize = 14.sp, modifier = Modifier.padding(
+                            start = 56.dp,
+                            top = 2.dp
+                        ),
+                        color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
+                    )
+
+
+                }
+
+
+                val snackbarLabel = stringResource(R.string.device_on)
+                var switchState = remember { mutableStateOf(false) }
+
+                if (device.type == DeviceType.SPEAKER) {
+                    uiSpeakerState.currentDevice = device as Speaker
+                    switchState =
+                        remember { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
+
+                    LaunchedEffect(uiSpeakerState.currentDevice?.status) {
+                        uiSpeakerState.currentDevice = device as Speaker
+                        switchState.value = uiSpeakerState.currentDevice?.status != Status.STOPPED
+                    }
+                }
+
+                if (device.type == DeviceType.AC) {
+                    uiAcState.currentDevice = device as Ac
+                    switchState =
+                        remember { mutableStateOf(uiAcState.currentDevice?.status != Status.OFF) }
+
+                    LaunchedEffect(uiAcState.currentDevice?.status) {
+                        uiAcState.currentDevice = device as Ac
+                        switchState.value = uiAcState.currentDevice?.status != Status.OFF
+                    }
+                }
+
+                if (device.type == DeviceType.LAMP) {
+                    uiLampState.currentDevice = device as Lamp
+                    switchState =
+                        remember { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
+
+                    LaunchedEffect(uiLampState.currentDevice?.status) {
+                        uiLampState.currentDevice = device as Lamp
+                        switchState.value = uiLampState.currentDevice?.status != Status.OFF
+                    }
+
+
+                }
+
+                if (device.type != DeviceType.BLINDS) {
+                    Switch(
+                        checked = switchState.value,
+                        onCheckedChange = { isChecked ->
+                            switchState.value = isChecked
+                            if (isChecked) {
+                                if (device.type == DeviceType.SPEAKER) {
+                                    uiSpeakerState.currentDevice = device as Speaker
+                                    speakerViewModel.play()
+                                }
+
+                                if (device.type == DeviceType.LAMP) {
+                                    uiLampState.currentDevice = device as Lamp
+                                    lampViewModel.turnOn()
+                                }
+
+                                if (device.type == DeviceType.AC) {
+                                    uiAcState.currentDevice = device as Ac
+                                    acViewModel.turnOn()
+                                }
+
+                            } else {
+
+                                if (device.type == DeviceType.SPEAKER) {
+                                    uiSpeakerState.currentDevice = device as Speaker
+                                    speakerViewModel.stop()
+                                }
+
+                                if (device.type == DeviceType.LAMP) {
+                                    uiLampState.currentDevice = device as Lamp
+                                    lampViewModel.turnOff()
+                                }
+
+                                if (device.type == DeviceType.AC) {
+                                    uiAcState.currentDevice = device as Ac
+                                    acViewModel.turnOff()
+                                }
+
+                            }
+
+                            if (switchState.value) {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        snackbarLabel,
+                                        withDismissAction = true
+                                    )
+                                }
+                            }
+
+
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Color.White,
+                            checkedTrackColor = MaterialTheme.colorScheme.secondary,
+                            uncheckedThumbColor = Color.White,
+                            uncheckedTrackColor = Color.LightGray,
+                            uncheckedBorderColor = Color.LightGray
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(bottom = 30.dp, end = 20.dp)
+                    )
+                }
+
+            }
+
+            if (device.type == DeviceType.BLINDS) {
+                deviceAux = device as Blinds
+                uiBlindsState.currentDevice = deviceAux as Blinds
+                status = uiAcState.currentDevice?.status.toString()
 
                 var label = ""
                 var disableButton = false
@@ -349,9 +349,9 @@ Box(modifier = Modifier.fillMaxWidth()) {
                     label = stringResource(id = R.string.close)
                 else {
                     if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
-                        label = stringResource(id = R.string.opening)
-                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
                         label = stringResource(id = R.string.closing)
+                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
+                        label = stringResource(id = R.string.opening)
 
                     disableButton = true
                 }

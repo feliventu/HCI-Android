@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.Posture
@@ -40,10 +41,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -88,79 +91,90 @@ fun MyHomeDestination(
         verticalArrangement = Arrangement.spacedBy(12.dp),
 
         ) {
-
-        Text(
-            text = stringResource(id = R.string.alarms),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(top = 15.dp)
-        )
-
-        for(device in uiState.devices){
-            if(device.type == DeviceType.ALARM){
-                AlarmCard(device = device, name = device.name)
+        if(uiState.devices.isEmpty()){
+            Column(
+                modifier = Modifier
+                    .padding(top = 56.dp)
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.welcome),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 25.sp,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(top = 15.dp),
+                    textAlign = TextAlign.Center,
+                    lineHeight = 40.sp
+                )
             }
         }
 
-//        Text(
-//            text = stringResource(id = R.string.recent_routines),
-//            fontWeight = FontWeight.SemiBold,
-//            fontSize = 18.sp,
-//
-//            )
-//        LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-//            items(5) {
-//                RoutineCard(false, "Routine ", "Descripción de la rutina 1", color = YellowR)
-//            }
-//        }
 
-        Text(
-            text = stringResource(id = R.string.recent_devices),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 18.sp
-        )
+        if (uiState.devices.any { it.type == DeviceType.ALARM }) {
+            Text(
+                text = stringResource(id = R.string.alarms),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(top = 15.dp)
+            )
 
-
-//            for (device in uiState.devices) {
-//
-//                DeviceCard( device = device, name = device.name, snackbarHostState = snackbarHostState)
-//            }
-
-
-        var columsize = 1
-        if (isCompact && isLandscape(LocalContext.current) ||
-            !isCompact && isLandscape(LocalContext.current)
-        ) {
-            columsize = 2
-        } else if (!isCompact && !isLandscape(LocalContext.current)) {
-            columsize = 3
-        }
-
-
-
-
-        for (i in 0 until uiState.devices.size step columsize) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(15.dp),
-                modifier = Modifier.padding(bottom = 5.dp)
-            ) {
-                for (j in i until minOf(i + columsize, uiState.devices.size)) {
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        if(uiState.devices[j].type != DeviceType.ALARM)
-                    DeviceCard(
-                        device = uiState.devices[j],
-                        name = uiState.devices[j].name,
-                        snackbarHostState = snackbarHostState,
-
-                    )}
+            for (device in uiState.devices) {
+                if (device.type == DeviceType.ALARM) {
+                    AlarmCard(device = device, name = device.name)
                 }
             }
         }
+
+
+
+
+        if(uiState.devices.any { it.type == DeviceType.LAMP || it.type == DeviceType.BLINDS || it.type == DeviceType.SPEAKER }) {
+
+            Text(
+                text = stringResource(id = R.string.recent_devices),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp
+            )
+
+            var columsize = 1
+            if (isCompact && isLandscape(LocalContext.current) ||
+                !isCompact && isLandscape(LocalContext.current)
+            ) {
+                columsize = 2
+            } else if (!isCompact && !isLandscape(LocalContext.current)) {
+                columsize = 3
+            }
+
+
+
+            for (i in 0 until uiState.devices.size step columsize) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = Modifier.padding(bottom = 5.dp)
+                ) {
+                    for (j in i until minOf(i + columsize, uiState.devices.size)) {
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                        ) {
+                            if (uiState.devices[j].type != DeviceType.ALARM)
+                                DeviceCard(
+                                    device = uiState.devices[j],
+                                    name = uiState.devices[j].name,
+                                    snackbarHostState = snackbarHostState,
+
+                                    )
+                        }
+                    }
+                }
+            }
+        }
+
 
 
 //        DeviceCard( snackbarHostState = snackbarHostState)
@@ -177,7 +191,7 @@ fun isLandscape(context: Context): Boolean {
 }
 
 @Composable
-fun Loading( ) {
+fun Loading() {
     var isLoading by remember {
         mutableStateOf(true)
     }
@@ -204,7 +218,7 @@ fun Loading( ) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding( top = 18.dp, start = 18.dp, end = 18.dp)
+                        .padding(top = 18.dp, start = 18.dp, end = 18.dp)
                 )
             }
         }

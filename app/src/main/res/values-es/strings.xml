@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Home Chan</string>
-    <string name="welcome">Comencemos con tu nuevo hogar inteligente!</string>
+    <string name="welcome">Comencemos con tu nuevo\nhogar inteligente!</string>
     <string name="nav_home">Hogar</string>
     <string name="nav_devices">Dispositivos</string>
     <string name="nav_routines">Rutinas</string>
@@ -38,7 +38,7 @@
 
     <string name="actualstatus">Apertura actual</string>
     <string name="maxaperture">Apertura max.</string>
-    <string name="close">Close</string>
+    <string name="close">Cerrar</string>
 
     <string name="device_on">Activado dispositivo</string>
     <string name="volume_updated">Actualizado volumen</string>
