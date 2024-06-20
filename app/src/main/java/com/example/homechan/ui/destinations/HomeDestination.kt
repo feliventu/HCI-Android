@@ -10,21 +10,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.Posture
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,12 +55,14 @@ import com.example.homechan.ui.components.AlarmCard
 import com.example.homechan.ui.components.BlindsDialog
 import com.example.homechan.ui.components.DeviceCard
 import com.example.homechan.ui.components.RoutineCard
+import com.example.homechan.ui.components.ShimmerListItem
 import com.example.homechan.ui.components.SpeakerDialog
 import com.example.homechan.ui.devices.DevicesViewModel
 import com.example.homechan.ui.devices.LampViewModel
 import com.example.homechan.ui.getViewModelFactory
 import com.example.homechan.ui.theme.YellowR
 import com.google.android.gms.location.DeviceOrientation
+import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
@@ -59,6 +70,7 @@ fun MyHomeDestination(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
 ) {
+    Loading()
     val uiState by viewModel.uiState.collectAsState()
 
     val adaptiveInfo = currentWindowAdaptiveInfo()
@@ -85,17 +97,17 @@ fun MyHomeDestination(
         )
         AlarmCard()
 
-        Text(
-            text = stringResource(id = R.string.recent_routines),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 18.sp,
-
-            )
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-            items(5) {
-                RoutineCard(false, "Routine ", "Descripción de la rutina 1", color = YellowR)
-            }
-        }
+//        Text(
+//            text = stringResource(id = R.string.recent_routines),
+//            fontWeight = FontWeight.SemiBold,
+//            fontSize = 18.sp,
+//
+//            )
+//        LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+//            items(5) {
+//                RoutineCard(false, "Routine ", "Descripción de la rutina 1", color = YellowR)
+//            }
+//        }
 
         Text(
             text = stringResource(id = R.string.recent_devices),
@@ -130,7 +142,9 @@ fun MyHomeDestination(
                 for (j in i until minOf(i + columsize, uiState.devices.size)) {
 
                     Box(
-                        modifier = Modifier.fillMaxWidth().weight(1f)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
                     ) {
                     DeviceCard(
                         device = uiState.devices[j],
@@ -154,4 +168,41 @@ fun isLandscape(context: Context): Boolean {
     val orientation = context.display?.rotation ?: 0
 
     return orientation == Surface.ROTATION_90 || orientation == Surface.ROTATION_270
+}
+
+@Composable
+fun Loading( ) {
+    var isLoading by remember {
+        mutableStateOf(true)
+    }
+    LaunchedEffect(key1 = true) {
+        delay(3000)
+        isLoading = false
+    }
+    if (isLoading) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(1) {
+                ShimmerListItem(
+                    isLoading = isLoading,
+                    contentAfterLoading = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)
+                        ) {
+
+
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding( top = 18.dp, start = 18.dp, end = 18.dp)
+                )
+            }
+        }
+    }
+
+
 }
