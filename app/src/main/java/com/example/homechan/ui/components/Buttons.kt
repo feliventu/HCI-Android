@@ -43,6 +43,7 @@ fun CustomTextField(
     label: String = "Name",
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onTextChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
 
@@ -55,7 +56,8 @@ fun CustomTextField(
         singleLine = true,
         interactionSource = interactionSource,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-        onValueChange = { newText -> searchText = newText },
+        onValueChange = { newText -> searchText = newText
+                        onTextChange(newText)},
         modifier = Modifier.width(250.dp),
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
