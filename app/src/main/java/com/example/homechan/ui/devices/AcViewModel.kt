@@ -51,6 +51,21 @@ class AcViewModel(private val repository: DeviceRepository) : ViewModel() {
         { state, _ -> state }
     )
 
+    fun setVerticalSwing(swing: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_VERTICAL_SWING_ACTION, arrayOf(swing)) },
+        { state, _ -> state }
+    )
+
+    fun setHorizontalSwing(swing: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_HORIZONTAL_SWING_ACTION, arrayOf(swing)) },
+        { state, _ -> state }
+    )
+
+    fun setFanSpeed(speed: String) = runOnViewModelScope(
+        { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_FAN_SPEED_ACTION, arrayOf(speed)) },
+        { state, _ -> state }
+    )
+
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
         updateState: (AcUiState, T) -> AcUiState

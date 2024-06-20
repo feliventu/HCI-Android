@@ -15,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -25,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +48,7 @@ import com.example.homechan.data.model.Speaker
 import com.example.homechan.data.model.Status
 import com.example.homechan.ui.devices.AcViewModel
 import com.example.homechan.ui.getViewModelFactory
+import kotlinx.coroutines.launch
 
 enum class AcDialogState {
     MAIN_DIALOG,
@@ -251,7 +254,7 @@ fun TemepratureDialog(
                 CustomOutlinedButtonIcon(
                     onClick = { acViewModel.setTemperature(uiAcState.currentDevice!!.temperature - 1) },
                     icon = ImageVector.vectorResource(R.drawable.ic_down_arrow),
-                    enabled = uiAcState.currentDevice!!.temperature >= 17
+                    enabled = uiAcState.currentDevice!!.temperature > 18
                 )
             }
         }
@@ -344,11 +347,18 @@ fun ModeDialog(
 @Composable
 fun VerticalSwingDialog(
     dialogState:  MutableState<AcDialogState>,
-    device: Device
-){
+    device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    ){
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+        val uiAcState by acViewModel.uiState.collectAsState()
+        val ac = device as Ac
+        uiAcState.currentDevice = ac
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -364,6 +374,54 @@ fun VerticalSwingDialog(
                 modifier = Modifier.padding(start = 8.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
+        }
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 15.dp)
+                .fillMaxWidth(), // Fill the entire width
+            horizontalArrangement = Arrangement.SpaceEvenly, // Space items evenly
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            var supportedVerticalSwing = arrayOf(
+                "auto",
+                "22",
+                "45",
+                "67",
+                "90"
+            )
+
+
+            val snackbarLabel = stringResource(R.string.verticalswing_update)
+            var selectedVerticalSwing = uiAcState.currentDevice!!.verticalSwing
+
+            CustomDropdown(
+                options = supportedVerticalSwing,
+                selectedOption = selectedVerticalSwing,
+            ) { selectedOption ->
+                acViewModel.setVerticalSwing(selectedOption)
+
+                scope.launch {
+                    snackbarHostState.showSnackbar(snackbarLabel, withDismissAction = true)
+                }
+            }
+
+
+        }
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp),
+
+            ) {
+            Text(text = stringResource(id = R.string.verticalswing))
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = uiAcState.currentDevice!!.verticalSwing,
+                modifier = Modifier.padding(end = 10.dp),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+
+
         }
     }
 }
@@ -372,11 +430,17 @@ fun VerticalSwingDialog(
 @Composable
 fun HorizontalSwingDialog(
     dialogState:  MutableState<AcDialogState>,
-    device: Device
+    device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ){
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+        val uiAcState by acViewModel.uiState.collectAsState()
+        val ac = device as Ac
+        uiAcState.currentDevice = ac
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -393,6 +457,55 @@ fun HorizontalSwingDialog(
                 color = MaterialTheme.colorScheme.tertiary
             )
         }
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 15.dp)
+                .fillMaxWidth(), // Fill the entire width
+            horizontalArrangement = Arrangement.SpaceEvenly, // Space items evenly
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            var supportedHorizontalSwing = arrayOf(
+                "auto",
+                "-90",
+                "-45",
+                "0",
+                "45",
+                "90"
+            )
+
+
+            val snackbarLabel = stringResource(R.string.horizontalswing_update)
+            var selectedHorizontalSwing = uiAcState.currentDevice!!.horizontalSwing
+
+            CustomDropdown(
+                options = supportedHorizontalSwing,
+                selectedOption = selectedHorizontalSwing,
+            ) { selectedOption ->
+                acViewModel.setHorizontalSwing(selectedOption)
+
+                scope.launch {
+                    snackbarHostState.showSnackbar(snackbarLabel, withDismissAction = true)
+                }
+            }
+
+
+        }
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp),
+
+            ) {
+            Text(text = stringResource(id = R.string.horizontalswing))
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = uiAcState.currentDevice!!.horizontalSwing,
+                modifier = Modifier.padding(end = 10.dp),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+
+
+        }
     }
 }
 
@@ -400,10 +513,17 @@ fun HorizontalSwingDialog(
 @Composable
 fun FanSpeedDialog(
     dialogState:  MutableState<AcDialogState>,
-    device: Device){
+    device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+){
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
+        val uiAcState by acViewModel.uiState.collectAsState()
+        val ac = device as Ac
+        uiAcState.currentDevice = ac
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -419,6 +539,54 @@ fun FanSpeedDialog(
                 modifier = Modifier.padding(start = 8.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
+        }
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 15.dp)
+                .fillMaxWidth(), // Fill the entire width
+            horizontalArrangement = Arrangement.SpaceEvenly, // Space items evenly
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            var supportedFanSpeed = arrayOf(
+                "auto",
+                "25",
+                "50",
+                "75",
+                "100"
+            )
+
+
+            val snackbarLabel = stringResource(R.string.fanspeed_update)
+            var selectedFanSpeed = uiAcState.currentDevice!!.fanSpeed
+
+            CustomDropdown(
+                options = supportedFanSpeed,
+                selectedOption = selectedFanSpeed,
+            ) { selectedOption ->
+                acViewModel.setFanSpeed(selectedOption)
+
+                scope.launch {
+                    snackbarHostState.showSnackbar(snackbarLabel, withDismissAction = true)
+                }
+            }
+
+
+        }
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp),
+
+            ) {
+            Text(text = stringResource(id = R.string.fanspeed))
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = uiAcState.currentDevice!!.fanSpeed,
+                modifier = Modifier.padding(end = 10.dp),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+
+
         }
     }
 }

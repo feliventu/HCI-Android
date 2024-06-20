@@ -67,6 +67,9 @@
     <string name="armed_away">Armada Away</string>
     <string name="disarmed">Desarmada</string>
 
+    <string name="verticalswing_update">Actualizando swing vertical</string>
+    <string name="horizontalswing_update">Actualizando swing horizontal</string>
+    <string name="fanspeed_update">Actualizando velocidad del ventilador</string>
 
 
 

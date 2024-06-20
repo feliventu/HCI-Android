@@ -58,6 +58,9 @@
     <string name="armed_stay">Armed stay</string>
     <string name="armed_away">Armed Away</string>
     <string name="disarmed">Disarmed</string>
+    <string name="verticalswing_update">Updating vertical swing</string>
+    <string name="horizontalswing_update">Updating horizontal swing</string>
+    <string name="fanspeed_update">Updating fan speed</string>
 
 
 </resources>
