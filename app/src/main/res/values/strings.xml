@@ -55,6 +55,9 @@
     <string name="opened">Opened</string>
     <string name="off">Off</string>
     <string name="on">On</string>
+    <string name="armed_stay">Armed stay</string>
+    <string name="armed_away">Armed Away</string>
+    <string name="disarmed">Disarmed</string>
 
 
 </resources>

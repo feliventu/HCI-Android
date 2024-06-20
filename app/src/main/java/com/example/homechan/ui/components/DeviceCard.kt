@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -20,13 +20,13 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,6 +55,7 @@ import com.example.homechan.ui.devices.SpeakerViewModel
 import com.example.homechan.ui.getViewModelFactory
 import com.example.homechan.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
+import com.example.homechan.data.remote.model.RemoteStatus
 
 
 @Composable
@@ -105,7 +106,7 @@ fun DeviceCard(
         uiAcState.currentDevice = deviceAux
         status = uiAcState.currentDevice?.status.toString()
 
-        if (uiAcState.currentDevice?.status.toString() == "ON")
+        if(uiAcState.currentDevice?.status.toString() == "ON")
             status = stringResource(id = R.string.on)
         else if (uiAcState.currentDevice?.status.toString() == "OFF")
             status = stringResource(id = R.string.off)
@@ -125,9 +126,9 @@ fun DeviceCard(
         uiBlindsState.currentDevice = deviceAux
         status = uiBlindsState.currentDevice?.status.toString()
 
-        if (uiBlindsState.currentDevice?.status.toString() == "OPENED")
+        if(uiBlindsState.currentDevice?.status.toString() == "OPENED")
             status = stringResource(id = R.string.closed)
-        else if (uiBlindsState.currentDevice?.status.toString() == "CLOSED")
+        else if(uiBlindsState.currentDevice?.status.toString() == "CLOSED")
             status = stringResource(id = R.string.opened)
         else {
             if (uiBlindsState.currentDevice?.status.toString() == "OPENING")
@@ -136,7 +137,7 @@ fun DeviceCard(
                 status = stringResource(id = R.string.closing)
         }
 
-        if (showDialog.value) {
+        if(showDialog.value){
             BlindsDialog(
                 onDismissRequest = { showDialog.value = false },
                 device = deviceAux,
@@ -340,40 +341,37 @@ Box(modifier = Modifier.fillMaxWidth()) {
         uiBlindsState.currentDevice = deviceAux as Blinds
         status = uiAcState.currentDevice?.status.toString()
 
-        var label = ""
-        var disableButton = false
-        if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
-            label = stringResource(id = R.string.open)
-        else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
-            label = stringResource(id = R.string.close)
-        else {
-            if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
-                label = stringResource(id = R.string.closing)
-            else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
-                label = stringResource(id = R.string.opening)
+                var label = ""
+                var disableButton = false
+                if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                    label = stringResource(id = R.string.open)
+                else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                    label = stringResource(id = R.string.close)
+                else {
+                    if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
+                        label = stringResource(id = R.string.opening)
+                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
+                        label = stringResource(id = R.string.closing)
 
-            disableButton = true
+                    disableButton = true
+                }
+
+                Box(
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                ) {
+                    CustomOutlinedButton(label = label, enabled = !disableButton, onClick = {
+                        if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                            blindsViewModel.close()
+                        else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                            blindsViewModel.open()
+                    },
+                        modifier = Modifier
+                            .padding(bottom =10.dp, end = 15.dp))
+                }
+            }
+
         }
 
-        Box(
-            contentAlignment = Alignment.BottomEnd,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomEnd)
-        ) {
-            CustomOutlinedButton(
-                label = label, enabled = !disableButton, onClick = {
-                    if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
-                        blindsViewModel.close()
-                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
-                        blindsViewModel.open()
-                },
-                modifier = Modifier
-                    .padding(bottom =10.dp, end = 15.dp)
-            )
-        }
-    }
 
-}
     }
 }

@@ -63,5 +63,11 @@
     <string name="off">Apagado</string>
     <string name="on">Prendido</string>
 
+    <string name="armed_stay">Armada Stay</string>
+    <string name="armed_away">Armada Away</string>
+    <string name="disarmed">Desarmada</string>
+
+
+
 
 </resources>

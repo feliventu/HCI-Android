@@ -1,6 +1,7 @@
 package com.example.homechan.data.remote.api
 
 import com.example.homechan.data.remote.model.RemoteAc
+import com.example.homechan.data.remote.model.RemoteAlarm
 import com.example.homechan.data.remote.model.RemoteBlinds
 import com.example.homechan.data.remote.model.RemoteDevice
 import com.example.homechan.data.remote.model.RemoteDeviceType
@@ -34,8 +35,12 @@ class DeviceTypeAdapter : JsonDeserializer<RemoteDevice<*>?> {
             gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAc?>() {}.type)
         } else if(deviceTypeId == RemoteDeviceType.BLINDS_DEVICE_TYPE_ID){
             gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteBlinds?>() {}.type)
-        }else{
+        }else if(deviceTypeId == RemoteDeviceType.ALARM_DEVICE_TYPE_ID) {
+            gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAlarm?>() {}.type)
+        }
+        else {
             null
+
         }
     }
 }

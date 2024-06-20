@@ -4,7 +4,7 @@ import com.example.homechan.data.remote.model.RemoteStatus
 
 
 enum class Status {
-    ON, OFF, PLAYING, STOPPED, PAUSED, OPENING, CLOSING, CLOSED, OPENED, UNKNOWN;
+    ON, OFF, PLAYING, STOPPED, PAUSED, OPENING, CLOSING, CLOSED, OPENED, ARMED_AWAY, ARMED_STAY, DISARMED, UNKNOWN;
 
     companion object {
         fun asRemoteModel(value: Status): String {
@@ -18,6 +18,9 @@ enum class Status {
                 CLOSING -> RemoteStatus.CLOSING
                 CLOSED -> RemoteStatus.CLOSED
                 OPENED -> RemoteStatus.OPENED
+                ARMED_AWAY -> RemoteStatus.ARMED_AWAY
+                ARMED_STAY -> RemoteStatus.ARMED_STAY
+                DISARMED -> RemoteStatus.DISARMED
                 else -> RemoteStatus.UNKNOWN
             }
         }

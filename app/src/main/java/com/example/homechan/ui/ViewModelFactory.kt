@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.homechan.data.repository.DeviceRepository
 import com.example.homechan.ui.devices.AcViewModel
+import com.example.homechan.ui.devices.AlarmViewModel
 import com.example.homechan.ui.devices.BlindsViewModel
 import com.example.homechan.ui.devices.DevicesViewModel
 import com.example.homechan.ui.devices.LampViewModel
@@ -59,6 +60,8 @@ class ViewModelFactory (
             isAssignableFrom(BlindsViewModel::class.java) ->
                 BlindsViewModel(deviceRepository)
 
+            isAssignableFrom(AlarmViewModel::class.java) ->
+                AlarmViewModel(deviceRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

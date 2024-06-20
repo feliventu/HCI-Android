@@ -50,6 +50,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 
 import com.example.homechan.R
+import com.example.homechan.data.model.DeviceType
 import com.example.homechan.ui.components.AcDialog
 import com.example.homechan.ui.components.AlarmCard
 import com.example.homechan.ui.components.BlindsDialog
@@ -88,14 +89,18 @@ fun MyHomeDestination(
 
         ) {
 
-
         Text(
             text = stringResource(id = R.string.alarms),
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             modifier = Modifier.padding(top = 15.dp)
         )
-        AlarmCard()
+
+        for(device in uiState.devices){
+            if(device.type == DeviceType.ALARM){
+                AlarmCard(device = device, name = device.name)
+            }
+        }
 
 //        Text(
 //            text = stringResource(id = R.string.recent_routines),
@@ -146,6 +151,7 @@ fun MyHomeDestination(
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
+                        if(uiState.devices[j].type != DeviceType.ALARM)
                     DeviceCard(
                         device = uiState.devices[j],
                         name = uiState.devices[j].name,

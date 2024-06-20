@@ -13,6 +13,9 @@ object RemoteStatus {
     const val CLOSING = "closing"
     const val CLOSED = "closed"
     const val OPENED = "opened"
+    const val ARMED_AWAY = "armedAway"
+    const val ARMED_STAY = "armedStay"
+    const val DISARMED = "disarmed"
     const val UNKNOWN = "unknown"
 
 
@@ -27,6 +30,9 @@ object RemoteStatus {
             CLOSING -> Status.CLOSING
             CLOSED -> Status.CLOSED
             OPENED -> Status.OPENED
+            ARMED_AWAY -> Status.ARMED_AWAY
+            ARMED_STAY -> Status.ARMED_STAY
+            DISARMED -> Status.DISARMED
             else -> Status.UNKNOWN
         }
     }

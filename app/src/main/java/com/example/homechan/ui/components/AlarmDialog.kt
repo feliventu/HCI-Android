@@ -18,6 +18,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -32,7 +34,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.homechan.R
+import com.example.homechan.data.model.Alarm
+import com.example.homechan.data.model.Device
+import com.example.homechan.data.remote.model.RemoteStatus
+import com.example.homechan.ui.devices.AlarmViewModel
+import com.example.homechan.ui.getViewModelFactory
 
 
 enum class AlarmDialogState {
@@ -41,13 +49,12 @@ enum class AlarmDialogState {
 
 }
 
-@Preview(showBackground = true)
 @Composable
 fun AlarmDialog(
     onDismissRequest: () -> Unit = {},
-    id: String = null.toString(),
-
+    device: Device,
     ) {
+
     val dialogState = rememberSaveable { mutableStateOf(AlarmDialogState.PASS_DIALOG) }
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
@@ -61,8 +68,8 @@ fun AlarmDialog(
             ),
         ) {
             when (dialogState.value) {
-                AlarmDialogState.MAIN_DIALOG -> MainDialog(dialogState)
-                AlarmDialogState.PASS_DIALOG -> PassDialog(dialogState)
+                AlarmDialogState.MAIN_DIALOG -> MainDialog(dialogState, device)
+                AlarmDialogState.PASS_DIALOG -> PassDialog(dialogState, device)
 
             }
             Spacer(modifier = Modifier.height(18.dp))
@@ -71,11 +78,21 @@ fun AlarmDialog(
 }
 
 @Composable
-internal fun PassDialog(dialogState: MutableState<AlarmDialogState>) {
+internal fun PassDialog(
+    dialogState: MutableState<AlarmDialogState>,
+    device: Device
+) {
     // Main dialog content
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory())
+        val uiAlarmState by alarmViewModel.uiState.collectAsState()
+        var deviceAux = device as Alarm
+        uiAlarmState.currentDevice = deviceAux
+        var password: Int = 0
+
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
 
@@ -105,7 +122,10 @@ internal fun PassDialog(dialogState: MutableState<AlarmDialogState>) {
         ) {
             CustomTextField(
                 label = "Password", PasswordVisualTransformation(),
-                KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
+                KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                onTextChange = { text ->
+                    password = text.toInt()
+                },
             )
         }
         Row(
@@ -115,7 +135,16 @@ internal fun PassDialog(dialogState: MutableState<AlarmDialogState>) {
         ) {
             CustomOutlinedButton(
                 label = stringResource(id = R.string.enter),
-                onClick = { dialogState.value = AlarmDialogState.MAIN_DIALOG },
+                onClick = {
+                    if( password == 1234){
+                        dialogState.value = AlarmDialogState.MAIN_DIALOG
+                    }
+                    else{
+                        //snackbar error password
+                        password = 0;
+                }
+
+                },
             )
         }
 
@@ -123,10 +152,28 @@ internal fun PassDialog(dialogState: MutableState<AlarmDialogState>) {
 }
 
 @Composable
-internal fun MainDialog(dialogState: MutableState<AlarmDialogState>) {
+internal fun MainDialog(
+    dialogState: MutableState<AlarmDialogState>,
+    device: Device
+) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
+        val alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory())
+        val uiAlarmState by alarmViewModel.uiState.collectAsState()
+        var deviceAux = device as Alarm
+        uiAlarmState.currentDevice = deviceAux
+
+        var status = ""
+
+        if(uiAlarmState.currentDevice?.status.toString() == "DISARMED")
+            status = stringResource(id =R.string.disarmed)
+        else if(uiAlarmState.currentDevice?.status.toString() == "ARMED_AWAY")
+            status = stringResource(id =R.string.armed_away)
+        else if(uiAlarmState.currentDevice?.status.toString() == "ARMED_STAY")
+            status = stringResource(id =R.string.armed_stay)
+
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -159,11 +206,13 @@ internal fun MainDialog(dialogState: MutableState<AlarmDialogState>) {
         ) {
             CustomOutlinedButton(
                 label = stringResource(id = R.string.armaway),
-                onClick = { },
+                onClick = { alarmViewModel.armAway() },
+                enabled = uiAlarmState.currentDevice?.status.toString() != "ARMED_AWAY"
             )
             CustomOutlinedButton(
                 label = stringResource(id = R.string.armstay),
-                onClick = { },
+                onClick = { alarmViewModel.armStay() },
+                enabled = uiAlarmState.currentDevice?.status.toString() != "ARMED_STAY"
             )
 
 
@@ -177,7 +226,8 @@ internal fun MainDialog(dialogState: MutableState<AlarmDialogState>) {
         ) {
             CustomOutlinedButton(
                 label = stringResource(id = R.string.disarm),
-                onClick = { },
+                onClick = { alarmViewModel.disarm() },
+                enabled = uiAlarmState.currentDevice?.status.toString() != "DISARMED"
             )
         }
 
@@ -188,7 +238,7 @@ internal fun MainDialog(dialogState: MutableState<AlarmDialogState>) {
             Text(text = stringResource(id = R.string.status))
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Active",
+                text = status,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -196,6 +246,7 @@ internal fun MainDialog(dialogState: MutableState<AlarmDialogState>) {
 
     }
 }
+
 
 
 

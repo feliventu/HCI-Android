@@ -14,28 +14,47 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.homechan.R
+import com.example.homechan.data.model.Alarm
+import com.example.homechan.data.model.Device
+import com.example.homechan.data.remote.model.RemoteStatus
+import com.example.homechan.ui.devices.AlarmViewModel
+import com.example.homechan.ui.getViewModelFactory
 import com.example.homechan.ui.theme.MyApplicationTheme
 
-@Preview
+
 @Composable
 fun AlarmCard(
-    name: String = "Alarm",
-
+    device: Device,
+    name: String = "Alarm"
 ) {
+    val alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory())
+    val uiAlarmState by alarmViewModel.uiState.collectAsState()
+    var deviceAux = device as Alarm
+    uiAlarmState.currentDevice = deviceAux
+    var status = RemoteStatus.ARMED_AWAY
+    if(uiAlarmState.currentDevice?.status.toString() == "DISARMED")
+        status = stringResource(id =R.string.disarmed)
+    else if(uiAlarmState.currentDevice?.status.toString() == "ARMED_AWAY")
+        status = stringResource(id =R.string.armed_away)
+    else if(uiAlarmState.currentDevice?.status.toString() == "ARMED_STAY")
+        status = stringResource(id =R.string.armed_stay)
 
 
 
@@ -45,7 +64,8 @@ fun AlarmCard(
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
-        AlarmDialog(onDismissRequest = { showDialog = false })
+        AlarmDialog(onDismissRequest = { showDialog = false },
+            device = deviceAux)
     }
 
     MyApplicationTheme(dynamicColor = false) {
@@ -76,7 +96,9 @@ fun AlarmCard(
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_alarm),
                         contentDescription = "",
-                        modifier = Modifier.padding(top = 2.dp).size(28.dp),
+                        modifier = Modifier
+                            .padding(top = 2.dp)
+                            .size(28.dp),
 
                         )
                     Text(
@@ -88,7 +110,7 @@ fun AlarmCard(
                 }
 
                 Text(
-                    text = "STATUS", fontSize = 14.sp, modifier = Modifier.padding(start = 58.dp),
+                    text = status, fontSize = 14.sp, modifier = Modifier.padding(start = 58.dp),
                     color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
                 )
             }
