@@ -21,6 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     primaryContainer = Color(0xFF222222),   //la card
     inversePrimary = Color.Black,
     onTertiary = Color(0x0FD6D6D6), //divider
+    error = Color(0xFFFC867F),
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -42,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
 
     tertiaryContainer = tertiaryContainerLight,
     onTertiaryContainer = onTertiaryContainerLight,
-    error = errorLight,
+    error = Color(0xFFFC867F),
     onError = onErrorLight,
     errorContainer = errorContainerLight,
     onErrorContainer = onErrorContainerLight,

@@ -78,5 +78,6 @@
     <string name="blindslevel_update">Actualizando apertura de la cortina</string>
     <string name="temperature_update">Actualizando temperatura</string>
     <string name="mode_update">Actualizando modo</string>
+    <string name="connection_error">Hubo un error inesperado\nPor favor pruebe reiniciar la aplicación</string>
 
 </resources>

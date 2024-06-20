@@ -1,6 +1,7 @@
 package com.example.homechan.ui.destinations
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.view.Surface
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,9 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,7 +56,9 @@ import com.example.homechan.ui.components.ShimmerListItem
 import com.example.homechan.ui.devices.DevicesViewModel
 import com.example.homechan.ui.getViewModelFactory
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun MyHomeDestination(
@@ -76,7 +82,46 @@ fun MyHomeDestination(
         verticalArrangement = Arrangement.spacedBy(12.dp),
 
         ) {
-        if (uiState.devices.isEmpty()) {
+
+        var connectionError = !uiState.isFetching && uiState.error != null
+
+        if (connectionError) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(id = R.string.connection_error),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(top = 45.dp),
+                        fontSize = 25.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 30.sp,
+                        fontWeight = FontWeight.SemiBold,
+
+                    )
+                    Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_error),
+                        contentDescription = "error", tint = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.size(80.dp).padding(top = 15.dp))
+                    Text(
+                        text = "Error: ${uiState.error!!.message}",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(top = 15.dp),
+                        fontSize = 18.sp,
+
+                        )
+                    val snackbarLabel = "Error: ${uiState.error!!.message}"
+
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            snackbarLabel,
+                            withDismissAction = true
+                        )
+                    }
+                }
+            }
+        }
+
+
+        if (uiState.devices.isEmpty() && !connectionError) {
             Column(
                 modifier = Modifier
                     .padding(top = 56.dp)
@@ -110,7 +155,8 @@ fun MyHomeDestination(
 
 
         if (alarmDevices.isNotEmpty()) {
-            val limitedAlarmDevices = if (alarmDevices.size >= 2) alarmDevices.take(2) else alarmDevices
+            val limitedAlarmDevices =
+                if (alarmDevices.size >= 2) alarmDevices.take(2) else alarmDevices
             val limitedAlarmDevicesSize = if (alarmDevices.size >= 2) 2 else alarmDevices.size
             Row {
                 Text(
@@ -120,8 +166,11 @@ fun MyHomeDestination(
                     modifier = Modifier.padding(top = 15.dp)
                 )
 
-                Text(text = "($limitedAlarmDevicesSize)", modifier = Modifier.padding( start = 5.dp,top = 15.dp),
-                    color = MaterialTheme.colorScheme.tertiary,)
+                Text(
+                    text = "($limitedAlarmDevicesSize)",
+                    modifier = Modifier.padding(start = 5.dp, top = 15.dp),
+                    color = MaterialTheme.colorScheme.tertiary,
+                )
             }
 
 
@@ -167,10 +216,12 @@ fun MyHomeDestination(
         if (nonAlarmDevices.isNotEmpty()) {
 
             var paddingTop = if (alarmDevices.isNotEmpty()) 0.dp else 15.dp
-            val limitedNonAlarmDevices = if (nonAlarmDevices.size >= 4) nonAlarmDevices.take(4) else nonAlarmDevices
-            val limitedNonAlarmDevicesSize = if (nonAlarmDevices.size >= 4) 4 else nonAlarmDevices.size
+            val limitedNonAlarmDevices =
+                if (nonAlarmDevices.size >= 4) nonAlarmDevices.take(4) else nonAlarmDevices
+            val limitedNonAlarmDevicesSize =
+                if (nonAlarmDevices.size >= 4) 4 else nonAlarmDevices.size
 
-            Row{
+            Row {
 
                 Text(
                     text = stringResource(id = R.string.recent_devices),
@@ -178,8 +229,11 @@ fun MyHomeDestination(
                     fontSize = 18.sp,
                     modifier = Modifier.padding(top = paddingTop)
                 )
-                Text(text = "($limitedNonAlarmDevicesSize)", modifier = Modifier.padding( start = 5.dp,top = paddingTop),
-                    color = MaterialTheme.colorScheme.tertiary,)
+                Text(
+                    text = "($limitedNonAlarmDevicesSize)",
+                    modifier = Modifier.padding(start = 5.dp, top = paddingTop),
+                    color = MaterialTheme.colorScheme.tertiary,
+                )
             }
 
             var columsize = 1
@@ -216,9 +270,6 @@ fun MyHomeDestination(
                 }
             }
         }
-
-
-
 
 
     }

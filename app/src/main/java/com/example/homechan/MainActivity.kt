@@ -127,7 +127,7 @@ fun MyNavigationScaffold() {
         if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
             NavigationSuiteType.NavigationBar;
         } else {
-            //NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
+
             NavigationSuiteType.NavigationDrawer
         }
     }
@@ -221,12 +221,22 @@ fun MyNavigationScaffold() {
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState) { data ->
+
+                    if(data.visuals.message.contains("Error")){
+                        Snackbar(
+                            snackbarData = data,
+                            containerColor = MaterialTheme.colorScheme.error,
+                            contentColor = Color.Black,
+                            dismissActionContentColor = Color.Black,
+                        )
+                    } else {
+
                     Snackbar(
                         snackbarData = data,
                         containerColor = Green01,
                         contentColor = Color.Black,
                         dismissActionContentColor = Color.Black,
-                    )
+                    )}
                 }
             },
             topBar = {

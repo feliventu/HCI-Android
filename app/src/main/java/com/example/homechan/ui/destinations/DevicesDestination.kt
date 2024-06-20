@@ -1,6 +1,7 @@
 package com.example.homechan.ui.destinations
 
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -27,9 +29,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,7 +47,9 @@ import com.example.homechan.ui.components.AlarmCard
 import com.example.homechan.ui.components.DeviceCard
 import com.example.homechan.ui.devices.DevicesViewModel
 import com.example.homechan.ui.getViewModelFactory
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun DevicesDestination(
@@ -67,7 +73,45 @@ fun DevicesDestination(
         verticalArrangement = Arrangement.spacedBy(12.dp),
 
         ) {
-        if (uiState.devices.isEmpty()) {
+
+        var connectionError = !uiState.isFetching && uiState.error != null
+
+        if (connectionError) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(id = R.string.connection_error),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(top = 45.dp),
+                        fontSize = 25.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 30.sp,
+                        fontWeight = FontWeight.SemiBold,
+
+                    )
+                    Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_error),
+                        contentDescription = "error", tint = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.size(80.dp).padding(top = 15.dp))
+                    Text(
+                        text = "Error: ${uiState.error!!.message}",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(top = 15.dp),
+                        fontSize = 18.sp,
+
+                        )
+                    val snackbarLabel = "Error: ${uiState.error!!.message}"
+
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            snackbarLabel,
+                            withDismissAction = true
+                        )
+                    }
+                }
+            }
+        }
+
+        if (uiState.devices.isEmpty() && !connectionError) {
             Column(
                 modifier = Modifier
                     .padding(top = 56.dp)

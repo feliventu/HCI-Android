@@ -69,6 +69,7 @@
     <string name="blindslevel_update">Updating blinds aperture</string>
     <string name="temperature_update">Updating temperature</string>
     <string name="mode_update">Updating mode</string>
+    <string name="connection_error">There was an unexpected error\nPlease try restarting the app</string>
 
 
 </resources>
