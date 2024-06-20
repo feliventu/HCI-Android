@@ -61,6 +61,14 @@
     <string name="verticalswing_update">Updating vertical swing</string>
     <string name="horizontalswing_update">Updating horizontal swing</string>
     <string name="fanspeed_update">Updating fan speed</string>
+    <string name="recent_alarms">Recent Alarms</string>
+    <string name="devices">Devices</string>
+    <string name="password">Password</string>
+    <string name="alarm_away_update">Updating alarm state</string>
+    <string name="blinds_update">Updating blinds</string>
+    <string name="blindslevel_update">Updating blinds aperture</string>
+    <string name="temperature_update">Updating temperature</string>
+    <string name="mode_update">Updating mode</string>
 
 
 </resources>

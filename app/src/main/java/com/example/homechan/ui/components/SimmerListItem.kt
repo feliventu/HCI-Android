@@ -27,17 +27,42 @@ fun ShimmerListItem(
     contentAfterLoading: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if(isLoading) {
+    if (isLoading) {
         Row(modifier = modifier) {
-            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
                 Box(
                     modifier = Modifier
                         .height(20.dp)
                         .width(100.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .shimmerEffect().padding(top = 10.dp, bottom = 10.dp)
+                        .shimmerEffect()
+
                 )
 
+                Box(
+                    modifier = Modifier
+                        .height(85.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .shimmerEffect()
+                )
+                Box(
+                    modifier = Modifier
+                        .height(85.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .shimmerEffect()
+                )
+
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(100.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .shimmerEffect()
+
+                )
+                for (i in 1..7) {
                     Box(
                         modifier = Modifier
                             .height(100.dp)
@@ -45,24 +70,8 @@ fun ShimmerListItem(
                             .clip(RoundedCornerShape(16.dp))
                             .shimmerEffect()
                     )
-
-                Box(
-                    modifier = Modifier
-                        .height(20.dp)
-                        .width(100.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .shimmerEffect().padding(top = 10.dp, bottom = 10.dp)
-                )
-                for (i in 1..7) {
-                Box(
-                    modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .shimmerEffect()
-                )}
+                }
             }
-
 
 
         }

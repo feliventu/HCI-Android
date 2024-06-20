@@ -154,7 +154,7 @@ internal fun GenreDialog(
 
 
             val snackbarLabel = stringResource(R.string.genre_updated)
-            var selectedGender = when (uiSpeakerState.currentDevice!!.genre.toString()) {
+            var selectedGender = when (uiSpeakerState.currentDevice!!.genre) {
                 "pop" -> stringResource(id = R.string.pop)
                 "rock" -> stringResource(id = R.string.rock)
                 "classical" -> stringResource(id = R.string.classical)
@@ -192,10 +192,20 @@ internal fun GenreDialog(
                 .padding(top = 10.dp),
 
             ) {
+            var selectedGender = when (uiSpeakerState.currentDevice!!.genre) {
+                "pop" -> stringResource(id = R.string.pop)
+                "rock" -> stringResource(id = R.string.rock)
+                "classical" -> stringResource(id = R.string.classical)
+                "country" -> stringResource(id = R.string.country)
+                "dance" -> stringResource(id = R.string.dance)
+                "latina" -> stringResource(id = R.string.latina)
+                else -> stringResource(id = R.string.no_data)
+
+            }
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = uiSpeakerState.currentDevice!!.genre,
+                text = selectedGender,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -416,10 +426,21 @@ internal fun MainDialog(
             modifier = Modifier
                 .padding(top = 15.dp),
         ) {
+            var selectedGender = when (uiSpeakerState.currentDevice!!.genre.toString()) {
+                "pop" -> stringResource(id = R.string.pop)
+                "rock" -> stringResource(id = R.string.rock)
+                "classical" -> stringResource(id = R.string.classical)
+                "country" -> stringResource(id = R.string.country)
+                "dance" -> stringResource(id = R.string.dance)
+                "latina" -> stringResource(id = R.string.latina)
+                else -> stringResource(id = R.string.no_data)
+
+            }
+
             Text(text = stringResource(id = R.string.genre))
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = uiSpeakerState.currentDevice!!.genre,
+                text = selectedGender,
                 modifier = Modifier.padding(end = 10.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )

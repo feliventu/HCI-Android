@@ -1,10 +1,12 @@
 package com.example.homechan
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -69,7 +71,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.homechan.ui.destinations.AboutDestination
-import com.example.homechan.ui.destinations.MyDeviceDestination
+import com.example.homechan.ui.destinations.DevicesDestination
+
 import com.example.homechan.ui.destinations.MyHomeDestination
 import com.example.homechan.ui.destinations.MyRoutineDestination
 import com.example.homechan.ui.destinations.NewHomeDestination
@@ -78,6 +81,7 @@ import com.example.homechan.ui.theme.MyApplicationTheme
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -104,18 +108,14 @@ enum class MyAppDestinations(
         R.drawable.ic_devices_fill,
         R.string.nav_devices
     ),
-    RUTINAS(
-        R.string.nav_routines,
-        R.drawable.ic_routines,
-        R.drawable.ic_routines_fill,
-        R.string.nav_routines
-    ),
+
     NEW_HOME(R.string.new_home, R.drawable.ic_home, R.drawable.ic_home_fill, R.string.new_home),
-    ABOUT(R.string.about, R.drawable.ic_more, R.drawable.ic_more, R.string.about)
+    ABOUT(R.string.about, R.drawable.ic_about, R.drawable.ic_about_fill, R.string.about)
 
 }
 
 
+@RequiresApi(Build.VERSION_CODES.R)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyNavigationScaffold() {
@@ -172,7 +172,7 @@ fun MyNavigationScaffold() {
             MyAppDestinations.entries.forEach {
                 if (it != MyAppDestinations.HOME &&
                     it != MyAppDestinations.DEVICES &&
-                    it != MyAppDestinations.RUTINAS
+                    (it != MyAppDestinations.ABOUT || customNavSuiteType != NavigationSuiteType.NavigationDrawer)
                 ) {
                     return@forEach
                 }
@@ -244,10 +244,11 @@ fun MyNavigationScaffold() {
                             Text("Home Chan", fontWeight = FontWeight.Bold)
                         },
                         actions = {
-                            IconButton(onClick = {  menuExpandedTop = !menuExpandedTop }
-                            , modifier = Modifier.onGloballyPositioned { coordinates ->
+                            IconButton(onClick = { menuExpandedTop = !menuExpandedTop },
+                                modifier = Modifier.onGloballyPositioned { coordinates ->
                                     val position = coordinates.positionInRoot()
-                                    iconButtonPosition = Offset(position.x.roundToInt().toFloat(),
+                                    iconButtonPosition = Offset(
+                                        position.x.roundToInt().toFloat(),
                                         position.y.roundToInt().toFloat()
                                     )
                                     xOffset = position.x
@@ -271,7 +272,7 @@ fun MyNavigationScaffold() {
                         shape = RoundedCornerShape(16.dp),
                         containerColor = MaterialTheme.colorScheme.inversePrimary,
                         offset = DpOffset(xOffset.dp - 20.dp, yOffset.dp),
-                        ) {
+                    ) {
                         DropdownMenuItem(onClick = {
                             currentDestination = MyAppDestinations.ABOUT
                             menuExpandedTop = false
@@ -282,11 +283,12 @@ fun MyNavigationScaffold() {
                                     color = MaterialTheme.colorScheme.primary
                                 )
                             })
+                    }
+
                 }
+            },
 
-            }},
-
-        ) { innerPadding ->
+            ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding),
@@ -294,8 +296,7 @@ fun MyNavigationScaffold() {
             ) {
                 when (currentDestination) {
                     MyAppDestinations.HOME -> MyHomeDestination(snackbarHostState = snackbarHostState)
-                    MyAppDestinations.DEVICES -> MyDeviceDestination();
-                    MyAppDestinations.RUTINAS -> MyRoutineDestination();
+                    MyAppDestinations.DEVICES -> DevicesDestination( snackbarHostState = snackbarHostState)
                     MyAppDestinations.NEW_HOME -> NewHomeDestination();
                     MyAppDestinations.ABOUT -> AboutDestination();
                 }
@@ -307,6 +308,7 @@ fun MyNavigationScaffold() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Preview(showBackground = true)
 @Composable
 fun MyNavigationScaffoldPreview() {

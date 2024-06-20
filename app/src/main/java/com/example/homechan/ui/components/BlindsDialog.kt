@@ -16,10 +16,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,6 +37,7 @@ import com.example.homechan.data.model.Blinds
 import com.example.homechan.data.model.Device
 import com.example.homechan.ui.devices.BlindsViewModel
 import com.example.homechan.ui.getViewModelFactory
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -42,7 +45,10 @@ import com.example.homechan.ui.getViewModelFactory
 fun BlindsDialog(
     onDismissRequest: () -> Unit,
     device: Device,
-    ) {
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+) {
+
+    val scope = rememberCoroutineScope()
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -63,9 +69,9 @@ fun BlindsDialog(
                 uiBlindsState.currentDevice = blinds
                 var label = ""
                 var disableButton = false
-                if(uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
                     label = stringResource(id = R.string.open)
-                else if(uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
                     label = stringResource(id = R.string.close)
                 else {
                     if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
@@ -73,7 +79,7 @@ fun BlindsDialog(
                     else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
                         label = stringResource(id = R.string.opening)
 
-                        disableButton = true
+                    disableButton = true
                 }
 
 
@@ -96,17 +102,33 @@ fun BlindsDialog(
                         modifier = Modifier.padding(start = 8.dp)
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    CustomOutlinedButton(onClick = {
-                        if(uiBlindsState.currentDevice!!.status.toString() == "OPENED")
-                            blindsViewModel.close()
-                        else if(uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
-                            blindsViewModel.open()
-                    },
-                    label = label,
-                    enabled = label == stringResource(id = R.string.open) || label == stringResource(id = R.string.close)
+                    var snackbarLabel = stringResource(id = R.string.blinds_update)
+                    CustomOutlinedButton(
+                        onClick = {
+                            if (uiBlindsState.currentDevice!!.status.toString() == "OPENED"){
+                                blindsViewModel.close()
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        snackbarLabel,
+                                        withDismissAction = true
+                                    )
+                                }}
+                            else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                            {blindsViewModel.open()
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        snackbarLabel,
+                                        withDismissAction = true
+                                    )
+                                }}
+                        },
+                        label = label,
+                        enabled = label == stringResource(id = R.string.open) || label == stringResource(
+                            id = R.string.close
+                        )
                     )
                 }
-
+var snackbarLabel = stringResource(id = R.string.blindslevel_update)
                 Row(
                     modifier = Modifier
                         .padding(top = 24.dp, bottom = 15.dp)
@@ -116,14 +138,26 @@ fun BlindsDialog(
                 ) {
                     Box(modifier = Modifier.padding(start = 50.dp)) {
                         CustomOutlinedButtonIcon(
-                            onClick = { blindsViewModel.setLevel( uiBlindsState.currentDevice!!.level + 10) },
+                            onClick = { blindsViewModel.setLevel(uiBlindsState.currentDevice!!.level + 10)
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        snackbarLabel,
+                                        withDismissAction = true
+                                    )
+                                }},
                             icon = ImageVector.vectorResource(R.drawable.ic_up_arrow),
                             enabled = uiBlindsState.currentDevice!!.level < 100 && !disableButton
-                            )
+                        )
                     }
                     Box(modifier = Modifier.padding(end = 50.dp)) {
                         CustomOutlinedButtonIcon(
-                            onClick = { blindsViewModel.setLevel(uiBlindsState.currentDevice!!.level - 10) },
+                            onClick = { blindsViewModel.setLevel(uiBlindsState.currentDevice!!.level - 10)
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        snackbarLabel,
+                                        withDismissAction = true
+                                    )
+                                }},
                             icon = ImageVector.vectorResource(R.drawable.ic_down_arrow),
                             enabled = uiBlindsState.currentDevice!!.level > 0 && !disableButton
                         )
@@ -132,22 +166,26 @@ fun BlindsDialog(
 
 
                 Row(
-                        modifier = Modifier.padding(top = 16.dp),
-                ){
-                Text(text = stringResource(id = R.string.actualstatus))
-                Spacer(modifier = Modifier.weight(1f))
-                Text(text = uiBlindsState.currentDevice!!.currentLevel.toString(),
-                    modifier = Modifier.padding(end = 10.dp),
-                    color = MaterialTheme.colorScheme.tertiary)
-            }
+                    modifier = Modifier.padding(top = 16.dp),
+                ) {
+                    Text(text = stringResource(id = R.string.actualstatus))
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = uiBlindsState.currentDevice!!.currentLevel.toString(),
+                        modifier = Modifier.padding(end = 10.dp),
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
                 Row(
                     modifier = Modifier.padding(top = 16.dp),
-                ){
+                ) {
                     Text(text = stringResource(id = R.string.maxaperture))
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = uiBlindsState.currentDevice!!.level.toString(),
+                    Text(
+                        text = uiBlindsState.currentDevice!!.level.toString(),
                         modifier = Modifier.padding(end = 10.dp),
-                        color = MaterialTheme.colorScheme.tertiary)
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
                 }
 
             }

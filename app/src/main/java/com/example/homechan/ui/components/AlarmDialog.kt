@@ -15,12 +15,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +43,7 @@ import com.example.homechan.data.model.Device
 import com.example.homechan.data.remote.model.RemoteStatus
 import com.example.homechan.ui.devices.AlarmViewModel
 import com.example.homechan.ui.getViewModelFactory
+import kotlinx.coroutines.launch
 
 
 enum class AlarmDialogState {
@@ -53,6 +56,7 @@ enum class AlarmDialogState {
 fun AlarmDialog(
     onDismissRequest: () -> Unit = {},
     device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
     ) {
 
     val dialogState = rememberSaveable { mutableStateOf(AlarmDialogState.PASS_DIALOG) }
@@ -68,7 +72,7 @@ fun AlarmDialog(
             ),
         ) {
             when (dialogState.value) {
-                AlarmDialogState.MAIN_DIALOG -> MainDialog(dialogState, device)
+                AlarmDialogState.MAIN_DIALOG -> MainDialog(dialogState, device, snackbarHostState)
                 AlarmDialogState.PASS_DIALOG -> PassDialog(dialogState, device)
 
             }
@@ -117,11 +121,12 @@ internal fun PassDialog(
         }
         Row(
             modifier = Modifier
-                .padding(top = 15.dp).fillMaxWidth(),
+                .padding(top = 15.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
             CustomTextField(
-                label = "Password", PasswordVisualTransformation(),
+                label = stringResource(id = R.string.password), PasswordVisualTransformation(),
                 KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                 onTextChange = { text ->
                     password = text.toInt()
@@ -130,7 +135,8 @@ internal fun PassDialog(
         }
         Row(
             modifier = Modifier
-                .padding(top = 10.dp).fillMaxWidth(),
+                .padding(top = 10.dp)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
             CustomOutlinedButton(
@@ -154,8 +160,11 @@ internal fun PassDialog(
 @Composable
 internal fun MainDialog(
     dialogState: MutableState<AlarmDialogState>,
-    device: Device
+    device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
+    val scope = rememberCoroutineScope()
+    var snackbarLabel = stringResource(id = R.string.alarm_away_update)
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -204,14 +213,26 @@ internal fun MainDialog(
             horizontalArrangement = Arrangement.SpaceEvenly, // Space items evenly
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             CustomOutlinedButton(
                 label = stringResource(id = R.string.armaway),
-                onClick = { alarmViewModel.armAway() },
+                onClick = { alarmViewModel.armAway()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            snackbarLabel,
+                            withDismissAction = true
+                        )
+                    }},
                 enabled = uiAlarmState.currentDevice?.status.toString() != "ARMED_AWAY"
             )
             CustomOutlinedButton(
                 label = stringResource(id = R.string.armstay),
-                onClick = { alarmViewModel.armStay() },
+                onClick = { alarmViewModel.armStay()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            snackbarLabel,
+                            withDismissAction = true
+                        )}},
                 enabled = uiAlarmState.currentDevice?.status.toString() != "ARMED_STAY"
             )
 
@@ -226,7 +247,12 @@ internal fun MainDialog(
         ) {
             CustomOutlinedButton(
                 label = stringResource(id = R.string.disarm),
-                onClick = { alarmViewModel.disarm() },
+                onClick = { alarmViewModel.disarm()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            snackbarLabel,
+                            withDismissAction = true
+                        )}},
                 enabled = uiAlarmState.currentDevice?.status.toString() != "DISARMED"
             )
         }

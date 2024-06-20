@@ -70,7 +70,13 @@
     <string name="verticalswing_update">Actualizando swing vertical</string>
     <string name="horizontalswing_update">Actualizando swing horizontal</string>
     <string name="fanspeed_update">Actualizando velocidad del ventilador</string>
-
-
+    <string name="recent_alarms">Alarmas recientes</string>
+    <string name="devices">Dispositivos</string>
+    <string name="password">Contraseña</string>
+    <string name="alarm_away_update">Actualizando estado de la alarma</string>
+    <string name="blinds_update">Actualizando cortina</string>
+    <string name="blindslevel_update">Actualizando apertura de la cortina</string>
+    <string name="temperature_update">Actualizando temperatura</string>
+    <string name="mode_update">Actualizando modo</string>
 
 </resources>

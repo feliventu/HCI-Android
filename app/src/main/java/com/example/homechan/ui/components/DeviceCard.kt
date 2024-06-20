@@ -116,6 +116,7 @@ fun DeviceCard(
             AcDialog(
                 onDismissRequest = { showDialog.value = false },
                 device = deviceAux,
+                snackbarHostState
             )
         }
     }
@@ -141,6 +142,7 @@ fun DeviceCard(
             BlindsDialog(
                 onDismissRequest = { showDialog.value = false },
                 device = deviceAux,
+                snackbarHostState
             )
 
         }
@@ -339,7 +341,7 @@ fun DeviceCard(
             if (device.type == DeviceType.BLINDS) {
                 deviceAux = device as Blinds
                 uiBlindsState.currentDevice = deviceAux as Blinds
-                status = uiAcState.currentDevice?.status.toString()
+                status = uiBlindsState.currentDevice?.status.toString()
 
                 var label = ""
                 var disableButton = false
@@ -359,11 +361,27 @@ fun DeviceCard(
                 Box(
                     modifier = Modifier.align(Alignment.BottomEnd)
                 ) {
+                    var snackbarLabel = stringResource(id = R.string.blinds_update)
                     CustomOutlinedButton(label = label, enabled = !disableButton, onClick = {
-                        if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                        if (uiBlindsState.currentDevice!!.status.toString() == "OPENED"){
+                            deviceAux = device as Blinds
+                            uiBlindsState.currentDevice = deviceAux as Blinds
                             blindsViewModel.close()
-                        else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                        }
+
+                        else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED"){
+                            deviceAux = device as Blinds
+                            uiBlindsState.currentDevice = deviceAux as Blinds
                             blindsViewModel.open()
+
+                        }
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }
+
                     },
                         modifier = Modifier
                             .padding(bottom =10.dp, end = 15.dp))

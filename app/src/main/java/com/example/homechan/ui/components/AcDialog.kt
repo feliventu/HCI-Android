@@ -66,6 +66,7 @@ enum class AcDialogState {
 fun AcDialog(
     onDismissRequest: () -> Unit,
     device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ){
     val dialogState = rememberSaveable { mutableStateOf(AcDialogState.MAIN_DIALOG) }
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -80,9 +81,9 @@ fun AcDialog(
             ),
         ) {
             when (dialogState.value) {
-                    AcDialogState.MAIN_DIALOG -> MainDialog(dialogState, device)
-                    AcDialogState.TEMPERATURE_DIALOG -> TemepratureDialog(dialogState, device)
-                    AcDialogState.MODE_DIALOG -> ModeDialog(dialogState, device)
+                    AcDialogState.MAIN_DIALOG -> MainDialog(dialogState, device, snackbarHostState)
+                    AcDialogState.TEMPERATURE_DIALOG -> TemepratureDialog(dialogState, device, snackbarHostState)
+                    AcDialogState.MODE_DIALOG -> ModeDialog(dialogState, device, snackbarHostState)
                     AcDialogState.VERTICAL_SWING_DIALOG -> VerticalSwingDialog(dialogState, device)
                     AcDialogState.HORIZONTAL_SWING_DIALOG -> HorizontalSwingDialog(dialogState, device)
                     AcDialogState.FAN_SPEED_DIALOG -> FanSpeedDialog(dialogState, device)
@@ -95,8 +96,10 @@ fun AcDialog(
 @Composable
 internal fun MainDialog(
     dialogState: MutableState<AcDialogState>,
-    device: Device
+    device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -131,6 +134,7 @@ internal fun MainDialog(
             LaunchedEffect(uiAcState.currentDevice?.status) {
                 switchState = uiAcState.currentDevice?.status != Status.OFF
             }
+            val snackbarLabel = stringResource(R.string.device_on)
             Switch(
                 checked = switchState,
                 onCheckedChange = { isChecked ->
@@ -138,6 +142,12 @@ internal fun MainDialog(
                     if (isChecked) {
                             uiAcState.currentDevice = device as Ac
                             acViewModel.turnOn()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }
                     } else {
                             uiAcState.currentDevice = device as Ac
                             acViewModel.turnOff()
@@ -210,8 +220,10 @@ internal fun MainDialog(
 @Composable
 fun TemepratureDialog(
     dialogState:  MutableState<AcDialogState>,
-    device: Device
+    device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ){
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -219,7 +231,7 @@ fun TemepratureDialog(
         val uiAcState by acViewModel.uiState.collectAsState()
         val ac = device as Ac
         uiAcState.currentDevice = ac
-
+        var snackbarLabel = stringResource(R.string.temperature_update)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -245,14 +257,26 @@ fun TemepratureDialog(
         ) {
             Box(modifier = Modifier.padding(start = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { acViewModel.setTemperature(uiAcState.currentDevice!!.temperature+ 1 ) },
+                    onClick = { acViewModel.setTemperature(uiAcState.currentDevice!!.temperature+ 1 )
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }},
                     icon = ImageVector.vectorResource(R.drawable.ic_up_arrow),
                     enabled = uiAcState.currentDevice!!.temperature < 34
                     )
             }
             Box(modifier = Modifier.padding(end = 50.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { acViewModel.setTemperature(uiAcState.currentDevice!!.temperature - 1) },
+                    onClick = { acViewModel.setTemperature(uiAcState.currentDevice!!.temperature - 1)
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }},
                     icon = ImageVector.vectorResource(R.drawable.ic_down_arrow),
                     enabled = uiAcState.currentDevice!!.temperature > 18
                 )
@@ -273,8 +297,10 @@ fun TemepratureDialog(
 @Composable
 fun ModeDialog(
     dialogState:  MutableState<AcDialogState>,
-    device: Device
+    device: Device,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     ) {
@@ -282,7 +308,7 @@ fun ModeDialog(
         val uiAcState by acViewModel.uiState.collectAsState()
         val ac = device as Ac
         uiAcState.currentDevice = ac
-
+        var snackbarLabel = stringResource(R.string.mode_update)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -311,6 +337,12 @@ fun ModeDialog(
             ) {
                 CustomOutlinedButtonIcon(
                     onClick = { acViewModel.setMode("cool")
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }
                     },
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_cool),
                     enabled = uiAcState.currentDevice!!.mode != "cool"
@@ -318,14 +350,26 @@ fun ModeDialog(
             }
             Box() {
                 CustomOutlinedButtonIcon(
-                    onClick = { acViewModel.setMode("heat") },
+                    onClick = { acViewModel.setMode("heat")
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }},
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_heat),
                     enabled = uiAcState.currentDevice!!.mode != "heat"
                 )
             }
             Box(modifier = Modifier.padding(end = 25.dp)) {
                 CustomOutlinedButtonIcon(
-                    onClick = { acViewModel.setMode("fan") },
+                    onClick = { acViewModel.setMode("fan")
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }},
                     icon = ImageVector.vectorResource(R.drawable.ic_ac_fan),
                     enabled = uiAcState.currentDevice!!.mode != "fan"
                 )

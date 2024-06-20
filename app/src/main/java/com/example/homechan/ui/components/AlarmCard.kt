@@ -11,6 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -42,7 +44,8 @@ import com.example.homechan.ui.theme.MyApplicationTheme
 @Composable
 fun AlarmCard(
     device: Device,
-    name: String = "Alarm"
+    name: String = "Alarm",
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     val alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory())
     val uiAlarmState by alarmViewModel.uiState.collectAsState()
@@ -61,11 +64,13 @@ fun AlarmCard(
     val adaptiveInfo = currentWindowAdaptiveInfo()
     val isCompact =
         adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
-    var showDialog by remember { mutableStateOf(false) }
+    var showDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
 
-    if (showDialog) {
-        AlarmDialog(onDismissRequest = { showDialog = false },
-            device = deviceAux)
+    if (showDialog.value) {
+        AlarmDialog(onDismissRequest = { showDialog.value = false },
+            device = deviceAux, snackbarHostState = snackbarHostState)
     }
 
     MyApplicationTheme(dynamicColor = false) {
@@ -74,7 +79,7 @@ fun AlarmCard(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary
             ),
-            onClick = { showDialog = true },
+            onClick = { showDialog.value = true },
             modifier = if (isCompact) {
                 Modifier
                     .fillMaxWidth() // Fill the maximum width available
@@ -82,7 +87,7 @@ fun AlarmCard(
             }// Keep the height as 100.dp
             else {
                 Modifier
-                    .width(400.dp) // Fill the maximum width available
+                    .fillMaxWidth() // Fill the maximum width available
                     .height(85.dp)
             }
         ) {
