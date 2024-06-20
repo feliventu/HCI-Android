@@ -99,19 +99,19 @@ fun DeviceCard(
 
     }
 
-    if(device.type == DeviceType.AC){
+    if (device.type == DeviceType.AC) {
         icon = ImageVector.vectorResource(R.drawable.ic_ac)
         deviceAux = device as Ac
         uiAcState.currentDevice = deviceAux
         status = uiAcState.currentDevice?.status.toString()
 
-        if(uiAcState.currentDevice?.status.toString() == "ON")
+        if (uiAcState.currentDevice?.status.toString() == "ON")
             status = stringResource(id = R.string.on)
-        else if(uiAcState.currentDevice?.status.toString() == "OFF")
+        else if (uiAcState.currentDevice?.status.toString() == "OFF")
             status = stringResource(id = R.string.off)
 
 
-        if(showDialog.value){
+        if (showDialog.value) {
             AcDialog(
                 onDismissRequest = { showDialog.value = false },
                 device = deviceAux,
@@ -119,15 +119,15 @@ fun DeviceCard(
         }
     }
 
-    if(device.type == DeviceType.BLINDS){
+    if (device.type == DeviceType.BLINDS) {
         icon = ImageVector.vectorResource(id = R.drawable.ic_blinds)
         deviceAux = device as Blinds
         uiBlindsState.currentDevice = deviceAux
         status = uiBlindsState.currentDevice?.status.toString()
 
-        if(uiBlindsState.currentDevice?.status.toString() == "OPENED")
+        if (uiBlindsState.currentDevice?.status.toString() == "OPENED")
             status = stringResource(id = R.string.closed)
-        else if(uiBlindsState.currentDevice?.status.toString() == "CLOSED")
+        else if (uiBlindsState.currentDevice?.status.toString() == "CLOSED")
             status = stringResource(id = R.string.opened)
         else {
             if (uiBlindsState.currentDevice?.status.toString() == "OPENING")
@@ -136,7 +136,7 @@ fun DeviceCard(
                 status = stringResource(id = R.string.closing)
         }
 
-        if(showDialog.value){
+        if (showDialog.value) {
             BlindsDialog(
                 onDismissRequest = { showDialog.value = false },
                 device = deviceAux,
@@ -151,7 +151,7 @@ fun DeviceCard(
         icon = ImageVector.vectorResource(R.drawable.ic_speaker)
         deviceAux = device as Speaker
         uiSpeakerState.currentDevice = deviceAux
-        var genre = when(uiSpeakerState.currentDevice!!.genre) {
+        var genre = when (uiSpeakerState.currentDevice!!.genre) {
             "rock" -> stringResource(id = R.string.rock)
             "pop" -> stringResource(id = R.string.pop)
             "country" -> stringResource(id = R.string.country)
@@ -162,7 +162,7 @@ fun DeviceCard(
 
         }
 
-        status =  stringResource(id = R.string.genre) + ": " + genre
+        status = stringResource(id = R.string.genre) + ": " + genre
 
         if (showDialog.value) {
             SpeakerDialog(
@@ -177,183 +177,203 @@ fun DeviceCard(
 
 
     MyApplicationTheme(dynamicColor = false) {
-        Card(
-            onClick = {
-                showDialog.value = true;
-            },
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = if (isCompact) {
-                Modifier
-                    .fillMaxWidth() // Fill the maximum width available
-                    .height(100.dp)
-            }// Keep the height as 100.dp
-            else {
-                Modifier
-                    .fillMaxWidth() // Fill the maximum width available
-                    .height(100.dp)
-            }
-        ) {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp)
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = "",
-                        modifier = Modifier.size(28.dp),
-                        )
-                    Text(
-                        text = name,
-                        modifier = Modifier.padding(start = 12.dp),
-                        textAlign = TextAlign.Center,
-                        fontSize = 18.sp,
-                    )
-                }
 
+Box(modifier = Modifier.fillMaxWidth()) {
+
+    Card(
+        onClick = {
+            showDialog.value = true;
+        },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.primary
+        ),
+        modifier = if (isCompact) {
+            Modifier
+                .fillMaxWidth() // Fill the maximum width available
+                .height(100.dp)
+        }// Keep the height as 100.dp
+        else {
+            Modifier
+                .fillMaxWidth() // Fill the maximum width available
+                .height(100.dp)
+        }
+    ) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp),
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "",
+                    modifier = Modifier.size(28.dp),
+                )
                 Text(
-                    text = status ,fontSize = 14.sp, modifier = Modifier.padding(start = 56.dp,
-                        top=2.dp),
-                    color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
+                    text = name,
+                    modifier = Modifier.padding(start = 12.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp,
                 )
+
+
             }
 
-            val snackbarLabel = stringResource(R.string.device_on)
-            var switchState = remember { mutableStateOf(false) }
+            Text(
+                text = status, fontSize = 14.sp, modifier = Modifier.padding(
+                    start = 56.dp,
+                    top = 2.dp
+                ),
+                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Light
+            )
 
-            if (device.type == DeviceType.SPEAKER) {
-                uiSpeakerState.currentDevice = device as Speaker
-                 switchState =
-                    remember { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
-
-                LaunchedEffect(uiSpeakerState.currentDevice?.status) {
-                    uiSpeakerState.currentDevice = device as Speaker
-                    switchState.value = uiSpeakerState.currentDevice?.status != Status.STOPPED
-                }
-            }
-
-            if (device.type == DeviceType.AC) {
-                uiAcState.currentDevice = device as Ac
-                switchState =
-                    remember { mutableStateOf(uiAcState.currentDevice?.status != Status.OFF) }
-
-                LaunchedEffect(uiAcState.currentDevice?.status) {
-                    uiAcState.currentDevice = device as Ac
-                    switchState.value = uiAcState.currentDevice?.status != Status.OFF
-                }
-            }
-
-            if (device.type == DeviceType.LAMP) {
-                uiLampState.currentDevice = device as Lamp
-                switchState =
-                    remember { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
-
-                LaunchedEffect(uiLampState.currentDevice?.status) {
-                    uiLampState.currentDevice = device as Lamp
-                    switchState.value = uiLampState.currentDevice?.status != Status.OFF
-                }
-            }
-
-            if(device.type != DeviceType.BLINDS) {
-                Switch(
-                    checked = switchState.value,
-                    onCheckedChange = { isChecked ->
-                        switchState.value = isChecked
-                        if (isChecked) {
-                            if (device.type == DeviceType.SPEAKER) {
-                                uiSpeakerState.currentDevice = device as Speaker
-                                speakerViewModel.play()
-                            }
-
-                            if (device.type == DeviceType.LAMP) {
-                                uiLampState.currentDevice = device as Lamp
-                                lampViewModel.turnOn()
-                            }
-
-                            if (device.type == DeviceType.AC) {
-                                uiAcState.currentDevice = device as Ac
-                                acViewModel.turnOn()
-                            }
-
-                        } else {
-
-                            if (device.type == DeviceType.SPEAKER) {
-                                uiSpeakerState.currentDevice = device as Speaker
-                                speakerViewModel.stop()
-                            }
-
-                            if (device.type == DeviceType.LAMP) {
-                                uiLampState.currentDevice = device as Lamp
-                                lampViewModel.turnOff()
-                            }
-
-                            if (device.type == DeviceType.AC) {
-                                uiAcState.currentDevice = device as Ac
-                                acViewModel.turnOff()
-                            }
-
-                        }
-
-                        if (switchState.value) {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(
-                                    snackbarLabel,
-                                    withDismissAction = true
-                                )
-                            }
-                        }
-
-
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = MaterialTheme.colorScheme.secondary,
-                        uncheckedThumbColor = Color.White,
-                        uncheckedTrackColor = Color.LightGray,
-                        uncheckedBorderColor = Color.LightGray
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(bottom = 30.dp, end = 20.dp)
-                )
-            }
-            else {
-                deviceAux = device as Blinds
-                uiBlindsState.currentDevice = deviceAux as Blinds
-                status = uiAcState.currentDevice?.status.toString()
-
-                var label = ""
-                var disableButton = false
-                if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
-                    label = stringResource(id = R.string.open)
-                else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
-                    label = stringResource(id = R.string.close)
-                else {
-                    if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
-                        label = stringResource(id = R.string.opening)
-                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
-                        label = stringResource(id = R.string.closing)
-
-                    disableButton = true
-                }
-
-                Box(
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    CustomOutlinedButton(label = label, enabled = !disableButton, onClick = {
-                        if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
-                            blindsViewModel.close()
-                        else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
-                            blindsViewModel.open()
-                    })
-                }
-            }
 
         }
 
 
+        val snackbarLabel = stringResource(R.string.device_on)
+        var switchState = remember { mutableStateOf(false) }
+
+        if (device.type == DeviceType.SPEAKER) {
+            uiSpeakerState.currentDevice = device as Speaker
+            switchState =
+                remember { mutableStateOf(uiSpeakerState.currentDevice?.status != Status.STOPPED) }
+
+            LaunchedEffect(uiSpeakerState.currentDevice?.status) {
+                uiSpeakerState.currentDevice = device as Speaker
+                switchState.value = uiSpeakerState.currentDevice?.status != Status.STOPPED
+            }
+        }
+
+        if (device.type == DeviceType.AC) {
+            uiAcState.currentDevice = device as Ac
+            switchState =
+                remember { mutableStateOf(uiAcState.currentDevice?.status != Status.OFF) }
+
+            LaunchedEffect(uiAcState.currentDevice?.status) {
+                uiAcState.currentDevice = device as Ac
+                switchState.value = uiAcState.currentDevice?.status != Status.OFF
+            }
+        }
+
+        if (device.type == DeviceType.LAMP) {
+            uiLampState.currentDevice = device as Lamp
+            switchState =
+                remember { mutableStateOf(uiLampState.currentDevice?.status != Status.OFF) }
+
+            LaunchedEffect(uiLampState.currentDevice?.status) {
+                uiLampState.currentDevice = device as Lamp
+                switchState.value = uiLampState.currentDevice?.status != Status.OFF
+            }
+
+
+        }
+
+        if (device.type != DeviceType.BLINDS) {
+            Switch(
+                checked = switchState.value,
+                onCheckedChange = { isChecked ->
+                    switchState.value = isChecked
+                    if (isChecked) {
+                        if (device.type == DeviceType.SPEAKER) {
+                            uiSpeakerState.currentDevice = device as Speaker
+                            speakerViewModel.play()
+                        }
+
+                        if (device.type == DeviceType.LAMP) {
+                            uiLampState.currentDevice = device as Lamp
+                            lampViewModel.turnOn()
+                        }
+
+                        if (device.type == DeviceType.AC) {
+                            uiAcState.currentDevice = device as Ac
+                            acViewModel.turnOn()
+                        }
+
+                    } else {
+
+                        if (device.type == DeviceType.SPEAKER) {
+                            uiSpeakerState.currentDevice = device as Speaker
+                            speakerViewModel.stop()
+                        }
+
+                        if (device.type == DeviceType.LAMP) {
+                            uiLampState.currentDevice = device as Lamp
+                            lampViewModel.turnOff()
+                        }
+
+                        if (device.type == DeviceType.AC) {
+                            uiAcState.currentDevice = device as Ac
+                            acViewModel.turnOff()
+                        }
+
+                    }
+
+                    if (switchState.value) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                snackbarLabel,
+                                withDismissAction = true
+                            )
+                        }
+                    }
+
+
+                },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = MaterialTheme.colorScheme.secondary,
+                    uncheckedThumbColor = Color.White,
+                    uncheckedTrackColor = Color.LightGray,
+                    uncheckedBorderColor = Color.LightGray
+                ),
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(bottom = 30.dp, end = 20.dp)
+            )
+        }
+
+    }
+
+    if (device.type == DeviceType.BLINDS) {
+        deviceAux = device as Blinds
+        uiBlindsState.currentDevice = deviceAux as Blinds
+        status = uiAcState.currentDevice?.status.toString()
+
+        var label = ""
+        var disableButton = false
+        if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+            label = stringResource(id = R.string.open)
+        else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+            label = stringResource(id = R.string.close)
+        else {
+            if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
+                label = stringResource(id = R.string.closing)
+            else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
+                label = stringResource(id = R.string.opening)
+
+            disableButton = true
+        }
+
+        Box(
+            contentAlignment = Alignment.BottomEnd,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomEnd)
+        ) {
+            CustomOutlinedButton(
+                label = label, enabled = !disableButton, onClick = {
+                    if (uiBlindsState.currentDevice!!.status.toString() == "OPENED")
+                        blindsViewModel.close()
+                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSED")
+                        blindsViewModel.open()
+                },
+                modifier = Modifier
+                    .padding(bottom =10.dp, end = 15.dp)
+            )
+        }
+    }
+
+}
     }
 }

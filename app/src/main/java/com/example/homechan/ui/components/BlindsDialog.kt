@@ -69,9 +69,9 @@ fun BlindsDialog(
                     label = stringResource(id = R.string.close)
                 else {
                     if (uiBlindsState.currentDevice!!.status.toString() == "OPENING")
-                        label = stringResource(id = R.string.opening)
-                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
                         label = stringResource(id = R.string.closing)
+                    else if (uiBlindsState.currentDevice!!.status.toString() == "CLOSING")
+                        label = stringResource(id = R.string.opening)
 
                         disableButton = true
                 }

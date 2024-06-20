@@ -32,7 +32,7 @@
     <string name="horizontalswing">Horizontal Swing</string>
     <string name="fanspeed">Fan speed</string>
     <string name="actualstatus">Actual aperture</string>
-    <string name="maxaperture">Max aperture</string>
+    <string name="maxaperture">Max. aperture</string>
     <string name="device_on">Activating device</string>
     <string name="volume_updated">Updating volume</string>
     <string name="open">Open</string>
