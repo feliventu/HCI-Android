@@ -144,7 +144,7 @@ fun DevicesDestination(
 
 
 
-        if (alarmDevices.isNotEmpty()) {
+        if (alarmDevices.isNotEmpty() && !connectionError) {
 
             val alarmDevicesSize = alarmDevices.size
             Row {
@@ -195,7 +195,7 @@ fun DevicesDestination(
 
 
 
-        if (nonAlarmDevices.isNotEmpty()) {
+        if (nonAlarmDevices.isNotEmpty() && !connectionError) {
             var paddingTop = if (alarmDevices.isNotEmpty()) 0.dp else 15.dp
             Row{
                 val nonAlarmDevicesSize = nonAlarmDevices.size

@@ -154,7 +154,7 @@ fun MyHomeDestination(
 
 
 
-        if (alarmDevices.isNotEmpty()) {
+        if (alarmDevices.isNotEmpty() && !connectionError) {
             val limitedAlarmDevices =
                 if (alarmDevices.size >= 2) alarmDevices.take(2) else alarmDevices
             val limitedAlarmDevicesSize = if (alarmDevices.size >= 2) 2 else alarmDevices.size
@@ -213,7 +213,7 @@ fun MyHomeDestination(
 
 
 
-        if (nonAlarmDevices.isNotEmpty()) {
+        if (nonAlarmDevices.isNotEmpty() && !connectionError) {
 
             var paddingTop = if (alarmDevices.isNotEmpty()) 0.dp else 15.dp
             val limitedNonAlarmDevices =
