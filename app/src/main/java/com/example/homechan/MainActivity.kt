@@ -25,6 +25,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -78,6 +79,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -98,6 +100,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var instance: MainActivity
     }
+
     private lateinit var notificationHelper: NotificationHelper
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -111,14 +114,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme(dynamicColor = false) {
-                MyNavigationScaffold()
+                MyCustomNavigationScaffold()
 
             }
         }
-        //sendNotification("Bienvenido a HomeChan", "Tu asistente de hogar inteligente")
 
 
-        }
+    }
 
     private fun askForNotificationPermission() {
         with(NotificationManagerCompat.from(this)) {
@@ -144,7 +146,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 
 
 }
@@ -222,6 +223,30 @@ enum class MyAppDestinations(
 @RequiresApi(Build.VERSION_CODES.R)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun MyCustomNavigationScaffold() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        MyNavigationScaffold()
+        val adaptiveInfo = currentWindowAdaptiveInfo();
+        if (adaptiveInfo.windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT)
+
+            Box(modifier = Modifier.size(250.dp).align(Alignment.BottomStart)) {
+        Text(
+            text = "HomeChan",
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 36.dp),
+            fontSize = 24.sp,
+            color = MaterialTheme.colorScheme.surface,
+            fontWeight = FontWeight.Bold
+        )
+    }}
+    }
+
+
+
+@RequiresApi(Build.VERSION_CODES.R)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun MyNavigationScaffold() {
 
     val adaptiveInfo = currentWindowAdaptiveInfo();
@@ -268,27 +293,30 @@ fun MyNavigationScaffold() {
             selectedTextColor = MaterialTheme.colorScheme.primary,
         )
     )
+
     NavigationSuiteScaffold(
 
         navigationSuiteItems =
         {
 
-            MyAppDestinations.entries.forEach {
+
+            MyAppDestinations.entries.forEachIndexed { index, it ->
                 if (it != MyAppDestinations.HOME &&
                     it != MyAppDestinations.DEVICES &&
                     (it != MyAppDestinations.ABOUT || customNavSuiteType != NavigationSuiteType.NavigationDrawer)
                 ) {
-                    return@forEach
+                    return@forEachIndexed
                 }
+
                 item(
-                    modifier = if (!isCompact) {
-                        Modifier.width(250.dp)
+                    modifier = if (!isCompact && index == 0) {
+                        Modifier.width(250.dp).padding(horizontal = 16.dp)
+                    } else if (!isCompact) {
+                        Modifier.width(250.dp).padding(horizontal = 16.dp)
                     } else {
                         Modifier
                     },
                     colors = itemColors,
-
-
                     icon = {
                         val icon = if (it == currentDestination) {
                             ImageVector.vectorResource(id = it.filledIcon)
@@ -301,11 +329,9 @@ fun MyNavigationScaffold() {
                             modifier = Modifier.size(32.dp)
                         )
                     },
-
                     label = { Text(stringResource(it.label)) },
                     selected = it == currentDestination,
                     onClick = { currentDestination = it }
-
                 )
             }
         },
@@ -320,13 +346,20 @@ fun MyNavigationScaffold() {
 
 
         ) {
-
+        Box {
+            Text(
+                text = "HomeChan",
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(16.dp)
+            )
+        }
 
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState) { data ->
 
-                    if(data.visuals.message.contains("Error")){
+                    if (data.visuals.message.contains("Error")) {
                         Snackbar(
                             snackbarData = data,
                             containerColor = MaterialTheme.colorScheme.error,
@@ -335,12 +368,13 @@ fun MyNavigationScaffold() {
                         )
                     } else {
 
-                    Snackbar(
-                        snackbarData = data,
-                        containerColor = Green01,
-                        contentColor = Color.Black,
-                        dismissActionContentColor = Color.Black,
-                    )}
+                        Snackbar(
+                            snackbarData = data,
+                            containerColor = Green01,
+                            contentColor = Color.Black,
+                            dismissActionContentColor = Color.Black,
+                        )
+                    }
                 }
             },
             topBar = {
@@ -410,7 +444,7 @@ fun MyNavigationScaffold() {
             ) {
                 when (currentDestination) {
                     MyAppDestinations.HOME -> MyHomeDestination(snackbarHostState = snackbarHostState)
-                    MyAppDestinations.DEVICES -> DevicesDestination( snackbarHostState = snackbarHostState)
+                    MyAppDestinations.DEVICES -> DevicesDestination(snackbarHostState = snackbarHostState)
                     MyAppDestinations.NEW_HOME -> NewHomeDestination();
                     MyAppDestinations.ABOUT -> AboutDestination();
                 }
