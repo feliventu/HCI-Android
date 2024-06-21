@@ -1,7 +1,17 @@
 package com.example.homechan
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent.getActivity
+import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings.Global.getString
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -69,7 +79,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.ContextCompat.getSystemServiceName
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.homechan.R.drawable.notification_icon
 import com.example.homechan.ui.destinations.AboutDestination
 import com.example.homechan.ui.destinations.DevicesDestination
 
@@ -81,9 +97,15 @@ import com.example.homechan.ui.theme.MyApplicationTheme
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
+    private lateinit var notificationHelper: NotificationHelper
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        askForNotificationPermission()
+        notificationHelper = NotificationHelper(this@MainActivity)
+        notificationHelper.createNotificationChannel()
+
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme(dynamicColor = false) {
@@ -91,9 +113,75 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+        sendNotification("Bienvenido a HomeChan", "Tu asistente de hogar inteligente")
+
+
+        }
+
+    private fun askForNotificationPermission() {
+        with(NotificationManagerCompat.from(this)) {
+            if (ActivityCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        1
+                    )
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                println("check permission")
+                println(areNotificationsEnabled())
+                return@with
+            }
+        }
     }
+
+fun sendNotification(title:String, message:String) {
+    notificationHelper.sendNotification(title, message)
+}
 }
 
+
+class NotificationHelper(private val context: Context) {
+    private val CHANNEL_ID = "main_channel"
+
+    fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Notificaciones de HomeChan"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance)
+
+            channel.enableVibration(true)
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+            notificationManager?.createNotificationChannel(channel)
+            Log.d("Notification", "Channel was created")
+        } else {
+            // If the version is lower than Oreo, the channel is not needed
+            Log.d("Notification", "Channel was not needed")
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun sendNotification(title: String, message: String) {
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification_icon)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(1, builder.build())
+            Log.d("Notification", "Notification was sent")
+        }
+    }
+}
 
 enum class MyAppDestinations(
     @StringRes val label: Int,
