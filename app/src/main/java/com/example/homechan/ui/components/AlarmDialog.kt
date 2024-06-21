@@ -111,7 +111,7 @@ internal fun PassDialog(
                 modifier = Modifier.size(30.dp)
             );
             Text(
-                text = "Alarm",
+                text = deviceAux.name.toString(),
                 textAlign = TextAlign.Left,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 10.dp)

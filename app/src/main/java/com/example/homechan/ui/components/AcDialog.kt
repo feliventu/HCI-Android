@@ -116,12 +116,12 @@ internal fun MainDialog(
 
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_devices),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_ac),
                 contentDescription = "",
                 modifier = Modifier.size(30.dp)
             );
             Text(
-                text = "Ac",
+                text = device.name,
                 textAlign = TextAlign.Left,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 8.dp)
