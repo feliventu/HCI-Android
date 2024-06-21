@@ -186,7 +186,8 @@ class NotificationHelper private constructor(private val context: Context) {
     @SuppressLint("MissingPermission")
     fun sendNotification(id: Int, title: String, message: String) {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_lamp)
+            .setSmallIcon(R.drawable.ic_hc)
+
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
