@@ -11,7 +11,7 @@ class Lamp(
     val status: Status,
     val color: String,
     val brightness: Int
-) : Device(id, name, DeviceType.LAMP) {
+) : Device(id, name, DeviceType.LAMP,status) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteLampState> {
         val state = RemoteLampState()

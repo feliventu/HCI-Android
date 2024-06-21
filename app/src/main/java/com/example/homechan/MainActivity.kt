@@ -74,7 +74,6 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
@@ -85,10 +84,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.getSystemServiceName
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.example.homechan.R.drawable.notification_icon
 import com.example.homechan.ui.destinations.AboutDestination
 import com.example.homechan.ui.destinations.DevicesDestination
-
 import com.example.homechan.ui.destinations.MyHomeDestination
 import com.example.homechan.ui.destinations.MyRoutineDestination
 import com.example.homechan.ui.destinations.NewHomeDestination
@@ -97,14 +94,19 @@ import com.example.homechan.ui.theme.MyApplicationTheme
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
+
+    companion object {
+        lateinit var instance: MainActivity
+    }
     private lateinit var notificationHelper: NotificationHelper
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        instance = this
+        notificationHelper = NotificationHelper.getInstance(this@MainActivity)
         askForNotificationPermission()
-        notificationHelper = NotificationHelper(this@MainActivity)
-        notificationHelper.createNotificationChannel()
+
 
         enableEdgeToEdge()
         setContent {
@@ -113,7 +115,7 @@ class MainActivity : ComponentActivity() {
 
             }
         }
-        sendNotification("Bienvenido a HomeChan", "Tu asistente de hogar inteligente")
+        //sendNotification("Bienvenido a HomeChan", "Tu asistente de hogar inteligente")
 
 
         }
@@ -143,16 +145,30 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-fun sendNotification(title:String, message:String) {
-    notificationHelper.sendNotification(title, message)
-}
-}
 
 
-class NotificationHelper(private val context: Context) {
+}
+
+class NotificationHelper private constructor(private val context: Context) {
+
+    companion object {
+        private var INSTANCE: NotificationHelper? = null
+
+        fun getInstance(context: Context): NotificationHelper {
+            if (INSTANCE == null) {
+                INSTANCE = NotificationHelper(context.applicationContext)
+            }
+            return INSTANCE!!
+        }
+    }
+
     private val CHANNEL_ID = "main_channel"
 
-    fun createNotificationChannel() {
+    init {
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Notificaciones de HomeChan"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -163,21 +179,20 @@ class NotificationHelper(private val context: Context) {
             notificationManager?.createNotificationChannel(channel)
             Log.d("Notification", "Channel was created")
         } else {
-            // If the version is lower than Oreo, the channel is not needed
             Log.d("Notification", "Channel was not needed")
         }
     }
 
     @SuppressLint("MissingPermission")
-    fun sendNotification(title: String, message: String) {
+    fun sendNotification(id: Int, title: String, message: String) {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.notification_icon)
+            .setSmallIcon(R.drawable.ic_lamp)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(context)) {
-            notify(1, builder.build())
+            notify(id, builder.build())
             Log.d("Notification", "Notification was sent")
         }
     }

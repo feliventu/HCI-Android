@@ -10,7 +10,7 @@ class Blinds(
     val status: Status,
     val level: Int,
     val currentLevel: Int,
-): Device(id, name, DeviceType.BLINDS) {
+): Device(id, name, DeviceType.BLINDS, status) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteBlindsState> {
         val state = RemoteBlindsState()

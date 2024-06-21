@@ -79,5 +79,6 @@
     <string name="temperature_update">Actualizando temperatura</string>
     <string name="mode_update">Actualizando modo</string>
     <string name="connection_error">Hubo un error inesperado\nPor favor pruebe reiniciar la aplicación</string>
+    <string name="device_updated">Dispositivo actualizado</string>
 
 </resources>

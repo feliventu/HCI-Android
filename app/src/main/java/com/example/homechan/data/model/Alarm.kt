@@ -8,7 +8,7 @@ class Alarm(
     id: String?,
     name: String,
     val status: Status,
-) : Device(id, name, DeviceType.ALARM) {
+) : Device(id, name, DeviceType.ALARM,status) {
 
     override fun asRemoteModel() : RemoteDevice<RemoteAlarmState> {
         val state = RemoteAlarmState()

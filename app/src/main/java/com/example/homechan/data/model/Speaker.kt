@@ -11,7 +11,7 @@ class Speaker(
     val volume: Int,
     val genre: String,
 
-    ) : Device(id, name, DeviceType.SPEAKER) {
+    ) : Device(id, name, DeviceType.SPEAKER, status) {
     override fun asRemoteModel(): RemoteDevice<RemoteSpeakerState> {
         val state = RemoteSpeakerState()
         state.status = Status.asRemoteModel(status)

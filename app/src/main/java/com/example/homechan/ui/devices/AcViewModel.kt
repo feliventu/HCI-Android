@@ -1,7 +1,9 @@
 package com.example.homechan.ui.devices
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.homechan.MainActivity
 import com.example.homechan.data.DataSourceException
 import com.example.homechan.data.model.Ac
 import com.example.homechan.data.model.Error

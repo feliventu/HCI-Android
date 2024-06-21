@@ -16,5 +16,5 @@ class ApiApplication : Application() {
 
 
     val deviceRepository: DeviceRepository
-        get() = DeviceRepository(deviceRemoteDataSource)
+        get() = DeviceRepository(deviceRemoteDataSource, this)
 }

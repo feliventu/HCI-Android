@@ -1,5 +1,6 @@
 package com.example.homechan.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.homechan.MainActivity
+import com.example.homechan.NotificationHelper
 import com.example.homechan.R
 import com.example.homechan.data.model.Ac
 import com.example.homechan.data.model.Blinds
@@ -66,6 +71,8 @@ fun DeviceCard(
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
 
     ) {
+    val context = LocalContext.current
+
     val lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
     val speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory())
     val acViewModel: AcViewModel = viewModel(factory = getViewModelFactory())
@@ -203,6 +210,7 @@ fun DeviceCard(
                 }
             ) {
                 Column {
+
                     Row(
                         modifier = Modifier
                             .padding(start = 16.dp, top = 16.dp),

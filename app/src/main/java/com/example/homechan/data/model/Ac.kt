@@ -13,7 +13,7 @@ class Ac(
     val horizontalSwing: String,
     val verticalSwing: String,
     val fanSpeed: String,
-    ) : Device(id, name, DeviceType.AC) {
+    ) : Device(id, name, DeviceType.AC, status) {
 
         override fun asRemoteModel() : RemoteDevice<RemoteAcState> {
             val state = RemoteAcState()
